@@ -4,7 +4,7 @@ run:
 clean:
 	mvn clean
 	
-git push: 
+git-push: 
 	git add .
 	git commit -m "$m"
 	git push
