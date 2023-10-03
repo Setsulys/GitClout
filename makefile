@@ -1,4 +1,6 @@
-run:
+run-front:
+	npm run --prefix ./src/frontend serve
+run-back:
 	mvn spring-boot:run
 
 clean:

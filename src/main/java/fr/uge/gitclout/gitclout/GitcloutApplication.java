@@ -9,5 +9,4 @@ public class GitcloutApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GitcloutApplication.class, args);
 	}
-
 }
