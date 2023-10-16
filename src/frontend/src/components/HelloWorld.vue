@@ -14,7 +14,7 @@ export default {
     }
   },
   mounted(){
-    fetch("/api/messages/hello")
+    fetch("/app/messages/hello")
     .then((response) => response.text())
     .then((data) =>{
         this.lsg = data;
