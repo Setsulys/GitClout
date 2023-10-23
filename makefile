@@ -6,7 +6,12 @@ run-back:
 clean:
 	mvn clean
 	
-git-push: 
+git-push:
+    mvn clean
 	git add .
 	git commit -m "$m"
-	git push
+    git push
+
+run:
+    mvn clean package
+    java -jar .\target\gitclout-0.0.1-SNAPSHOT.jar
