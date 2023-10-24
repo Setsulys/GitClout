@@ -1,5 +1,8 @@
 <template>
   <HelloWorld/>
+  <div id="app">
+    <img src="./assets/gclout.png">
+  </div>
 </template>
 
 <script>
