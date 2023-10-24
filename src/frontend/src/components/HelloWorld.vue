@@ -17,7 +17,7 @@ export default {
     fetch("/app/messages/hello")
     .then((response) => response.text())
     .then((data) =>{
-        this.lsg = data;
+        this.msg = data;
   })
   }
 
