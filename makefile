@@ -10,4 +10,4 @@ git-push:
 	git push
 run:
 	mvn clean package
-	java -jar .\target\gitclout-0.0.1-SNAPSHOT.jar
+	java -jar ./target/gitclout-0.0.1-SNAPSHOT.jar
