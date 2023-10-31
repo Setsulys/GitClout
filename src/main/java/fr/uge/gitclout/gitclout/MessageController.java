@@ -1,8 +1,7 @@
 package fr.uge.gitclout.gitclout;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/app/messages")
 public class MessageController {
@@ -12,8 +11,11 @@ public class MessageController {
         return "GITCLOUT DE JULIEN ET STEVEN";
     }
 
-    @GetMapping("/getLinkMessage")
-    public String getlinkMessage(){
-        return "Veuillez inserer votre lien Git";
+    @PostMapping("/toTheBack")
+    public String displayLink(@RequestBody GitLinkRequest gitLinkRequest){
+        String gitLink = gitLinkRequest.getGitLink();
+         return "Données recu : " + gitLink;
     }
+
+
 }

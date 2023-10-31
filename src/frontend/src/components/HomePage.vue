@@ -4,17 +4,34 @@
     <h3> revenez plus tard</h3>
     <h3>Inserez votre lien GIT</h3>
     <input v-model="text" placeholder="https://gitlab.com/nom/projet">
-    <button @click="submit">Gitclouting</button>
+    <button class="ui button" @click="submit">Gitclouting</button>
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   name: 'HomePage',
   data(){
     return {
-        msg:''
+        msg:'',
+        text:'',
     }
+  },
+
+  methods:{
+    submit(){
+        const data ={
+            gitLink : this.text,
+        };
+        axios.post("/app/messages/toTheBack",data)
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) =>{
+        console.error(error);
+        });
+     },
   },
   mounted(){
     fetch("/app/messages/hello")
