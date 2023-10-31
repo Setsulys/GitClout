@@ -11,4 +11,9 @@ public class MessageController {
     public String hello(){
         return "GITCLOUT DE JULIEN ET STEVEN";
     }
+
+    @GetMapping("/getLinkMessage")
+    public String getlinkMessage(){
+        return "Veuillez inserer votre lien Git";
+    }
 }

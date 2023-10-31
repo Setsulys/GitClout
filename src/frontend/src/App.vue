@@ -1,17 +1,17 @@
 <template>
-  <HelloWorld/>
+  <HomePage/>
   <div id="app">
     <img src="./assets/gclout.png">
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HomePage from './components/HomePage.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    HomePage
   }
 }
 </script>
