@@ -65,9 +65,9 @@ public class DataBase {
     public void createTables() {
         try(Statement stmt = conn.createStatement()){
             stmt.executeUpdate("CREATE TABLE contributeur (pseudo varchar(50) PRIMARY KEY, name varchar(50))");
-            stmt.executeUpdate("CREATE TABLE projet (idprojet int PRIMARY KEY, nomprojet varchar(50), description varchar(250), pseudo varchar(50))");
+            stmt.executeUpdate("CREATE TABLE projet (idprojet int PRIMARY KEY, nomprojet varchar(50), description varchar(250))");
             stmt.executeUpdate("CREATE TABLE technologie (techno varchar(50) PRIMARY KEY, type varchar(50))");
-            stmt.executeUpdate("CREATE TABLE travaille (pseudo varchar(50), idprojet int, techno varchar(50), nbligne int, PRIMARY KEY (pseudo, idprojet, techno))");
+            stmt.executeUpdate("CREATE TABLE travaille (pseudo varchar(50), idprojet int, techno varchar(50), pseudoTag varchar(50), nbligne int, descriptionTag varchar(250), PRIMARY KEY (pseudo, idprojet, techno, pseudoTag))");
             stmt.executeUpdate("ALTER TABLE travaille ADD CONSTRAINT foreign_key_technologie FOREIGN KEY (techno) REFERENCES technologie (techno)");
             stmt.executeUpdate("ALTER TABLE travaille ADD CONSTRAINT foreign_key_contributeur FOREIGN KEY (pseudo) REFERENCES contributeur (pseudo)");
             stmt.executeUpdate("ALTER TABLE travaille ADD CONSTRAINT foreign_key_projet FOREIGN KEY (idprojet) REFERENCES projet (idprojet)");

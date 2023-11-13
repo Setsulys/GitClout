@@ -34,3 +34,4 @@ target/
 *.iws
 *.iml
 *.ipr
+/.metadata/

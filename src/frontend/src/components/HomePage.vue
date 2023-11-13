@@ -3,8 +3,17 @@
     <h3> Site en production</h3>
     <h3> revenez plus tard</h3>
     <h3>Inserez votre lien GIT</h3>
-    <input v-model="text" placeholder="https://gitlab.com/nom/projet">
-    <button class="ui button" @click="submit">Gitclouting</button>
+
+
+
+
+    <div class="ui large action input">
+          <input class="wide-input" v-model="text" placeholder="https://gitlab.com/nom/projet">
+          <div class="ui button" @click="submit">Gitclouting</div>
+    </div>
+
+    <!--<input v-model="text" placeholder="https://gitlab.com/nom/projet">-->
+    <!--<button class="ui primary button" @click="submit">Gitclouting</button>-->
 </template>
 
 <script>
@@ -42,4 +51,9 @@ export default {
   }
 }
 </script>
+
+.wide-input{
+min-width: 600px;
+width: 50%;
+}
 
