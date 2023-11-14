@@ -51,9 +51,9 @@ export default {
   }
 }
 </script>
-
+<style>
 .wide-input{
 min-width: 600px;
 width: 50%;
 }
-
+</style>

@@ -5,6 +5,7 @@ run-back:
 clean:
 	mvn clean
 git-push:
+	mvn clean
 	git add .
 	git commit -m "$m"
 	git push
