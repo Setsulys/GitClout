@@ -144,6 +144,7 @@ public class JGitBlame {
             var treewalk = new TreeWalk(git.getRepository()); //init the treewalk
 
             var blame = new Blame(git,treewalk,tagtree,getTags);
+            blame.blame();
             display(blame);
 
         } catch (Exception e) {

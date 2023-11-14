@@ -27,6 +27,12 @@ public class Blame {
     private final Map<Extensions,Integer> nbComments = new HashMap<>();
     private final Map<String,Integer> nbCommentsForFile = new HashMap<>();
 
+
+
+    private final Git git;
+    private final TreeWalk treeWalk;
+    private final List<Ref> getTags;
+
     @SafeVarargs
     public static void checkNonNull(Object ... check) {
         Arrays.stream(check).forEach(e -> Objects.requireNonNull(e));
@@ -112,8 +118,8 @@ public class Blame {
     /**
      * Make the git blame on all the files of the directory
      * @param git
-     * @param treewalk
-     * @param tagtree
+     * @param treeWalk
+     * @param tagTree
      * @param getTags
      * @throws MissingObjectException
      * @throws IncorrectObjectTypeException
@@ -121,25 +127,25 @@ public class Blame {
      * @throws IOException
      * @throws GitAPIException
      */
-    public Blame(Git git, TreeWalk treewalk, RevTree tagtree,List<Ref> getTags/*A voir si on modifie pas par un unique tag*/) throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException {
-        checkNonNull(git,treewalk,tagtree,getTags);
-        var sW = new StringWork();
-        treewalk.addTree(tagtree);
-        treewalk.setRecursive(true);
-        while(treewalk.next()) {
-            String filePath = treewalk.getPathString();
+    public Blame(Git git, TreeWalk treeWalk, RevTree tagTree,List<Ref> getTags/*A voir si on modifie pas par un unique tag*/) throws IOException {
+        checkNonNull(git,treeWalk,tagTree,getTags);
+        this.git = git;
+        this.treeWalk = treeWalk;
+        this.getTags = getTags;
+        treeWalk.addTree(tagTree);
+        treeWalk.setRecursive(true);
+    }
 
+    public void blame() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException{
+        var sW = new StringWork();
+        while(treeWalk.next()) {
+            String filePath = treeWalk.getPathString();
             if(sW.splitExtention(filePath)!=null) {
                 var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
                 var blame = git.blame().setStartCommit(getTags.getFirst().getObjectId()).setFilePath(filePath).call(); //blame the curent file
-
-                prepareAndCheckComments(treewalk, git,FileExtension.extensionDescription(extension));
-
+                prepareAndCheckComments(treeWalk, git,FileExtension.extensionDescription(extension));
                 addFilesForExtensions(FileExtension.extensionDescription(extension), filePath);
-
-                Map<String,Long> countByName =IntStream.range(0, blame.getResultContents().size()) //Count the number of line done by someone in a file
-                        .mapToObj(e -> blame.getSourceAuthor(e).getName())
-                        .collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+                Map<String,Long> countByName =IntStream.range(0, blame.getResultContents().size()).mapToObj(e -> blame.getSourceAuthor(e).getName()).collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
                 checkIfCode(filePath,FileExtension.extensionDescription(extension), countByName);
             }
         }
