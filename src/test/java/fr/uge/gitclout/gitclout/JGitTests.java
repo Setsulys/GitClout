@@ -134,7 +134,7 @@ public class JGitTests {
         @Test
         public void precondition() {
             var jGit = new JGitBlame();
-            var localPath = Paths.get("").toAbsolutePath().getParent()+"\\Contributor\\Project";
+            var localPath = Paths.get("").toAbsolutePath().getParent()+ File.separator + "Contributor"+ File.separator +"Project";
             var repositoryURL = "https://gitlab.com/Contributor/Project";
             assertThrows(NullPointerException.class,()->jGit.cloneRepository(null,localPath));
             assertThrows(NullPointerException.class,()->jGit.cloneRepository(repositoryURL,null));
