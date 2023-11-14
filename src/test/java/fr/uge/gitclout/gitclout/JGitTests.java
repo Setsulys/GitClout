@@ -117,8 +117,8 @@ public class JGitTests {
         public void checkLocalPathFromGitURL()  throws IOException{
             String repositoryURL = "https://gitlab.com/Contributor/Project";
             String repositoryURL2 = "https://gitlab.com/Contributor/Project2";
-            assertEquals(Paths.get("").toAbsolutePath().getParent()+"\\Contributor\\Project",sW.localPathFromURI(repositoryURL));
-            assertNotEquals(Paths.get("").toAbsolutePath().getParent()+"\\Contributor\\Project",sW.localPathFromURI(repositoryURL2));
+            assertEquals(Paths.get("").toAbsolutePath()+"\\GitDataBase\\Contributor\\Project",sW.localPathFromURI(repositoryURL));
+            assertNotEquals(Paths.get("").toAbsolutePath()+"\\GitDataBase\\Contributor\\Project",sW.localPathFromURI(repositoryURL2));
         }
 
         @Test

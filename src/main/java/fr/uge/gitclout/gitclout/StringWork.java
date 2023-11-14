@@ -36,7 +36,7 @@ public class StringWork {
         //System.out.println(Arrays.stream(test).map(e -> e).collect(Collectors.joining(", ","[","]")));
         String name = test[test.length-2]; //get owner name
         String projectName = test[test.length-1].replace(".git", ""); // remove .git at the end of the string
-        String localPath = Paths.get("").toAbsolutePath().getParent().toString() +File.separator+name +File.separator+projectName;
+        String localPath = Paths.get("").toAbsolutePath().toString() +"\\GitDataBase"+File.separator+name +File.separator+projectName;
         //System.out.println(localPath);
         Files.createDirectories(Paths.get(localPath));
         return localPath;
