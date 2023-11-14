@@ -130,10 +130,10 @@ public class JGitTests {
 
     @Nested
     public class JGitBlameTest{
-        private JGitBlame jGit = new JGitBlame();
 
         @Test
         public void precondition() {
+            var jGit = new JGitBlame();
             var localPath = Paths.get("").toAbsolutePath().getParent()+"\\Contributor\\Project";
             var repositoryURL = "https://gitlab.com/Contributor/Project";
             assertThrows(NullPointerException.class,()->jGit.cloneRepository(null,localPath));

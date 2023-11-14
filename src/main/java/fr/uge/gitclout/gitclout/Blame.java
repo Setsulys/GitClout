@@ -136,6 +136,15 @@ public class Blame {
         treeWalk.setRecursive(true);
     }
 
+    /**
+     * Blame on the project with specific tag
+     * @throws MissingObjectException
+     * @throws IncorrectObjectTypeException
+     * @throws CorruptObjectException
+     * @throws IOException
+     * @throws GitAPIException
+     */
+
     public void blame() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException{
         var sW = new StringWork();
         while(treeWalk.next()) {
