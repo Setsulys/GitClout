@@ -27,27 +27,32 @@ public class JGitTests {
 
     @Nested
     public class BlameTest{
-        private final JGitBlame jgit = new JGitBlame();
-        private final StringWork sW = new StringWork();
         private final Extensions extension = Extensions.JAVA;
+        private Blame blame = initialise();
 
-        private final String gitPath;
-        private final Repository repos;
-        private final Git git;
-        private final List<Ref> getTags;
-        private final RevTree tagTree;
-        private final TreeWalk treeWalk;
-        private final Blame blame;
+        private Git git;
+        private List<Ref> getTags;
 
-        @SuppressWarnings("resource")
-        private BlameTest() throws IOException, GitAPIException {
-            gitPath = sW.localPathFromURI("https://gitlab.com/Setsulys/the_light_corridor.git") + "/.git";
-            repos = jgit.getRepos(gitPath);
+        public BlameTest() throws GitAPIException, IOException {
+        }
+
+        public Blame initialise() throws GitAPIException, IOException {
+            JGitBlame jGit = new JGitBlame();
+            StringWork sW = new StringWork();
+            String repositoryURL = "https://gitlab.com/Setsulys/the_light_corridor.git";
+            String localPath = sW.localPathFromURI(repositoryURL);
+            String gitPath = localPath + "/.git";
+            File tmpDir = new File(gitPath);
+            Repository repos = jGit.getRepos(gitPath);
             git = new Git(repos);
-            getTags =jgit.getTag(git);
-            tagTree = new RevWalk(git.getRepository()).parseCommit(getTags.getFirst().getObjectId()).getTree();
-            treeWalk = new TreeWalk(git.getRepository()); //init the treewalk
-            blame = new Blame(git, treeWalk, tagTree, getTags);
+            jGit.checkAndClone(localPath, tmpDir, repositoryURL);
+            getTags = jGit.getTag(git);
+            if(getTags.isEmpty()) {
+                return null;
+            }
+            var tagTree = new RevWalk(git.getRepository()).parseCommit(getTags.getFirst().getObjectId()).getTree();
+            var treeWalk = new TreeWalk(git.getRepository()); //init the treewalk
+            return new Blame(git, treeWalk, tagTree, getTags);
         }
 
         @Test
@@ -59,13 +64,15 @@ public class JGitTests {
             strings.add("/* * TEST TRUE 3* */");
             strings.add("/** TEST TRUE 4*/ System.out.println(\"aaaa\");"); //valide quand on a pas le \"aaaa\"
             //strings.add("/** TEST 5 *//** System.out.print(\"Faux positif\"); */");
+            blame.blame();
             blame.checkComments(extension, strings, "Tests");
             assertEquals(strings.size()-1,blame.nbCommentsForFileMap().get("Tests"));
 
         }
 
         @Test
-        public void checkWithFalse() {
+        public void checkWithFalse() throws GitAPIException, IOException {
+
             var strings = new ArrayList<String>();
             strings.add("System.out.println(\"/* TEST FALSE 0\");");
             strings.add("System.out.println(\"// TEST FALSE 1\");");
@@ -74,29 +81,34 @@ public class JGitTests {
             strings.add("System.out.println(\"/* TEST FALSE 4 */\");");
             strings.add("/ / TEST FALSE 5");
             strings.add("Sytem.out.println(\" \" /* TEST FALSE 6 \"*/ + \" \");");
+            blame.blame();
             blame.checkComments(extension, strings, "Tests");
             assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
         }
 
         @Test
-        public void checkCodeAndCommentsTogether() {
+        public void checkCodeAndCommentsTogether() throws GitAPIException, IOException {
             var strings = new ArrayList<String>();
             strings.add("System.out.println(\"TEST 0 \"); /* TEST 0 */");
             strings.add("System.out.println(\"/* TEST FALSE 5 */\"); /* TEST FALSE 5 */");
             strings.add("/** TEST 11 */ System.out.println(\"TEST 11\");");
+            blame.blame();
             blame.checkComments(extension, strings, "Tests");
             assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
         }
 
         @Test
-        public void checkListPrecondition() {
+        public void checkListPrecondition() throws GitAPIException, IOException {
             var strings = new ArrayList<String>();
             strings.add(null);
+            blame.blame();
             assertThrows(NullPointerException.class,()-> blame.checkComments(extension, strings, "Tests"));
         }
 
         @Test
-        public void precondition() {
+        public void precondition() throws IOException, GitAPIException {
+            var tagTree = new RevWalk(git.getRepository()).parseCommit(getTags.getFirst().getObjectId()).getTree();
+            var treeWalk = new TreeWalk(git.getRepository()); //init the treewalk
             assertThrows(NullPointerException.class, ()-> new Blame(null, treeWalk, tagTree, getTags));
             assertThrows(NullPointerException.class, ()-> new Blame(git, null, tagTree, getTags));
             assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, null, getTags));

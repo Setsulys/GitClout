@@ -1,7 +1,8 @@
 <template>
+  <img src="./assets/gclout.png">
   <HomePage/>
   <div id="app">
-    <img src="./assets/gclout.png">
+
   </div>
 </template>
 
@@ -24,5 +25,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+img{
+  width: 18%;
 }
 </style>

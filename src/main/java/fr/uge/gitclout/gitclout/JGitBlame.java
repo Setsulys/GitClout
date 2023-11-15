@@ -2,10 +2,13 @@ package fr.uge.gitclout.gitclout;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
@@ -18,6 +21,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
+
 
 public class JGitBlame {
 
@@ -107,6 +111,16 @@ public class JGitBlame {
         }
     }
 
+    public static boolean isGitRepo(String url){
+        Objects.requireNonNull(url);
+        Pattern pattern = Pattern.compile("\\.git$");
+        Matcher matcher = pattern.matcher(url);
+        var match =matcher.find();
+        if(!match){
+            System.out.println("Ce n'est pas un repo git");
+        }
+        return match;
+    }
 
     /**
      * Display the blame
@@ -123,10 +137,13 @@ public class JGitBlame {
         System.out.println(blame.getTotalBlame()+"\n");
     }
 
-    public void run() {
+    public void run(String repositoryURL) {
         try {
             StringWork sW = new StringWork();
-            String repositoryURL = "https://gitlab.com/Setsulys/the_light_corridor.git";
+            if(!JGitBlame.isGitRepo(repositoryURL)){
+                return;
+            }
+            //String repositoryURL = "https://gitlab.com/Setsulys/the_light_corridor.git";
             String localPath = sW.localPathFromURI(repositoryURL);
             String gitPath  = localPath + "/.git";
             File tmpDir  = new File(gitPath);
@@ -154,6 +171,6 @@ public class JGitBlame {
 
     public static void main(String[] args) {
         var jgit = new JGitBlame();
-        jgit.run();
+        jgit.run("https://gitlab.com/Setsulys/the_light_corridor.git");
     }
 }

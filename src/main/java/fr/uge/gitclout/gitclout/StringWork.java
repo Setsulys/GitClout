@@ -1,5 +1,7 @@
 package fr.uge.gitclout.gitclout;
 
+
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,12 +34,12 @@ public class StringWork {
      */
     public String localPathFromURI(String repositoryURL) throws IOException {
         Objects.requireNonNull(repositoryURL);
+
         String[] test = repositoryURL.split("/",5);
         //System.out.println(Arrays.stream(test).map(e -> e).collect(Collectors.joining(", ","[","]")));
         String name = test[test.length-2]; //get owner name
         String projectName = test[test.length-1].replace(".git", ""); // remove .git at the end of the string
         String localPath = Paths.get("").toAbsolutePath().toString() +File.separator + "GitDataBase"+ File.separator + name + File.separator + projectName;
-        //System.out.println(localPath);
         Files.createDirectories(Paths.get(localPath));
         return localPath;
     }
