@@ -1,4 +1,4 @@
-package fr.uge.gitclout.gitclout;
+package fr.uge.gitclout.gitclout.blame;
 
 import java.util.Objects;
 
@@ -18,21 +18,22 @@ public record FileExtension(String file, String extension) {
         Objects.requireNonNull(extension);
         return switch(extension) {
             case "c" -> Extensions.C;
-            case "h" -> Extensions.HEADER;
+            case "h" -> Extensions.C;
             case "java" -> Extensions.JAVA;
             case "js" -> Extensions.JAVASCRIPT;
             case "html" -> Extensions.HTML;
             case "css" -> Extensions.CSS;
             case "py" -> Extensions.PYTHON;
             case "cpp" -> Extensions.CPLUSPLUS;
+            case "hpp" -> Extensions.CPLUSPLUS;
             case "c++" -> Extensions.CPLUSPLUS;
+            case "cc" -> Extensions.CPLUSPLUS;
+            case "hh" -> Extensions.CPLUSPLUS;
             case "php" -> Extensions.PHP;
             case "ts" -> Extensions.TYPESCRPIPT;
             case "ml" -> Extensions.OCAML;
-            case "hs" -> Extensions.HASKELL;
-            case "lhs" -> Extensions.HASKELL;
-            case "txt" -> Extensions.TEXT;
-            case "md" -> Extensions.MARKDOWN;
+            case "rb" -> Extensions.RUBY;
+            case "cs" -> Extensions.CSHARP;
             default -> Extensions.OTHER;
         };
     }

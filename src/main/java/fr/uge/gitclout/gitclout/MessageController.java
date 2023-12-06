@@ -1,5 +1,5 @@
 package fr.uge.gitclout.gitclout;
-
+import fr.uge.gitclout.gitclout.blame.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

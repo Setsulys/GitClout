@@ -1,20 +1,17 @@
-package fr.uge.gitclout.gitclout;
+package fr.uge.gitclout.gitclout.blame;
 
 public enum Extensions {
     C,
-    HEADER,
     JAVA,
     JAVASCRIPT,
     HTML,
     CSS,
     PYTHON,
-    SQL,
     CPLUSPLUS,
     PHP,
     TYPESCRPIPT,
     OCAML,
-    HASKELL,
-    TEXT,
-    MARKDOWN,
+    CSHARP,
+    RUBY,
     OTHER
 }

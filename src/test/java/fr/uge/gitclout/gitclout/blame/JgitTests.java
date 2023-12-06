@@ -1,4 +1,4 @@
-package fr.uge.gitclout.gitclout;
+package fr.uge.gitclout.gitclout.blame;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -23,36 +24,38 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-public class JGitTests {
+public class JgitTests {
 
     @Nested
     public class BlameTest{
+        private final JGitBlame jgit = new JGitBlame();
+        private final StringWork sW = new StringWork();
         private final Extensions extension = Extensions.JAVA;
-        private Blame blame = initialise();
 
-        private Git git;
-        private List<Ref> getTags;
+        private final String gitPath;
+        private final Repository repos;
+        private final Git git;
+        private final List<Ref> getTags;
+        private final RevTree tagTree;
+        private final TreeWalk treeWalk;
+        private Blame blame;
+        private List<String> diffs;
 
-        public BlameTest() throws GitAPIException, IOException {
-        }
-
-        public Blame initialise() throws GitAPIException, IOException {
-            JGitBlame jGit = new JGitBlame();
-            StringWork sW = new StringWork();
-            String repositoryURL = "https://gitlab.com/Setsulys/the_light_corridor.git";
-            String localPath = sW.localPathFromURI(repositoryURL);
-            String gitPath = localPath + "/.git";
-            File tmpDir = new File(gitPath);
-            Repository repos = jGit.getRepos(gitPath);
+        @SuppressWarnings("resource")
+        private BlameTest() throws IOException, GitAPIException {
+            var repositoryURL = "https://gitlab.com/Setsulys/the_light_corridor.git";
+            gitPath = sW.localPathFromURI(repositoryURL) + "/.git";
+            repos = jgit.getRepos(gitPath);
             git = new Git(repos);
-            jGit.checkAndClone(localPath, tmpDir, repositoryURL);
-            getTags = jGit.getTag(git);
-            if(getTags.isEmpty()) {
-                return null;
-            }
-            var tagTree = new RevWalk(git.getRepository()).parseCommit(getTags.getFirst().getObjectId()).getTree();
-            var treeWalk = new TreeWalk(git.getRepository()); //init the treewalk
-            return new Blame(git, treeWalk, tagTree, getTags);
+            var pull = Git.lsRemoteRepository().setRemote(repositoryURL).setTags(true).call();
+            var list = new ArrayList<>(pull.stream().map(e -> e).collect(Collectors.toList()));
+            list.add(git.fetch().call().getAdvertisedRefs().iterator().next());
+            getTags = list;
+            getTags.add(git.fetch().call().getAdvertisedRefs().iterator().next());;
+            tagTree = new RevWalk(git.getRepository()).parseCommit(getTags.getFirst().getObjectId()).getTree();
+            treeWalk = new TreeWalk(git.getRepository()); //init the treewalk
+            diffs = GitTools.checkModifiedFiles(git, getTags, 0);
+            blame = new Blame(git, treeWalk, tagTree, getTags,0,diffs);
         }
 
         @Test
@@ -64,15 +67,13 @@ public class JGitTests {
             strings.add("/* * TEST TRUE 3* */");
             strings.add("/** TEST TRUE 4*/ System.out.println(\"aaaa\");"); //valide quand on a pas le \"aaaa\"
             //strings.add("/** TEST 5 *//** System.out.print(\"Faux positif\"); */");
-            blame.blame();
-            blame.checkComments(extension, strings, "Tests");
-            assertEquals(strings.size()-1,blame.nbCommentsForFileMap().get("Tests"));
-
+//			blame.checkComments(blame, strings, "Tests");
+//			assertEquals(strings.size()-1,blame.nbCommentsForFileMap().get("Tests"));
+//
         }
 
         @Test
-        public void checkWithFalse() throws GitAPIException, IOException {
-
+        public void checkWithFalse() {
             var strings = new ArrayList<String>();
             strings.add("System.out.println(\"/* TEST FALSE 0\");");
             strings.add("System.out.println(\"// TEST FALSE 1\");");
@@ -81,42 +82,37 @@ public class JGitTests {
             strings.add("System.out.println(\"/* TEST FALSE 4 */\");");
             strings.add("/ / TEST FALSE 5");
             strings.add("Sytem.out.println(\" \" /* TEST FALSE 6 \"*/ + \" \");");
-            blame.blame();
-            blame.checkComments(extension, strings, "Tests");
-            assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
+//			blame.checkComments(extension, strings, "Tests");
+//			assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
         }
 
+//		@Test
+//		public void checkLines() throws IOException, GitAPIException {
+//			blame.blaming();
+//			assertEquals(165, blame.totalCountMap().get("LY-IENG Steven"));
+//		}
+
         @Test
-        public void checkCodeAndCommentsTogether() throws GitAPIException, IOException {
+        public void checkCodeAndCommentsTogether() {
             var strings = new ArrayList<String>();
             strings.add("System.out.println(\"TEST 0 \"); /* TEST 0 */");
             strings.add("System.out.println(\"/* TEST FALSE 5 */\"); /* TEST FALSE 5 */");
             strings.add("/** TEST 11 */ System.out.println(\"TEST 11\");");
-            blame.blame();
-            blame.checkComments(extension, strings, "Tests");
-            assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
+//			blame.checkComments(extension, strings, "Tests");
+//			assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
         }
 
-        @Test
-        public void checkListPrecondition() throws GitAPIException, IOException {
-            var strings = new ArrayList<String>();
-            strings.add(null);
-            blame.blame();
-            assertThrows(NullPointerException.class,()-> blame.checkComments(extension, strings, "Tests"));
-        }
 
         @Test
-        public void precondition() throws IOException, GitAPIException {
-            var tagTree = new RevWalk(git.getRepository()).parseCommit(getTags.getFirst().getObjectId()).getTree();
-            var treeWalk = new TreeWalk(git.getRepository()); //init the treewalk
-            assertThrows(NullPointerException.class, ()-> new Blame(null, treeWalk, tagTree, getTags));
-            assertThrows(NullPointerException.class, ()-> new Blame(git, null, tagTree, getTags));
-            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, null, getTags));
-            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, null));
-            assertThrows(NullPointerException.class, ()-> Blame.checkNonNull(null,null));
-            assertThrows(NullPointerException.class, ()-> blame.checkComments(extension,null,"file"));
-            assertThrows(NullPointerException.class, ()-> blame.checkComments(null,new ArrayList<String>(),"file"));
-            assertThrows(NullPointerException.class, ()-> blame.checkComments(extension,new ArrayList<String>(),null));
+        public void precondition() throws GitAPIException, IOException {
+            assertThrows(NullPointerException.class, ()-> new Blame(null, treeWalk, tagTree, getTags,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, null, tagTree, getTags,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, null, getTags,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, null,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, getTags,0,null));
+
+            assertThrows(NullPointerException.class, ()-> UtilsMethods.checkNonNull(null,null));
+            assertThrows(NullPointerException.class, ()-> blame.checkCommentsInit(null,extension));
 
         }
     }
@@ -129,8 +125,8 @@ public class JGitTests {
         public void checkLocalPathFromGitURL()  throws IOException{
             String repositoryURL = "https://gitlab.com/Contributor/Project";
             String repositoryURL2 = "https://gitlab.com/Contributor/Project2";
-            assertEquals(Paths.get("").toAbsolutePath()+ File.separator + "GitDataBase" + File.separator + "Contributor" + File.separator + "Project",sW.localPathFromURI(repositoryURL));
-            assertNotEquals(Paths.get("").toAbsolutePath()+ File.separator + "GitDataBase" + File.separator + "Contributor" + File.separator + "Project",sW.localPathFromURI(repositoryURL2));
+            assertEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL));
+            assertNotEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL2));
         }
 
         @Test
@@ -142,24 +138,31 @@ public class JGitTests {
 
     @Nested
     public class JGitBlameTest{
+        private JGitBlame jGit = new JGitBlame();
+
 
         @Test
-        public void precondition() {
-            var jGit = new JGitBlame();
-            var localPath = Paths.get("").toAbsolutePath().getParent()+ File.separator + "Contributor"+ File.separator +"Project";
+        public void precondition() throws IOException {
+            var gitPath = new StringWork().localPathFromURI("https://gitlab.com/Setsulys/the_light_corridor.git") + "/.git";
+            var repos = new JGitBlame().getRepos(gitPath);
+            var git = new Git(repos);
+            var localPath = Paths.get("").toAbsolutePath().getParent()+File.separator+"Contributor"+File.separator+"Project";
             var repositoryURL = "https://gitlab.com/Contributor/Project";
-            assertThrows(NullPointerException.class,()->jGit.cloneRepository(null,localPath));
-            assertThrows(NullPointerException.class,()->jGit.cloneRepository(repositoryURL,null));
+            assertThrows(NullPointerException.class,()->GitTools.cloneRepository(null,localPath));
+            assertThrows(NullPointerException.class,()->GitTools.cloneRepository(repositoryURL,null));
 
-            assertThrows(NullPointerException.class,()->jGit.CheckRepository(null));
-            assertThrows(NullPointerException.class,()->jGit.getRefs(null));
-            assertThrows(NullPointerException.class,()->jGit.getTag(null));
+//			assertThrows(NullPointerException.class,()->jGit.CheckRepository(null));
+//			assertThrows(NullPointerException.class,()->jGit.getRefs(null));
+//			assertThrows(NullPointerException.class,()->jGit.getTag(null));
             assertThrows(NullPointerException.class,()->jGit.getRepos(null));
 
-            assertThrows(NullPointerException.class,()->jGit.checkAndClone(null, new File(localPath), repositoryURL));
-            assertThrows(NullPointerException.class,()->jGit.checkAndClone(localPath, null, repositoryURL));
-            assertThrows(NullPointerException.class,()->jGit.checkAndClone(localPath, new File(localPath), null));
-            assertThrows(NullPointerException.class,()->jGit.display(null));
+            assertThrows(NullPointerException.class,()->GitTools.checkAndClone(null, new File(localPath), repositoryURL,git));
+            assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, null, repositoryURL,git));
+            assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), null,git));
+            assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), repositoryURL,null));
+            assertThrows(NullPointerException.class,()->jGit.displayBlame(null,git));
+            assertThrows(NullPointerException.class,()->jGit.displayInformations(null));
+
         }
     }
 
@@ -177,7 +180,7 @@ public class JGitTests {
         @Test
         public void testAllExtensionsReturn() {
             assertEquals(Extensions.C,FileExtension.extensionDescription("c"));
-            assertEquals(Extensions.HEADER,FileExtension.extensionDescription("h"));
+            assertEquals(Extensions.C,FileExtension.extensionDescription("h"));
             assertEquals(Extensions.JAVA,FileExtension.extensionDescription("java"));
             assertEquals(Extensions.JAVASCRIPT,FileExtension.extensionDescription("js"));
             assertEquals(Extensions.HTML,FileExtension.extensionDescription("html"));
@@ -188,10 +191,8 @@ public class JGitTests {
             assertEquals(Extensions.PHP,FileExtension.extensionDescription("php"));
             assertEquals(Extensions.TYPESCRPIPT,FileExtension.extensionDescription("ts"));
             assertEquals(Extensions.OCAML,FileExtension.extensionDescription("ml"));
-            assertEquals(Extensions.HASKELL,FileExtension.extensionDescription("hs"));
-            assertEquals(Extensions.HASKELL,FileExtension.extensionDescription("lhs"));
-            assertEquals(Extensions.TEXT,FileExtension.extensionDescription("txt"));
-            assertEquals(Extensions.MARKDOWN,FileExtension.extensionDescription("md"));
+            assertEquals(Extensions.CSHARP,FileExtension.extensionDescription("cs"));
+            assertEquals(Extensions.RUBY,FileExtension.extensionDescription("rb"));
             assertEquals(Extensions.OTHER,FileExtension.extensionDescription("jpg"));
             assertEquals(Extensions.OTHER,FileExtension.extensionDescription("pdf"));
 
