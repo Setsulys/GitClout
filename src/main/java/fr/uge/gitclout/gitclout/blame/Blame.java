@@ -117,23 +117,21 @@ public class Blame {
 	 * @return a regex of the language comments
 	 */
 	private String regex(Extensions extension) {
-//		return switch(extension) {
-//		case Extensions.C -> "";
-//		case Extensions.JAVA -> "";
-//		case Extensions.JAVASCRIPT-> "";
-//		case Extensions.HTML -> "";
-//		case Extensions.CSS -> "";
-//		case Extensions.PYTHON -> "";
-//		case Extensions.CPLUSPLUS -> "";
-//		case Extensions.CPLUSPLUS ;
-//		case Extensions.PHP -> "";
-//		case Extensions.TYPESCRPIPT -> "";
-//		case Extensions.OCAML -> "";
-//		case Extensions.RUBY -> "";
-//		case Extensions.CSHARP -> "";
-//		default ->  "";
-//		};
-		return "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
+		return switch(extension) {
+		case Extensions.C -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
+		case Extensions.JAVA -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
+		case Extensions.JAVASCRIPT-> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
+		case Extensions.HTML -> "(?!.*([\"']).*\\1.*)(?:^\s*<!--|<!--(?:[^-]|-(?!->))*-->)";
+		case Extensions.CSS -> "(?!.*([\"']).*\\1.*)(?:^\s*\\/\\*.*?\\*\\/)";
+		case Extensions.PYTHON -> "(?!.*([\"']).*\\1.*)(?:^\s*#.*|^\s*(?:'''|\"\"\")(?:[^\n]*\\w[^\n]*)*(?:'''|\"\"\"))";
+		case Extensions.CPLUSPLUS -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
+		case Extensions.PHP -> "(?!.*([\"']).*\\1.*)(?:^\s*(?:\\/\\/|#|\\/\\*).*)";
+		case Extensions.TYPESCRPIPT -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
+		case Extensions.RUBY -> "(#.*$|^=begin(\s(.?))*(=end\s*$))";
+		case Extensions.CSHARP -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
+		default ->  "";
+		};
+
 	}
 
 	/**
