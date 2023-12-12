@@ -35,9 +35,11 @@ public class Blame {
 	/**
 	 * Make the git blame on all the files of the directory
 	 * @param git
-	 * @param treewalk
-	 * @param tagtree
-	 * @param currentTag
+	 * @param treeWalk
+	 * @param tagTree
+	 * @Param allTag
+	 * @param currentTagPosition
+	 * @Param filesChanged
 	 * @throws MissingObjectException
 	 * @throws IncorrectObjectTypeException
 	 * @throws CorruptObjectException
@@ -82,34 +84,32 @@ public class Blame {
 		var sW = new StringWork();
 		while(treeWalk.next()) {
 			String filePath = treeWalk.getPathString();
-
-			if(sW.splitExtention(filePath)!=null) {
-				var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
-				if(FileExtension.extensionDescription(extension)!=Extensions.OTHER) {
-					if(currentTagPosition==0) {
-						subBlame(filePath,extension);
-					}
-					else if(changedFiles.contains(filePath)) {
-						System.out.println("Tag :"+ currentTag.getName() + "--"+filePath);
-						subBlame(filePath,extension);//check if the line in the file is a comment to increment a comment line value
-					}
-					else {
-						System.out.println(filePath +" HAVE NOT CHANGED FOR " + currentTag.getName());
-					}
-				}
-				else {
-					addFilesForExtensions(FileExtension.extensionDescription(extension), filePath);
-				}
-			}
+			checkBlame(sW,filePath);
 		}
 	}
 
-	public void subBlame(String filePath, String extension) throws GitAPIException {
-		var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call(); //blame the curent file
-		addFilesForExtensions(FileExtension.extensionDescription(extension), filePath);
-		checkCommentsInit(blameResult,FileExtension.extensionDescription(extension)); //check if the line in the file is a comment to increment a comment line value
-
+	/**
+	 *
+	 * @param sW
+	 * @param filePath
+	 * @throws GitAPIException
+	 */
+	private void checkBlame(StringWork sW,String filePath) throws GitAPIException {
+		if(sW.splitExtention(filePath)!=null) {
+			var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
+			if(FileExtension.extensionDescription(extension)!=Extensions.OTHER) {
+				var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
+				if(currentTagPosition==0) { //we need to blame the first tag
+					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
+				}
+				else if(changedFiles.contains(filePath)) {//Check if the current file is modified
+					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
+				}
+			}
+			addFilesForExtensions(FileExtension.extensionDescription(extension), filePath);
+		}
 	}
+
 
 	/**
 	 * Check the file extension and return a regex for the language

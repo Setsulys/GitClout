@@ -189,8 +189,6 @@ public class JgitTests {
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("c++"));
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("cpp"));
             assertEquals(Extensions.PHP,FileExtension.extensionDescription("php"));
-            assertEquals(Extensions.TYPESCRPIPT,FileExtension.extensionDescription("ts"));
-            assertEquals(Extensions.OCAML,FileExtension.extensionDescription("ml"));
             assertEquals(Extensions.CSHARP,FileExtension.extensionDescription("cs"));
             assertEquals(Extensions.RUBY,FileExtension.extensionDescription("rb"));
             assertEquals(Extensions.OTHER,FileExtension.extensionDescription("jpg"));

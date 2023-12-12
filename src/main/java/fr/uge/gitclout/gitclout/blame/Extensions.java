@@ -10,7 +10,6 @@ public enum Extensions {
     CPLUSPLUS,
     PHP,
     TYPESCRPIPT,
-    OCAML,
     CSHARP,
     RUBY,
     OTHER

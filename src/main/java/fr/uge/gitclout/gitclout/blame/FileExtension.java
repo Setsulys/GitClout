@@ -31,7 +31,6 @@ public record FileExtension(String file, String extension) {
             case "hh" -> Extensions.CPLUSPLUS;
             case "php" -> Extensions.PHP;
             case "ts" -> Extensions.TYPESCRPIPT;
-            case "ml" -> Extensions.OCAML;
             case "rb" -> Extensions.RUBY;
             case "cs" -> Extensions.CSHARP;
             default -> Extensions.OTHER;
