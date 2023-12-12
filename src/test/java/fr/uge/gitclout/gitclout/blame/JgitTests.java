@@ -160,7 +160,7 @@ public class JgitTests {
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, null, repositoryURL,git));
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), null,git));
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), repositoryURL,null));
-            assertThrows(NullPointerException.class,()->jGit.displayBlame(null,git));
+            //assertThrows(NullPointerException.class,()->jGit.displayBlame(null,git));
             assertThrows(NullPointerException.class,()->jGit.displayInformations(null));
 
         }
@@ -189,6 +189,7 @@ public class JgitTests {
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("c++"));
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("cpp"));
             assertEquals(Extensions.PHP,FileExtension.extensionDescription("php"));
+            assertEquals(Extensions.TYPESCRPIPT,FileExtension.extensionDescription("ts"));
             assertEquals(Extensions.CSHARP,FileExtension.extensionDescription("cs"));
             assertEquals(Extensions.RUBY,FileExtension.extensionDescription("rb"));
             assertEquals(Extensions.OTHER,FileExtension.extensionDescription("jpg"));

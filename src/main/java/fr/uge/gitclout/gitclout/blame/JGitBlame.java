@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
@@ -27,6 +26,7 @@ public class JGitBlame {
     private final ArrayList<Ref> tagOfProject = new ArrayList<>();
     private final HashMap<Ref,java.sql.Date> tagDate = new HashMap<>();
     private final Object lock = new Object();
+    private final ArrayList<Blame> blameList = new ArrayList<>();
 
 
     /**
@@ -90,7 +90,7 @@ public class JGitBlame {
      * @throws IOException
      * @throws GitAPIException
      */
-    public void displayBlame(Blame blame,Git git) throws IOException, GitAPIException {
+    public void displayBlame(Blame blame) throws IOException, GitAPIException {
         UtilsMethods.checkNonNull(blame);
         synchronized(lock) {
             System.out.println("\n\n---------------------------------------------------------------\n---------------------------------------------------------------");
@@ -118,46 +118,26 @@ public class JGitBlame {
 
 
 
-    public void working(Blame blame,Git git) throws IOException, GitAPIException {
-        synchronized (lock) {
-            blame.blaming();
-            displayBlame(blame,git);
-        }
-    }
+
 
 
     public void inerRun(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
         UtilsMethods.checkNonNull(git,allTag);
         try {
-            ExecutorService executor = Executors.newFixedThreadPool(16);
-            executor.submit(()->{
-                try {
-                    @SuppressWarnings("resource")
-                    var tagtree = new RevWalk(git.getRepository()).parseCommit(allTag.get(actualTag).getObjectId()).getTree(); //take for the first tag
-                    var treewalk = new TreeWalk(git.getRepository()); //init the treewalk
-                    var filesChange = GitTools.checkModifiedFiles(git, tagOfProject, actualTag);
-                    var blame = new Blame(git,treewalk,tagtree,allTag,actualTag, filesChange);
-                    working(blame,git);
-                }catch(IOException e) {
-                    throw new AssertionError(e);
-                } catch (GitAPIException gae) {
-                    throw new AssertionError(gae);
-                }
-            });
-            executor.shutdown();
-            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+            @SuppressWarnings("resource")
+            var tagtree = new RevWalk(git.getRepository()).parseCommit(allTag.get(actualTag).getObjectId()).getTree(); //take for the first tag
+            var treewalk = new TreeWalk(git.getRepository()); //init the treewalk
+            var filesChange = GitTools.checkModifiedFiles(git, tagOfProject, actualTag);
+            var blame = new Blame(git,treewalk,tagtree,allTag,actualTag, filesChange);
+            blameList.add(blame);
+            blame.blaming();
         }catch(Exception e ) {
             throw new AssertionError(e);
         }
     }
 
-
     public void run(String repositoryURL) {
         try {
-            if(!UtilsMethods.isGitRepo(repositoryURL)){
-                return;
-            }
-            var threads = new ArrayList<Thread>();
             String localPath = new StringWork().localPathFromURI(repositoryURL);
             String gitPath  = localPath + "/.git";
             File tmpDir  = new File(gitPath);
@@ -167,34 +147,43 @@ public class JGitBlame {
             displayInformations(git);
             checkRepositoryTags(git, repositoryURL);
             dateFromTag(git, tagOfProject);
+            var executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()-5);
+            var task = new ArrayList<Future>();
             for(var i =0; i < tagOfProject.size();i++) {
-                var j=i;
-                threads.add(Thread.ofPlatform().start(()->{
+                var j= i;
+                Future future = executors.submit(()->{
                     try {
                         inerRun(git,tagOfProject,j);
                     } catch (IOException | GitAPIException e) {
                         throw new AssertionError(e);
                     }
-                }));
+                });
+                task.add(future);
             }
-            for(var thread : threads) {
-                thread.join();
+            for(var future : task) {
+                future.get();
             }
-//			while(!allTags.isEmpty()) {
-//				inerRun(git, allTags);
-//			}
+            executors.shutdown();
         } catch (Exception e) {
             throw new AssertionError(e);
         }
+        System.out.println("work done");
     }
 
 
     public static void main(String[] args) throws IOException {
         var jgit = new JGitBlame();
-        jgit.run("https://gitlab.com/Setsulys/the_light_corridor.git");
-        //jgit.run("https://github.com/openjdk/jdk.git");
+        //jgit.run("https://gitlab.com/Setsulys/the_light_corridor.git");
+        jgit.run("https://github.com/openjdk/jdk.git");
         //jgit.run("https://gitlab.ow2.org/asm/asm.git");
     }
+
+//	public void working(Blame blame,Git git) throws IOException, GitAPIException {
+////synchronized (lock) {
+//	blame.blaming();
+////	displayBlame(blame,git);
+////}
+//}
 
 //	/**
 //	 * Get all the tags of the repository

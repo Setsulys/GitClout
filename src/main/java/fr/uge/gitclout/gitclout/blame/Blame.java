@@ -37,9 +37,9 @@ public class Blame {
 	 * @param git
 	 * @param treeWalk
 	 * @param tagTree
-	 * @Param allTag
+	 * @param allTag
+	 * @param filesChanged
 	 * @param currentTagPosition
-	 * @Param filesChanged
 	 * @throws MissingObjectException
 	 * @throws IncorrectObjectTypeException
 	 * @throws CorruptObjectException
@@ -85,24 +85,21 @@ public class Blame {
 		while(treeWalk.next()) {
 			String filePath = treeWalk.getPathString();
 			checkBlame(sW,filePath);
+
 		}
 	}
 
-	/**
-	 *
-	 * @param sW
-	 * @param filePath
-	 * @throws GitAPIException
-	 */
 	private void checkBlame(StringWork sW,String filePath) throws GitAPIException {
 		if(sW.splitExtention(filePath)!=null) {
 			var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
 			if(FileExtension.extensionDescription(extension)!=Extensions.OTHER) {
 				var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
 				if(currentTagPosition==0) { //we need to blame the first tag
+					System.out.println(changedFiles.size()+" & " +filePath +" new ");
 					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
 				}
 				else if(changedFiles.contains(filePath)) {//Check if the current file is modified
+					System.out.println(changedFiles.size()+" & " +filePath +" has changed ");
 					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
 				}
 			}
@@ -190,6 +187,7 @@ public class Blame {
 			blameData.add(new Data(currentTag, contributor,file,line!=null?line:0,comments!=null?comments:0));
 		}
 	}
+
 
 
 
