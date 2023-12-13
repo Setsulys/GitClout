@@ -33,18 +33,17 @@ public class Blame {
 	//private final HashMap<Ref,java.sql.Date> tagDate = new HashMap<>();
 
 	/**
-	 * Make the git blame on all the files of the directory
-	 * @param git
+	 * Constructor of blame class
+	 * @param git the git on what we blame
 	 * @param treeWalk
 	 * @param tagTree
-	 * @param allTag
-	 * @param filesChanged
-	 * @param currentTagPosition
+	 * @param allTag list of all tags, chronologicaly sorted
+	 * @param currentTagPosition is the current position of the tag in the allTag list
+	 * @param filesChanged list of changed files
 	 * @throws MissingObjectException
 	 * @throws IncorrectObjectTypeException
 	 * @throws CorruptObjectException
 	 * @throws IOException
-	 * @throws GitAPIException
 	 */
 	public Blame(Git git, TreeWalk treeWalk, RevTree tagTree,List<Ref> allTag,int currentTagPosition,List<String> filesChanged) throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException{
 		UtilsMethods.checkNonNull(git,treeWalk,tagTree,allTag,filesChanged);
@@ -59,9 +58,9 @@ public class Blame {
 	}
 
 	/**
-	 * Check the extension for each files and put it in a map for later use
-	 * @param extension
-	 * @param filePath
+	 * This method take a file and put it in the class map to know what is this file language
+	 * @param extension the extension of the file (like file.java, the extension is java)
+	 * @param filePath name of the file
 	 */
 	private void addFilesForExtensions(Extensions extension,String filePath) {
 		UtilsMethods.checkNonNull(extension,filePath);
@@ -73,7 +72,7 @@ public class Blame {
 	}
 
 	/**
-	 * Blame on the project with specific tag
+	 * Principal method of this class that check the blame of git files, this will look upon the lines of codes and lines of comments
 	 * @throws MissingObjectException
 	 * @throws IncorrectObjectTypeException
 	 * @throws CorruptObjectException
@@ -89,6 +88,13 @@ public class Blame {
 		}
 	}
 
+	/**
+	 * check if a file has been modified, deleted or added
+	 * if the condition is matching the method will blame the file
+	 * @param sW is the stringWork class that permit to split or do anything on the file
+	 * @param filePath name of the file
+	 * @throws GitAPIException
+	 */
 	private void checkBlame(StringWork sW,String filePath) throws GitAPIException {
 		if(sW.splitExtention(filePath)!=null) {
 			var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
@@ -109,8 +115,8 @@ public class Blame {
 
 
 	/**
-	 * Check the file extension and return a regex for the language
-	 * @param extension
+	 * return a regex of the language comments
+	 * @param extension extension of the current file language
 	 * @return a regex of the language comments
 	 */
 	private String regex(Extensions extension) {
@@ -133,8 +139,8 @@ public class Blame {
 
 	/**
 	 * Init all elements and put in a record list all the lines typed by all contributors
-	 * @param blame
-	 * @param extension
+	 * @param blame blame result of the file
+	 * @param extension extension of the current file language
 	 */
 	public void checkCommentsInit(BlameResult blame,Extensions extension) {
 		UtilsMethods.checkNonNull(blame,extension);
@@ -151,11 +157,11 @@ public class Blame {
 
 	/**
 	 * Try to get the number of comments and code line for each contributor and put it in a record list
-	 * @param blame
-	 * @param rawText
-	 * @param pattern
-	 * @param codeCount
-	 * @param commentsCount
+	 * @param blame blame result of the file
+	 * @param rawText is the result content of the blame
+	 * @param pattern is the pattern get from the method regex
+	 * @param codeCount a hashmap collecting contributors and it contribution on codes lines
+	 * @param commentsCount a hashmap collecting contributors and it contribution on comments lines
 	 */
 	private void checkComments(BlameResult blame,RawText rawText, Pattern pattern, HashMap<Contributor,Integer> codeCount,HashMap<Contributor,Integer> commentsCount) {
 		UtilsMethods.checkNonNull(blame,rawText,pattern,commentsCount);
@@ -176,9 +182,9 @@ public class Blame {
 
 	/**
 	 * Get all information for the actual file ( number of line of code/line of comments)  and put it in an arraylist of record Data
-	 * @param file
-	 * @param countline
-	 * @param countComments
+	 * @param file is the name of this file
+	 * @param countline a hashmap collecting contributors and it contribution on codes lines
+	 * @param countComments a hashmap collecting contributors and it contribution on comments lines
 	 */
 	private void divideIntoData(String file,Map<Contributor,Integer> countline,Map<Contributor,Integer>countComments) {
 		for(var contributor : contributorData) {

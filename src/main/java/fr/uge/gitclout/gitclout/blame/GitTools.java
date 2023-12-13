@@ -26,12 +26,13 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 //Add a bool to check if we need to made change in the data base
 public class GitTools {
+
     /**
      * Check if the folder is empty and if it already contains a git directory
      * Clone the given repository
-     * @param localPath
-     * @param tmpDir
-     * @param repositoryURL
+     * @param localPath local path where the git is stored
+     * @param tmpDir dump file to check if the directory exist
+     * @param repositoryURL url of the git repository
      * @throws IOException
      * @throws GitAPIException
      */
@@ -45,10 +46,11 @@ public class GitTools {
             pullRepository(git, repositoryURL, localPath);
         }
     }
+
     /**
      * Clone remote repository in the localPath
-     * @param repositoryURL
-     * @param localPath
+     * @param repositoryURL url of the git repository
+     * @param localPath local path where the git is stored
      * @throws GitAPIException
      */
     public static void cloneRepository(String repositoryURL, String localPath) throws GitAPIException {
@@ -64,9 +66,9 @@ public class GitTools {
 
     /**
      * If the repository already exist, try to pull new information to analyse
-     * @param git
-     * @param repositoryURL
-     * @param localPath
+     * @param git the git on what we blame
+     * @param repositoryURL url of the git repository
+     * @param localPath local path where the git is stored
      * @throws GitAPIException
      * @throws IOException
      */
@@ -87,7 +89,15 @@ public class GitTools {
 
 
 
-
+    /**
+     * return the commit date of the tag
+     * @param git the git on what we blame
+     * @param ref is the tag on what we search
+     * @return a long that is the commit time
+     * @throws IncorrectObjectTypeException
+     * @throws MissingObjectException
+     * @throws IOException
+     */
     public static long getCommitDate(Git git,Ref ref) throws IncorrectObjectTypeException, MissingObjectException, IOException {
         return git.getRepository().parseCommit(ref.getObjectId()).getCommitTime() * 1000L;
     }
@@ -97,7 +107,7 @@ public class GitTools {
 
     /**
      * Return list of Contributors data
-     * @param git
+     * @param git the git on what we blame
      * @return list of Contributors data
      */
     public static ArrayList<Contributor> authorCredentials(Git git) {
@@ -115,7 +125,11 @@ public class GitTools {
         }
     }
 
-
+    /**
+     * return a string of the authors in the project
+     * @param git the git on what we blaming
+     * @return a string of the authors in the project
+     */
     public static String getAuthorCredentials(Git git) {
         return authorCredentials(git).stream().map(String::valueOf).collect(Collectors.joining("\n"));
     }
@@ -142,7 +156,9 @@ public class GitTools {
 
     /**
      * Get the tag before current one if exist counting the main head
-     * @return last tag of the project
+     * @param allTag list of all tags, chronologicaly sorted
+     * @param currentTagPosition is the current position of the tag in the allTag list
+     * @return the last tag if there is tag before the actual one
      */
     private static Ref getLastRef(List<Ref> allTag,int currentTagPosition) {
         if(currentTagPosition!=0) {
@@ -152,9 +168,10 @@ public class GitTools {
     }
 
     /**
-     *
-     * @param ref
-     * @return
+     * return the commit from the ref
+     * @param git the git on what we blame
+     * @param ref is the tag on what we search
+     * @return the commit from the ref
      * @throws MissingObjectException
      * @throws IncorrectObjectTypeException
      * @throws IOException
@@ -168,8 +185,9 @@ public class GitTools {
 
     /**
      * Prepare to parse a tree to get the tree where we gave the commit
-     * @param commit
-     * @return an iterator of the tree at the point of the commit
+     * @param git the git on what we blame
+     * @param commit the commit that we want to parse
+     * @return a AbstractTreeIterator to get the tree where we gave the commit
      * @throws IOException
      */
     private static AbstractTreeIterator prepareTreeParser(Git git,RevCommit commit) throws IOException {
@@ -182,8 +200,9 @@ public class GitTools {
 
     /**
      * return a list of changes between last tag and current one
-     * @param oldCommit
-     * @param newCommit
+     * @param git the git on what we blame
+     * @param oldCommit is the last commit of this git
+     * @param newCommit is the current commit of this git
      * @return a list of changes between last tag and current one
      * @throws IOException
      * @throws GitAPIException
@@ -198,6 +217,10 @@ public class GitTools {
 
     /**
      * Check the modified files between actual and last tag
+     * @param git the git on what we blame
+     * @param allTag list of all tags, chronologicaly sorted
+     * @param currentTagPosition is the current position of the tag in the allTag list
+     * @return list of all files that have been modified, deleted or added
      * @throws IOException
      * @throws GitAPIException
      */

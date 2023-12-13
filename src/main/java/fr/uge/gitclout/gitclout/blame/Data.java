@@ -10,6 +10,10 @@ public record Data(Ref tag,Contributor contributor,String file,int lines,int com
         return file + "\n" + contributor.name() +"\n Code line" + lines +"\n Comments line"+ comments ;
     }
 
+    /**
+     * return the contributor name and number of lines of codes and comments that he typed
+     * @return the contributor name and number of lines of codes and comments that he typed
+     */
     public String nameAndNumbers() {
         return contributor.name()+" : ("+lines +", "+comments+")";
     }

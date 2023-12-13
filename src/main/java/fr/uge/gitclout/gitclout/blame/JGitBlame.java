@@ -30,7 +30,9 @@ public class JGitBlame {
 
 
     /**
-     * Get the date of
+     * Get the date of all the refs
+     * @param git the git on what we blaming
+     * @param allTag list of all tags, chronologicaly sorted
      * @throws IncorrectObjectTypeException
      * @throws MissingObjectException
      * @throws IOException
@@ -42,11 +44,11 @@ public class JGitBlame {
             tagDate.put(ref, sqlDate);
         }
     }
+
     /**
      * GEt tags from remote
-     * @param remote
-     * @throws InvalidRemoteException
-     * @throws TransportException
+     * @param git the git on what we blaming
+     * @param repositoryURL
      * @throws GitAPIException
      */
     public void checkRepositoryTags(Git git,String repositoryURL) throws GitAPIException {
@@ -121,7 +123,7 @@ public class JGitBlame {
 
 
 
-    public void inerRun(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
+    public void subRun(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
         UtilsMethods.checkNonNull(git,allTag);
         try {
             @SuppressWarnings("resource")
@@ -153,7 +155,7 @@ public class JGitBlame {
                 var j= i;
                 Future future = executors.submit(()->{
                     try {
-                        inerRun(git,tagOfProject,j);
+                        subRun(git,tagOfProject,j);
                     } catch (IOException | GitAPIException e) {
                         throw new AssertionError(e);
                     }

@@ -7,10 +7,11 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class StringWork {
+
     /**
      * get Files extensions
-     * @param file
-     * @return
+     * @param file split the file and put it in a record
+     * @return the file and it extension in a record
      */
     public FileExtension splitExtention(String file) {
         Objects.requireNonNull(file);
@@ -26,8 +27,8 @@ public class StringWork {
 
     /**
      * create folder with URL name and project and return localpath of the folder
-     * @param repositoryURL
-     * @return
+     * @param repositoryURL string of the git url
+     * @return localpath local path of the git
      * @throws IOException
      */
     public String localPathFromURI(String repositoryURL) throws IOException {
