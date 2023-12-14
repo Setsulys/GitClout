@@ -36,7 +36,10 @@ public class GitTools {
      * @throws GitAPIException
      */
     public static void checkAndClone(String localPath,File tmpDir, String repositoryURL,Git git) throws IOException, GitAPIException {
-        UtilsMethods.checkNonNull(localPath,tmpDir,repositoryURL,git);
+        Objects.requireNonNull(localPath);
+        Objects.requireNonNull(tmpDir);
+        Objects.requireNonNull(repositoryURL);
+        Objects.requireNonNull(git);
         if(!Files.list(Paths.get(localPath)).findAny().isPresent()) {
             if(!tmpDir.exists()) {
                 cloneRepository(repositoryURL, localPath);
@@ -53,7 +56,8 @@ public class GitTools {
      * @throws GitAPIException
      */
     public static void cloneRepository(String repositoryURL, String localPath) throws GitAPIException {
-        UtilsMethods.checkNonNull(repositoryURL,localPath);
+        Objects.requireNonNull(repositoryURL);
+        Objects.requireNonNull(localPath);
         CloneCommand cloneCommand = Git.cloneRepository()
                 .setURI(repositoryURL)
                 .setDirectory(new File(localPath));

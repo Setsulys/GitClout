@@ -15,15 +15,6 @@ import java.util.regex.Pattern;
 
 public class UtilsMethods {
     /**
-     * Check if one or more of this parametter isnt null
-     * @param check all the parametter to be verified if is null
-     */
-    @SafeVarargs
-    public static void checkNonNull(Object ... check) {
-        Arrays.stream(check).forEach(Objects::requireNonNull);
-    }
-
-    /**
      * Check if the current url is a git repos
      * @param url string of the url
      * @return true if it is a git repos false otherwise

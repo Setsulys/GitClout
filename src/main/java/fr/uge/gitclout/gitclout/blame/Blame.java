@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -45,7 +47,14 @@ public class Blame {
 	 * @throws IOException
 	 */
 	public Blame(Git git, TreeWalk treeWalk, RevTree tagTree,List<Ref> allTag,int currentTagPosition,List<String> filesChanged) throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException{
-		UtilsMethods.checkNonNull(git,treeWalk,tagTree,allTag,filesChanged);
+		Objects.requireNonNull(git);
+		Objects.requireNonNull(treeWalk);
+		Objects.requireNonNull(tagTree);
+		Objects.requireNonNull(allTag);
+		Objects.requireNonNull(filesChanged);
+		if(currentTagPosition<0) {
+			throw new IllegalArgumentException();
+		}
 		this.git = git;
 		this.treeWalk = treeWalk;
 		this.currentTagPosition=currentTagPosition;
@@ -62,7 +71,8 @@ public class Blame {
 	 * @param filePath name of the file
 	 */
 	private void addFilesForExtensions(Extensions extension,String filePath) {
-		UtilsMethods.checkNonNull(extension,filePath);
+		Objects.requireNonNull(extension);
+		Objects.requireNonNull(filePath);
 		if(extensionsFiles.putIfAbsent(extension, new ArrayList<>(List.of(filePath)))!=null) {
 			var list = extensionsFiles.get(extension);
 			list.add(filePath);
@@ -136,14 +146,14 @@ public class Blame {
 		};
 
 	}
-
 	/**
 	 * Init all elements and put in a record list all the lines typed by all contributors
 	 * @param blame blame result of the file
 	 * @param extension extension of the current file language
 	 */
 	public void checkCommentsInit(BlameResult blame,Extensions extension) {
-		UtilsMethods.checkNonNull(blame,extension);
+		Objects.requireNonNull(blame);
+		Objects.requireNonNull(extension);
 		var codeCount = contributorData.stream().collect(Collectors.toMap(person -> person,person -> 0,(oldValue,newValue)->newValue,HashMap::new));
 		if(extension.equals(Extensions.OTHER) || extension.equals(Extensions.MEDIA)) {
 			return;
@@ -164,10 +174,12 @@ public class Blame {
 	 * @param rawText is the result content of the blame
 	 * @param pattern is the pattern get from the method regex
 	 * @param codeCount a hashmap collecting contributors and it contribution on codes lines
-	 * @throws InterruptedException
+	 * @throws ExecutionException
 	 */
-	public void checkComments(BlameResult blame,RawText rawText, Pattern pattern, HashMap<Contributor,Integer> codeCount) throws InterruptedException	 {
-		UtilsMethods.checkNonNull(blame,rawText,pattern);
+	public void checkComments(BlameResult blame,RawText rawText, Pattern pattern, HashMap<Contributor,Integer> codeCount) throws InterruptedException{
+		Objects.requireNonNull(blame);
+		Objects.requireNonNull(rawText);
+		Objects.requireNonNull(codeCount);
 		for(int i =0;i < rawText.size();i++) {
 			var author = blame.getSourceAuthor(i); //getmail
 			var contr = new Contributor(author.getName(),author.getEmailAddress());
@@ -191,6 +203,7 @@ public class Blame {
 			blameData.add(new Data(currentTag, contributor,file,line!=null?line:0));
 		}
 	}
+
 
 
 
