@@ -26,7 +26,6 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 //Add a bool to check if we need to made change in the data base
 public class GitTools {
-
     /**
      * Check if the folder is empty and if it already contains a git directory
      * Clone the given repository

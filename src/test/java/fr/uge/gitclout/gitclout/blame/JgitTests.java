@@ -8,11 +8,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -57,51 +60,6 @@ public class JgitTests {
             diffs = GitTools.checkModifiedFiles(git, getTags, 0);
             blame = new Blame(git, treeWalk, tagTree, getTags,0,diffs);
         }
-
-        @Test
-        public void check() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException{
-            var strings = new ArrayList<String>();
-            strings.add("//TEST TRUE 0");
-            strings.add("/* TEST TRUE 1*/");
-            strings.add("/** TEST TRUE 2**/");
-            strings.add("/* * TEST TRUE 3* */");
-            strings.add("/** TEST TRUE 4*/ System.out.println(\"aaaa\");"); //valide quand on a pas le \"aaaa\"
-            //strings.add("/** TEST 5 *//** System.out.print(\"Faux positif\"); */");
-//			blame.checkComments(blame, strings, "Tests");
-//			assertEquals(strings.size()-1,blame.nbCommentsForFileMap().get("Tests"));
-//
-        }
-
-        @Test
-        public void checkWithFalse() {
-            var strings = new ArrayList<String>();
-            strings.add("System.out.println(\"/* TEST FALSE 0\");");
-            strings.add("System.out.println(\"// TEST FALSE 1\");");
-            strings.add("System.out.println(\" // TEST FALSE 2\");");
-            strings.add("System.out.println(\"/* TEST FALSE 3\");");
-            strings.add("System.out.println(\"/* TEST FALSE 4 */\");");
-            strings.add("/ / TEST FALSE 5");
-            strings.add("Sytem.out.println(\" \" /* TEST FALSE 6 \"*/ + \" \");");
-//			blame.checkComments(extension, strings, "Tests");
-//			assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
-        }
-
-//		@Test
-//		public void checkLines() throws IOException, GitAPIException {
-//			blame.blaming();
-//			assertEquals(165, blame.totalCountMap().get("LY-IENG Steven"));
-//		}
-
-        @Test
-        public void checkCodeAndCommentsTogether() {
-            var strings = new ArrayList<String>();
-            strings.add("System.out.println(\"TEST 0 \"); /* TEST 0 */");
-            strings.add("System.out.println(\"/* TEST FALSE 5 */\"); /* TEST FALSE 5 */");
-            strings.add("/** TEST 11 */ System.out.println(\"TEST 11\");");
-//			blame.checkComments(extension, strings, "Tests");
-//			assertEquals(0,blame.nbCommentsForFileMap().get("Tests"));
-        }
-
 
         @Test
         public void precondition() throws GitAPIException, IOException {
@@ -174,7 +132,7 @@ public class JgitTests {
             var fe = new FileExtension("Test","java");
             assertEquals("Test", fe.file());
             assertEquals("java",fe.extension());
-            assertEquals("File : Test.java\n=>Test & java",fe.toString());
+            assertEquals("Test & java",fe.toString());
         }
 
         @Test
@@ -192,7 +150,29 @@ public class JgitTests {
             assertEquals(Extensions.TYPESCRPIPT,FileExtension.extensionDescription("ts"));
             assertEquals(Extensions.CSHARP,FileExtension.extensionDescription("cs"));
             assertEquals(Extensions.RUBY,FileExtension.extensionDescription("rb"));
-            assertEquals(Extensions.OTHER,FileExtension.extensionDescription("jpg"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mp3"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mp4"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("wav"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mkv"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jpg"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("png"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jpeg"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("webm"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jiff"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("gif"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("png"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("xls"));
+            assertEquals(Extensions.OTHER,FileExtension.extensionDescription("pdf"));
+            assertEquals(Extensions.BUILD,FileExtension.extensionDescription("xml"));
+            assertEquals(Extensions.BUILD,FileExtension.extensionDescription("yml"));
+            assertEquals(Extensions.DOC,FileExtension.extensionDescription("md"));
+            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("csv"));
+            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("docx"));
+            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("txt"));
+            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("git"));
+            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("project"));
+            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("gitignore"));
+            assertEquals(Extensions.MAKEFILE,FileExtension.extensionDescription("makefile"));
             assertEquals(Extensions.OTHER,FileExtension.extensionDescription("pdf"));
 
         }
