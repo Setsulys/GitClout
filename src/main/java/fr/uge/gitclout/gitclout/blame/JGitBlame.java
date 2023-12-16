@@ -132,6 +132,9 @@ public class JGitBlame {
 
     public void run(String repositoryURL) {
         try {
+            if(!UtilsMethods.isGitRepo(repositoryURL)){
+                return;
+            }
             String localPath = new StringWork().localPathFromURI(repositoryURL);
             String gitPath  = localPath + "/.git";
             File tmpDir  = new File(gitPath);
