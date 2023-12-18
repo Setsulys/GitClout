@@ -1,25 +1,13 @@
 <template>
-    <h1>{{msg}}</h1>
-    <h2>steven julien</h2>
-    <h3> Site en production</h3>
-    <h3> revenez plus tard</h3>
+  <div>
+    <h2>New Tab Component</h2>
+    <!-- Use the data passed through query to display content -->
+    <p>{{ $route.query.data }}</p>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  data(){
-    return {
-        msg:''
-    }
-  },
-  mounted(){
-    fetch("/app/messages/hello")
-    .then((response) => response.text())
-    .then((data) =>{
-        this.msg = data;
-  })
-  }
-
+  name: 'NewTabComponent',
 }
 </script>
