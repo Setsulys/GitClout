@@ -13,9 +13,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTree;
@@ -26,7 +23,49 @@ import org.junit.jupiter.api.Test;
 
 public class JgitTests {
 
+public class BlameTest{
+    private final JGitBlame jgit = new JGitBlame();
+    private final StringWork sW = new StringWork();
+    private final Extensions extension = Extensions.JAVA;
 
+    private final String gitPath;
+    private final Repository repos;
+    private final Git git;
+    private final List<Ref> getTags;
+    private final RevTree tagTree;
+    private final TreeWalk treeWalk;
+    private Blame blame;
+    private List<String> diffs;
+
+        @SuppressWarnings("resource")
+        private BlameTest() throws IOException, GitAPIException {
+            var repositoryURL = "https://gitlab.com/Setsulys/the_light_corridor.git";
+            gitPath = sW.localPathFromURI(repositoryURL) + "/.git";
+            repos = jgit.getRepos(gitPath);
+            git = new Git(repos);
+            var pull = Git.lsRemoteRepository().setRemote(repositoryURL).setTags(true).call();
+            var list = new ArrayList<>(pull.stream().map(e -> e).collect(Collectors.toList()));
+            list.add(git.fetch().call().getAdvertisedRefs().iterator().next());
+            getTags = list;
+            getTags.add(git.fetch().call().getAdvertisedRefs().iterator().next());;
+            tagTree = new RevWalk(git.getRepository()).parseCommit(getTags.getFirst().getObjectId()).getTree();
+            treeWalk = new TreeWalk(git.getRepository()); //init the treewalk
+            diffs = GitTools.checkModifiedFiles(git, getTags, 0);
+            blame = new Blame(git, treeWalk, tagTree, getTags,0,diffs);
+        }
+
+        @Test
+        public void precondition() throws GitAPIException, IOException {
+            assertThrows(NullPointerException.class, ()-> new Blame(null, treeWalk, tagTree, getTags,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, null, tagTree, getTags,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, null, getTags,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, null,0,diffs));
+            assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, getTags,0,null));
+
+            assertThrows(NullPointerException.class, ()-> blame.checkCommentsInit(null,extension));
+
+        }
+    }
 
     @Nested
     public class StringWorkTest{
@@ -71,7 +110,7 @@ public class JgitTests {
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, null, repositoryURL,git));
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), null,git));
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), repositoryURL,null));
-            assertThrows(NullPointerException.class,()->jGit.displayBlame(null,git));
+            //assertThrows(NullPointerException.class,()->jGit.displayBlame(null,git));
             assertThrows(NullPointerException.class,()->jGit.displayInformations(null));
 
         }
@@ -85,7 +124,7 @@ public class JgitTests {
             var fe = new FileExtension("Test","java");
             assertEquals("Test", fe.file());
             assertEquals("java",fe.extension());
-            assertEquals("File : Test.java\n=>Test & java",fe.toString());
+            assertEquals("Test & java",fe.toString());
         }
 
         @Test
@@ -100,9 +139,32 @@ public class JgitTests {
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("c++"));
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("cpp"));
             assertEquals(Extensions.PHP,FileExtension.extensionDescription("php"));
+            assertEquals(Extensions.TYPESCRPIPT,FileExtension.extensionDescription("ts"));
             assertEquals(Extensions.CSHARP,FileExtension.extensionDescription("cs"));
             assertEquals(Extensions.RUBY,FileExtension.extensionDescription("rb"));
-            assertEquals(Extensions.OTHER,FileExtension.extensionDescription("jpg"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mp3"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mp4"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("wav"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mkv"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jpg"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("png"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jpeg"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("webm"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jiff"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("gif"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("png"));
+            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("xls"));
+            assertEquals(Extensions.OTHER,FileExtension.extensionDescription("pdf"));
+            assertEquals(Extensions.BUILD,FileExtension.extensionDescription("xml"));
+            assertEquals(Extensions.BUILD,FileExtension.extensionDescription("yml"));
+            assertEquals(Extensions.DOC,FileExtension.extensionDescription("md"));
+            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("csv"));
+            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("docx"));
+            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("txt"));
+            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("git"));
+            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("project"));
+            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("gitignore"));
+            assertEquals(Extensions.MAKEFILE,FileExtension.extensionDescription("makefile"));
             assertEquals(Extensions.OTHER,FileExtension.extensionDescription("pdf"));
 
         }

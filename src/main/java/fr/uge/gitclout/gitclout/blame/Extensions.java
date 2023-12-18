@@ -12,5 +12,11 @@ public enum Extensions {
     TYPESCRPIPT,
     CSHARP,
     RUBY,
+    DOC,
+    RESSOURCES,
+    MEDIA,
+    BUILD,
+    CONFIGURATION,
+    MAKEFILE,
     OTHER
 }

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -27,27 +29,32 @@ public class Blame {
 	private final TreeWalk treeWalk;
 	private final Ref currentTag;
 	private final int currentTagPosition;
-	private final ArrayList<Data> blameData =new ArrayList<>();
+	private final ArrayList<Data> blameData = new ArrayList<>();
 	private final ArrayList<Contributor> contributorData ;
 	private final List<String> changedFiles;
-	//private final HashMap<Ref,java.sql.Date> tagDate = new HashMap<>();
 
 	/**
-	 * Make the git blame on all the files of the directory
-	 * @param git
+	 * Constructor of blame class
+	 * @param git the git on what we blame
 	 * @param treeWalk
 	 * @param tagTree
-	 * @Param allTag
-	 * @param currentTagPosition
-	 * @Param filesChanged
+	 * @param allTag list of all tags, chronologicaly sorted
+	 * @param currentTagPosition is the current position of the tag in the allTag list
+	 * @param filesChanged list of changed files
 	 * @throws MissingObjectException
 	 * @throws IncorrectObjectTypeException
 	 * @throws CorruptObjectException
 	 * @throws IOException
-	 * @throws GitAPIException
 	 */
 	public Blame(Git git, TreeWalk treeWalk, RevTree tagTree,List<Ref> allTag,int currentTagPosition,List<String> filesChanged) throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException{
-		UtilsMethods.checkNonNull(git,treeWalk,tagTree,allTag,filesChanged);
+		Objects.requireNonNull(git);
+		Objects.requireNonNull(treeWalk);
+		Objects.requireNonNull(tagTree);
+		Objects.requireNonNull(allTag);
+		Objects.requireNonNull(filesChanged);
+		if(currentTagPosition<0) {
+			throw new IllegalArgumentException();
+		}
 		this.git = git;
 		this.treeWalk = treeWalk;
 		this.currentTagPosition=currentTagPosition;
@@ -59,12 +66,13 @@ public class Blame {
 	}
 
 	/**
-	 * Check the extension for each files and put it in a map for later use
-	 * @param extension
-	 * @param filePath
+	 * This method take a file and put it in the class map to know what is this file language
+	 * @param extension the extension of the file (like file.java, the extension is java)
+	 * @param filePath name of the file
 	 */
 	private void addFilesForExtensions(Extensions extension,String filePath) {
-		UtilsMethods.checkNonNull(extension,filePath);
+		Objects.requireNonNull(extension);
+		Objects.requireNonNull(filePath);
 		if(extensionsFiles.putIfAbsent(extension, new ArrayList<>(List.of(filePath)))!=null) {
 			var list = extensionsFiles.get(extension);
 			list.add(filePath);
@@ -73,7 +81,7 @@ public class Blame {
 	}
 
 	/**
-	 * Blame on the project with specific tag
+	 * Principal method of this class that check the blame of git files, this will look upon the lines of codes and lines of comments
 	 * @throws MissingObjectException
 	 * @throws IncorrectObjectTypeException
 	 * @throws CorruptObjectException
@@ -82,27 +90,32 @@ public class Blame {
 	 */
 	public void blaming() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException  {
 		var sW = new StringWork();
+		System.out.println("-------------------------------------------");
 		while(treeWalk.next()) {
 			String filePath = treeWalk.getPathString();
 			checkBlame(sW,filePath);
+
 		}
 	}
 
 	/**
-	 *
-	 * @param sW
-	 * @param filePath
+	 * check if a file has been modified, deleted or added
+	 * if the condition is matching the method will blame the file
+	 * @param sW is the stringWork class that permit to split or do anything on the file
+	 * @param filePath name of the file
 	 * @throws GitAPIException
 	 */
 	private void checkBlame(StringWork sW,String filePath) throws GitAPIException {
 		if(sW.splitExtention(filePath)!=null) {
 			var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
-			if(FileExtension.extensionDescription(extension)!=Extensions.OTHER) {
+			if(FileExtension.extensionDescription(extension)!=Extensions.OTHER && FileExtension.extensionDescription(extension)!=Extensions.RESSOURCES) {
 				var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
+				//System.out.println(extension +" to do" + FileExtension.extensionDescription(extension));
 				if(currentTagPosition==0) { //we need to blame the first tag
 					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
 				}
 				else if(changedFiles.contains(filePath)) {//Check if the current file is modified
+					//System.out.println(changedFiles.size()+" & " +filePath +" is present ");
 					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
 				}
 			}
@@ -112,8 +125,8 @@ public class Blame {
 
 
 	/**
-	 * Check the file extension and return a regex for the language
-	 * @param extension
+	 * return a regex of the language comments
+	 * @param extension extension of the current file language
 	 * @return a regex of the language comments
 	 */
 	private String regex(Extensions extension) {
@@ -133,63 +146,64 @@ public class Blame {
 		};
 
 	}
-
 	/**
 	 * Init all elements and put in a record list all the lines typed by all contributors
-	 * @param blame
-	 * @param extension
+	 * @param blame blame result of the file
+	 * @param extension extension of the current file language
 	 */
 	public void checkCommentsInit(BlameResult blame,Extensions extension) {
-		UtilsMethods.checkNonNull(blame,extension);
+		Objects.requireNonNull(blame);
+		Objects.requireNonNull(extension);
 		var codeCount = contributorData.stream().collect(Collectors.toMap(person -> person,person -> 0,(oldValue,newValue)->newValue,HashMap::new));
-		var commentCount = contributorData.stream().collect(Collectors.toMap(person -> person,person -> 0,(oldValue,newValue)->newValue,HashMap::new));
-		if(extension.equals(Extensions.OTHER)) {
+		if(extension.equals(Extensions.OTHER) || extension.equals(Extensions.MEDIA)) {
 			return;
 		}
 		RawText rawText = blame.getResultContents();
 		String regex = regex(extension);
 		Pattern pattern = Pattern.compile(regex);
-		checkComments(blame,rawText,pattern,codeCount,commentCount);
+		try {
+			checkComments(blame,rawText,pattern,codeCount);
+		} catch (Exception e) {
+			return;
+		}
 	}
 
 	/**
 	 * Try to get the number of comments and code line for each contributor and put it in a record list
-	 * @param blame
-	 * @param rawText
-	 * @param pattern
-	 * @param codeCount
-	 * @param commentsCount
+	 * @param blame blame result of the file
+	 * @param rawText is the result content of the blame
+	 * @param pattern is the pattern get from the method regex
+	 * @param codeCount a hashmap collecting contributors and it contribution on codes lines
+	 * @throws ExecutionException
 	 */
-	private void checkComments(BlameResult blame,RawText rawText, Pattern pattern, HashMap<Contributor,Integer> codeCount,HashMap<Contributor,Integer> commentsCount) {
-		UtilsMethods.checkNonNull(blame,rawText,pattern,commentsCount);
+	public void checkComments(BlameResult blame,RawText rawText, Pattern pattern, HashMap<Contributor,Integer> codeCount) throws InterruptedException{
+		Objects.requireNonNull(blame);
+		Objects.requireNonNull(rawText);
+		Objects.requireNonNull(codeCount);
 		for(int i =0;i < rawText.size();i++) {
 			var author = blame.getSourceAuthor(i); //getmail
 			var contr = new Contributor(author.getName(),author.getEmailAddress());
 			String line = rawText.getString(i);
 			Matcher matcher = pattern.matcher(line);
-			if(matcher.find()) {
-				//System.out.println(treeWalk.getPathString()+" line "+i);
-				commentsCount.compute(contr, (k,v)->(v==null)?1:v+1);
-			}else {
+			if(!matcher.find()) {
 				codeCount.compute(contr, (k,v)->(v==null)?1:v+1);
-			}
+			};
 		}
-		divideIntoData(treeWalk.getPathString(), codeCount, commentsCount);
+		divideIntoData(treeWalk.getPathString(), codeCount);
 	}
-
 	/**
 	 * Get all information for the actual file ( number of line of code/line of comments)  and put it in an arraylist of record Data
-	 * @param file
-	 * @param countline
-	 * @param countComments
+	 * @param file is the name of this file
+	 * @param countline a hashmap collecting contributors and it contribution on codes lines
 	 */
-	private void divideIntoData(String file,Map<Contributor,Integer> countline,Map<Contributor,Integer>countComments) {
+	private void divideIntoData(String file,Map<Contributor,Integer> countline) {
 		for(var contributor : contributorData) {
 			var line =countline.getOrDefault(contributor, null);
-			var comments =countComments.getOrDefault(contributor, null);
-			blameData.add(new Data(currentTag, contributor,file,line!=null?line:0,comments!=null?comments:0));
+			//System.out.println(new Data(currentTag, contributor,file,line!=null?line:0).toString());
+			blameData.add(new Data(currentTag, contributor,file,line!=null?line:0));
 		}
 	}
+
 
 
 
@@ -223,22 +237,14 @@ public class Blame {
 
 
 	/**
-	 *
+	 *return String of file and whom typed how many line of each type
 	 * @return String of file and whom typed how many line of each type
 	 */
 	public String divideIntoDataString() {
 		var affichage = blameData.stream().collect(Collectors.groupingBy(Data::file));
-		return affichage.entrySet().stream().map(e -> e.getKey() + " : " + e.getValue().stream().map(f-> f.nameAndNumbers()).collect(Collectors.joining(", ","{","}"))).collect(Collectors.joining("\n"));
+		return affichage.entrySet().stream().map(e -> e.getKey() + " : " + e.getValue().stream().map(f-> f.toString()).collect(Collectors.joining(", ","{","}"))).collect(Collectors.joining("\n"));
 	}
 
-	/**
-	 * return a string of number of comment in each files
-	 * @return a string of number of comment in each files
-	 */
-	public String divideIntoDataStringGetCommentByFile() {
-		var affichage = blameData.stream().collect(Collectors.groupingBy(Data::file));
-		return affichage.entrySet().stream().map(e -> e.getKey() + " ----> " + e.getValue().stream().map(f-> f.comments()).reduce(0, (a,b)-> a+b)).collect(Collectors.joining("\n"));
-	}
 
 	/**
 	 * return a string of number of code line in each files
@@ -259,24 +265,6 @@ public class Blame {
 	}
 
 	/**
-	 * return a string displaying the total number of lines of comments typed by each contributor
-	 * @return a string displaying the total number of lines of comments typed by each contributor
-	 */
-	public String totalLinesComments() {
-		var affichage = blameData.stream().collect(Collectors.groupingBy(Data::contributor));
-		return affichage.entrySet().stream().map(e-> e.getKey().name()+ " ----> "+ e.getValue().stream().map(f-> f.comments()).reduce(0, (a,b)-> a+b)).collect(Collectors.joining("\n"));
-	}
-
-	/**
-	 * return a string displaying the total number of lines typed by each contributor without differing comments and code lines
-	 * @return a string displaying the total number of lines typed by each contributor without differing comments and code lines
-	 */
-	public String totalLines() {
-		var affichage = blameData.stream().collect(Collectors.groupingBy(Data::contributor));
-		return affichage.entrySet().stream().map(e-> e.getKey().name()+ " ----> "+ e.getValue().stream().map(f-> f.lines()+f.comments()).reduce(0, (a,b)-> a+b)).collect(Collectors.joining("\n"));
-	}
-
-	/**
 	 * Display Technologies used for each files
 	 * @return Name of the technology with a list of every files for this technology
 	 */
@@ -286,3 +274,4 @@ public class Blame {
 				.collect(Collectors.joining("\n"));
 	}
 }
+

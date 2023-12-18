@@ -7,27 +7,26 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class StringWork {
+
     /**
      * get Files extensions
-     * @param file
-     * @return
+     * @param file split the file and put it in a record
+     * @return the file and it extension in a record
      */
     public FileExtension splitExtention(String file) {
         Objects.requireNonNull(file);
         String[] split =file.split("[.]",2);
+        //System.out.println(Arrays.asList(split).stream().collect(Collectors.joining(",")));
         if(split.length>1) {
-            if(!split[0].isBlank()) {
-                FileExtension fe = new FileExtension(split[0], split[1]);
-                return fe;
-            }
+            return split[0].isBlank()? new FileExtension(split[1], split[1]) : new FileExtension(split[0], split[1]);
         }
-        return null;
+        return new FileExtension(split[0], split[0]);
     }
 
     /**
      * create folder with URL name and project and return localpath of the folder
-     * @param repositoryURL
-     * @return
+     * @param repositoryURL string of the git url
+     * @return localpath local path of the git
      * @throws IOException
      */
     public String localPathFromURI(String repositoryURL) throws IOException {
