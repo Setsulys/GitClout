@@ -1,8 +1,16 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-
-createApp(App).mount('#app')
 import 'semantic-ui-css/semantic.min.css';
-//import Vue from 'vue';
-//import SuiVue from 'semantic-ui-vue';
-//import '../semantic/dist/semantic.min.css';
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes: [
+        { path: '/', component: App },
+        // Add more routes for additional components
+    ]
+});
+
+createApp(App)
+    .use(router)
+    .mount('#app');
