@@ -57,7 +57,7 @@ public class JGitBlame {
      * @param repositoryURL
      * @throws GitAPIException
      */
-    public void checkRepositoryTags(Git git,String repositoryURL) throws GitAPIException {
+    private void checkRepositoryTags(Git git,String repositoryURL) throws GitAPIException {
         Objects.requireNonNull(git);
         Objects.requireNonNull(repositoryURL);
         var pull = Git.lsRemoteRepository().setRemote(repositoryURL).setTags(true).call();
@@ -104,14 +104,14 @@ public class JGitBlame {
     /**
      * Check how many task has ended until now
      */
-    public void checkEndedTask() {
+    private void checkEndedTask() {
         scheduler.scheduleAtFixedRate(() -> {
             percentOfFinished = Double.valueOf(finishedTask)*100/Double.valueOf(tagOfProject.size());
             System.out.println("Task ended : " + df.format(percentOfFinished) +"%" + " == "+finishedTask+"/"+tagOfProject.size());
         }, 1, 2, TimeUnit.SECONDS);
     }
 
-    public void subRun(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
+    private void subRun(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
         Objects.requireNonNull(git);
         Objects.requireNonNull(allTag);
         if(actualTag <0) {
@@ -130,10 +130,10 @@ public class JGitBlame {
         }
     }
 
-    public void run(String repositoryURL) {
+    public boolean run(String repositoryURL) {
         try {
             if(!UtilsMethods.isGitRepo(repositoryURL)){
-                return;
+                return false;
             }
             String localPath = new StringWork().localPathFromURI(repositoryURL);
             String gitPath  = localPath + "/.git";
@@ -175,6 +175,7 @@ public class JGitBlame {
         System.out.println("work done");
         //System.out.println(blameList.stream().map(e-> e.blameDatas().stream().filter(f-> f.file().equals("src/lights.c")).map(f-> f.nameAndNumbers()).collect(Collectors.toList()).toString()).collect(Collectors.joining("\n")));
         //System.out.println(blameList.stream().map(e-> e.blameDatas().stream().map(i-> i.tag()).collect(Collectors.toList()).toString()).collect(Collectors.joining("\n")));
+        return true;
     }
 
     public ArrayList<Blame> projectData(){

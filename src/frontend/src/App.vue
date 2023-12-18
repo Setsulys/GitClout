@@ -1,10 +1,13 @@
 <template>
+  <body>
   <img src="./assets/gclout.png">
-  <HomePage @openNewFile ="openNewFile"/>
-    <NewFile v-if="showNewFile  " @closeNewFile = "closeNewFile"/>
+  <HomePage/>
+  <NewFile/>
   <div id="app">
 
   </div>
+  </body>
+
 </template>
 
 <script>
@@ -17,21 +20,6 @@ export default {
     HomePage,
     NewFile,
   },
-  data(){
-    return{
-      showNewFile : false,
-    };
-  },
-
-  methods:{
-    openNewFile(){
-      this.showNewFile = true;
-    },
-    closeNewFile(){
-      this.showNewFile = false;
-    }
-
-  }
 }
 </script>
 
@@ -46,6 +34,9 @@ export default {
 }
 img{
   width: 18%;
+}
+body{
+  background-color: rgb(150, 153, 201,0.7);
 }
 </style>
 
