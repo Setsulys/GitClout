@@ -5,7 +5,7 @@
 
     <div class="ui large action input">
           <input class="wide-input" v-model="text" placeholder="https://gitlab.com/nom/projet">
-          <div class="ui button" @click="submit">Gitclouting</div>
+          <div class="ui button" @click="onclick" >Gitclouting</div>
     </div>
 
   <div class ="chartMenu">
@@ -72,6 +72,18 @@ export default {
   },
 
   methods: {
+    onclick(){
+      this.submit();
+      this.openNewTab();
+    },
+    openNewTab(){
+      /*      const newTab = './HelloWorld.vue';
+            window.open(newTab,'_blank');*/
+      //this.$router.push({name:'HelloWorld'})
+/*      const newTab = window.open('', '_blank');
+      newTab.location.href = this.$router.resolve({ name: 'NewFile' }).href;*/
+  this.$emit('openNewFile');
+    },
     submit() {
       const data = {
         gitLink: this.text,

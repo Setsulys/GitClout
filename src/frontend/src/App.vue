@@ -1,6 +1,7 @@
 <template>
   <img src="./assets/gclout.png">
-  <HomePage/>
+  <HomePage @openNewFile ="openNewFile"/>
+    <NewFile v-if="showNewFile  " @closeNewFile = "closeNewFile"/>
   <div id="app">
 
   </div>
@@ -8,11 +9,28 @@
 
 <script>
 import HomePage from './components/HomePage.vue'
+import NewFile from "@/components/NewFile.vue";
 
 export default {
   name: 'App',
   components: {
-    HomePage
+    HomePage,
+    NewFile,
+  },
+  data(){
+    return{
+      showNewFile : false,
+    };
+  },
+
+  methods:{
+    openNewFile(){
+      this.showNewFile = true;
+    },
+    closeNewFile(){
+      this.showNewFile = false;
+    }
+
   }
 }
 </script>
