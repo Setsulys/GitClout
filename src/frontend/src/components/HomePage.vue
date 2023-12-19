@@ -46,9 +46,7 @@ export default {
   },
 
   methods: {
-    openInNewTab(url) {
-      window.open(url, '_blank', 'noreferrer');
-    },
+
     reloadCurrentPage(){
       window.location.reload();
     },

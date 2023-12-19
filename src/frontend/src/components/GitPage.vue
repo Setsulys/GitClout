@@ -40,7 +40,9 @@ export default {
   };
   },
   methods:{
-
+    openInNewTab(url) {
+      window.open(url, '_blank', 'noreferrer');
+    },
   },
   mounted(){
     fetch('/app/rest/getlink')
@@ -68,7 +70,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-y: auto;
+  //overflow-y: auto;
 }
 
 .gitBox{

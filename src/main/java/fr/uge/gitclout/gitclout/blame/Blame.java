@@ -199,7 +199,7 @@ public class Blame {
 	private void divideIntoData(String file,Map<Contributor,Integer> countline) {
 		for(var contributor : contributorData) {
 			var line =countline.getOrDefault(contributor, null);
-			//System.out.println(new Data(currentTag, contributor,file,line!=null?line:0).toString());
+			//System.out.println(new Data(currentTag, contributor,file,line!=null?line:0));
 			blameData.add(new Data(currentTag, contributor,file,line!=null?line:0));
 		}
 	}

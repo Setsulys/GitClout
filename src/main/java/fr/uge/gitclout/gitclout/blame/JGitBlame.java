@@ -111,7 +111,7 @@ public class JGitBlame {
         }, 1, 2, TimeUnit.SECONDS);
     }
 
-    private void subRun(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
+    private void runByTag(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
         Objects.requireNonNull(git);
         Objects.requireNonNull(allTag);
         if(actualTag <0) {
@@ -119,10 +119,10 @@ public class JGitBlame {
         }
         try {
             @SuppressWarnings("resource")
-            var tagtree = new RevWalk(git.getRepository()).parseCommit(allTag.get(actualTag).getObjectId()).getTree(); //take for the first tag
+            var tagTree = new RevWalk(git.getRepository()).parseCommit(allTag.get(actualTag).getObjectId()).getTree(); //take for the first tag
             var treewalk = new TreeWalk(git.getRepository()); //init the treewalk
             var filesChange = GitTools.checkModifiedFiles(git, tagOfProject, actualTag);
-            var blame = new Blame(git,treewalk,tagtree,allTag,actualTag, filesChange);
+            var blame = new Blame(git,treewalk,tagTree,allTag,actualTag, filesChange);
             blameList.add(blame);
             blame.blaming();
         }catch(Exception e ) {
@@ -155,7 +155,7 @@ public class JGitBlame {
 
                     try {
                         System.out.println("start --------------------------" + tagOfProject.get(j).getName());
-                        subRun(git,tagOfProject,j);
+                        runByTag(git,tagOfProject,j);
                         finishedTask++;
                     } catch (IOException | GitAPIException e) {
                         throw new AssertionError(e);

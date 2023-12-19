@@ -5,7 +5,7 @@
         <i class="chart bar icon"></i>
         <div class="content">
           Statistiques du git blamé
-          <div class="sub header">Non fini</div>
+          <div class="sub header">Valeurs en dur</div>
         </div>
       </h2>
     </div>

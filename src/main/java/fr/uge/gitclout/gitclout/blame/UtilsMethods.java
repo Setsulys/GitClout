@@ -23,10 +23,6 @@ public class UtilsMethods {
         Objects.requireNonNull(url);
         Pattern pattern = Pattern.compile("^(https?|git|ssh)://.+\\.git$");
         Matcher matcher = pattern.matcher(url);
-        var match =matcher.find();
-        if(!match){
-            System.out.println("Ce n'est pas un repo git :  Les repos Git doivent etre de la forme https://<Pseudo>/<Projet>.git");
-        }
-        return match;
+        return matcher.find();
     }
 }

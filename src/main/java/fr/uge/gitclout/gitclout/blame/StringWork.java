@@ -13,7 +13,7 @@ public class StringWork {
      * @param file split the file and put it in a record
      * @return the file and it extension in a record
      */
-    public FileExtension splitExtention(String file) {
+    public static FileExtension splitExtention(String file) {
         Objects.requireNonNull(file);
         String[] split =file.split("[.]",2);
         //System.out.println(Arrays.asList(split).stream().collect(Collectors.joining(",")));
@@ -33,9 +33,10 @@ public class StringWork {
         Objects.requireNonNull(repositoryURL);
         String[] test = repositoryURL.split("/",5);
         //System.out.println(Arrays.stream(test).map(e -> e).collect(Collectors.joining(", ","[","]")));
+        String gitName = test[test.length-3];
         String name = test[test.length-2]; //get owner name
         String projectName = test[test.length-1].replace(".git", ""); // remove .git at the end of the string
-        String localPath = Paths.get("").toAbsolutePath().toString()+ File.separator+"GitDataBase"+File.separator+name +File.separator+projectName;
+        String localPath = Paths.get("").toAbsolutePath().toString() +File.separator+"GitDataBase"+File.separator + gitName + File.separator+name +File.separator+projectName;
         //System.out.println(localPath);
         Files.createDirectories(Paths.get(localPath));
         return localPath;

@@ -75,8 +75,8 @@ public class BlameTest{
         public void checkLocalPathFromGitURL()  throws IOException{
             String repositoryURL = "https://gitlab.com/Contributor/Project";
             String repositoryURL2 = "https://gitlab.com/Contributor/Project2";
-            assertEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL));
-            assertNotEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL2));
+            assertEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"gitlab.com"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL));
+            assertNotEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"gitlab.com"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL2));
         }
 
         @Test

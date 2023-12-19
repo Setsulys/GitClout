@@ -2,7 +2,7 @@
   <body>
   <img src="./assets/gclout.png">
   <HomePage/>
-  <NewFile/>
+<!--  <NewFile/>-->
   <div id="app">
 
   </div>
@@ -12,13 +12,13 @@
 
 <script>
 import HomePage from './components/HomePage.vue'
-import NewFile from "@/components/NewFile.vue";
+/*import NewFile from "@/components/NewFile.vue";*/
 
 export default {
   name: 'App',
   components: {
     HomePage,
-    NewFile,
+/*    NewFile,*/
   },
 }
 </script>
