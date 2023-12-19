@@ -18,8 +18,8 @@
             <div class="gitboxbox">
               <div class="ui relaxed divided list">
                 <div v-for="(item, index) in links" :key="index" class="item">
-                  <i class="large github middle aligned icon"   @click="openInNewTab('https://www.youtube.com/watch?v=dQw4w9WgXcQ')"></i>
-                  <div class="content" @click="openInNewTab('https://www.youtube.com/watch?v=dQw4w9WgXcQ')">
+                  <i class="large github middle aligned icon"   @click="openInNewTab('https://www.youtube.com/watch?v=GtL1huin9EE')"></i>
+                  <div class="content" @click="openInNewTab('https://www.youtube.com/watch?v=GtL1huin9EE')">
                     <a class="header">{{ item }}</a>
                   </div>
                 </div>
