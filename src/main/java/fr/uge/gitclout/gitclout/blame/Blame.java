@@ -90,7 +90,6 @@ public class Blame {
 	 */
 	public void blaming() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException  {
 		var sW = new StringWork();
-		System.out.println("-------------------------------------------");
 		while(treeWalk.next()) {
 			String filePath = treeWalk.getPathString();
 			checkBlame(sW,filePath);
@@ -106,8 +105,7 @@ public class Blame {
 	 * @throws GitAPIException
 	 */
 	private void checkBlame(StringWork sW,String filePath) throws GitAPIException {
-		if(sW.splitExtention(filePath)!=null) {
-			var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
+			var extension = StringWork.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
 			if(FileExtension.extensionDescription(extension)!=Extensions.OTHER && FileExtension.extensionDescription(extension)!=Extensions.RESSOURCES) {
 				var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
 				//System.out.println(extension +" to do" + FileExtension.extensionDescription(extension));
@@ -120,7 +118,6 @@ public class Blame {
 				}
 			}
 			addFilesForExtensions(FileExtension.extensionDescription(extension), filePath);
-		}
 	}
 
 
@@ -199,8 +196,9 @@ public class Blame {
 	private void divideIntoData(String file,Map<Contributor,Integer> countline) {
 		for(var contributor : contributorData) {
 			var line =countline.getOrDefault(contributor, null);
-			//System.out.println(new Data(currentTag, contributor,file,line!=null?line:0));
-			blameData.add(new Data(currentTag, contributor,file,line!=null?line:0));
+			var data = new Data(currentTag, contributor,file,line!=null?line:0);
+			//System.out.println(data);
+			blameData.add(data);
 		}
 	}
 

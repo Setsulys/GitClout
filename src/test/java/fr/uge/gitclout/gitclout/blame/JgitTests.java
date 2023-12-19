@@ -81,7 +81,7 @@ public class BlameTest{
 
         @Test
         public void precondition() {
-            assertThrows(NullPointerException.class,()-> sW.splitExtention(null));
+            assertThrows(NullPointerException.class,()-> StringWork.splitExtention(null));
             assertThrows(NullPointerException.class,()-> sW.localPathFromURI(null));
         }
     }
