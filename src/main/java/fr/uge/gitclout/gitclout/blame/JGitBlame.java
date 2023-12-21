@@ -25,30 +25,12 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 
 public class JGitBlame {
     private final ArrayList<Ref> tagOfProject = new ArrayList<>();
-    private final HashMap<Ref,java.sql.Date> tagDate = new HashMap<>();
     private final ArrayList<Blame> blameList = new ArrayList<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private int finishedTask =0;
     private double percentOfFinished=0;
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
-    /**
-     * Get the date of all the refs
-     * @param git the git on what we blaming
-     * @param allTag list of all tags, chronologicaly sorted
-     * @throws IncorrectObjectTypeException exception
-     * @throws MissingObjectException exception
-     * @throws IOException exception
-     */
-    private void dateFromTag(Git git, List<Ref> allTag) throws IncorrectObjectTypeException, MissingObjectException, IOException {
-        Objects.requireNonNull(git);
-        Objects.requireNonNull(allTag);
-        for(var ref : allTag) {
-            java.util.Date commitDate = new java.util.Date(GitTools.getCommitDate(git, ref));
-            java.sql.Date sqlDate = new java.sql.Date(commitDate.getTime());
-            tagDate.put(ref, sqlDate);
-        }
-    }
 
     /**
      * GEt tags from remote
@@ -118,7 +100,6 @@ public class JGitBlame {
         GitTools.checkAndClone(localPath, tmpDir, repositoryURL,git);
         checkRepositoryTags(git, repositoryURL);
         displayInformations(git);
-        dateFromTag(git, tagOfProject);
         checkEndedTask();
     }
 
