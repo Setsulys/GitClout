@@ -32,15 +32,15 @@ public class GitTools {
      * @param localPath local path where the git is stored
      * @param tmpDir dump file to check if the directory exist
      * @param repositoryURL url of the git repository
-     * @throws IOException
-     * @throws GitAPIException
+     * @throws IOException exception
+     * @throws GitAPIException exception
      */
     public static void checkAndClone(String localPath,File tmpDir, String repositoryURL,Git git) throws IOException, GitAPIException {
         Objects.requireNonNull(localPath);
         Objects.requireNonNull(tmpDir);
         Objects.requireNonNull(repositoryURL);
         Objects.requireNonNull(git);
-        if(!Files.list(Paths.get(localPath)).findAny().isPresent()) {
+        if(Files.list(Paths.get(localPath)).findAny().isEmpty()) {
             if(!tmpDir.exists()) {
                 cloneRepository(repositoryURL, localPath);
             }
@@ -53,7 +53,7 @@ public class GitTools {
      * Clone remote repository in the localPath
      * @param repositoryURL url of the git repository
      * @param localPath local path where the git is stored
-     * @throws GitAPIException
+     * @throws GitAPIException exception
      */
     public static void cloneRepository(String repositoryURL, String localPath) throws GitAPIException {
         Objects.requireNonNull(repositoryURL);
@@ -72,8 +72,8 @@ public class GitTools {
      * @param git the git on what we blame
      * @param repositoryURL url of the git repository
      * @param localPath local path where the git is stored
-     * @throws GitAPIException
-     * @throws IOException
+     * @throws GitAPIException exception
+     * @throws IOException exception
      */
     public static void pullRepository(Git git,String repositoryURL,String localPath) throws GitAPIException, IOException{
         Objects.requireNonNull(repositoryURL);
@@ -97,9 +97,9 @@ public class GitTools {
      * @param git the git on what we blame
      * @param ref is the tag on what we search
      * @return a long that is the commit time
-     * @throws IncorrectObjectTypeException
-     * @throws MissingObjectException
-     * @throws IOException
+     * @throws IncorrectObjectTypeException exception
+     * @throws MissingObjectException exception
+     * @throws IOException exception
      */
     public static long getCommitDate(Git git,Ref ref) throws IncorrectObjectTypeException, MissingObjectException, IOException {
         return git.getRepository().parseCommit(ref.getObjectId()).getCommitTime() * 1000L;
@@ -175,9 +175,9 @@ public class GitTools {
      * @param git the git on what we blame
      * @param ref is the tag on what we search
      * @return the commit from the ref
-     * @throws MissingObjectException
-     * @throws IncorrectObjectTypeException
-     * @throws IOException
+     * @throws MissingObjectException exception
+     * @throws IncorrectObjectTypeException exception
+     * @throws IOException exception
      */
     private static RevCommit getCommitByRef(Git git,Ref ref) throws MissingObjectException, IncorrectObjectTypeException, IOException {
         try(RevWalk revWalk = new RevWalk(git.getRepository())) {
@@ -191,7 +191,7 @@ public class GitTools {
      * @param git the git on what we blame
      * @param commit the commit that we want to parse
      * @return a AbstractTreeIterator to get the tree where we gave the commit
-     * @throws IOException
+     * @throws IOException exception
      */
     private static AbstractTreeIterator prepareTreeParser(Git git,RevCommit commit) throws IOException {
         try (ObjectReader reader = git.getRepository().newObjectReader()) {
@@ -207,8 +207,8 @@ public class GitTools {
      * @param oldCommit is the last commit of this git
      * @param newCommit is the current commit of this git
      * @return a list of changes between last tag and current one
-     * @throws IOException
-     * @throws GitAPIException
+     * @throws IOException exception
+     * @throws GitAPIException exception
      */
     private static List<DiffEntry> getChangedFiles(Git git,RevCommit oldCommit, RevCommit newCommit) throws IOException, GitAPIException{
         try (RevWalk revWalk = new RevWalk(git.getRepository())) {
@@ -224,8 +224,8 @@ public class GitTools {
      * @param allTag list of all tags, chronologicaly sorted
      * @param currentTagPosition is the current position of the tag in the allTag list
      * @return list of all files that have been modified, deleted or added
-     * @throws IOException
-     * @throws GitAPIException
+     * @throws IOException exception
+     * @throws GitAPIException exception
      */
     public static List<String> checkModifiedFiles(Git git,List<Ref> allTag,int currentTagPosition) throws IOException, GitAPIException {
         RevCommit oldCommit = getCommitByRef(git,getLastRef(allTag,currentTagPosition));

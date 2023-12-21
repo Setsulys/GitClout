@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,24 +25,22 @@ import org.junit.jupiter.api.Test;
 public class JgitTests {
 
 public class BlameTest{
-    private final JGitBlame jgit = new JGitBlame();
-    private final StringWork sW = new StringWork();
     private final Extensions extension = Extensions.JAVA;
 
-    private final String gitPath;
-    private final Repository repos;
     private final Git git;
     private final List<Ref> getTags;
     private final RevTree tagTree;
     private final TreeWalk treeWalk;
-    private Blame blame;
-    private List<String> diffs;
+    private final Blame blame;
+    private final List<String> diffs;
 
         @SuppressWarnings("resource")
         private BlameTest() throws IOException, GitAPIException {
             var repositoryURL = "https://gitlab.com/Setsulys/the_light_corridor.git";
-            gitPath = sW.localPathFromURI(repositoryURL) + "/.git";
-            repos = jgit.getRepos(gitPath);
+            StringWork sW = new StringWork();
+            String gitPath = sW.localPathFromURI(repositoryURL) + "/.git";
+            JGitBlame jgit = new JGitBlame();
+            Repository repos = jgit.getRepos(gitPath);
             git = new Git(repos);
             var pull = Git.lsRemoteRepository().setRemote(repositoryURL).setTags(true).call();
             var list = new ArrayList<>(pull.stream().map(e -> e).collect(Collectors.toList()));
@@ -62,21 +61,22 @@ public class BlameTest{
             assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, null,0,diffs));
             assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, getTags,0,null));
 
-            assertThrows(NullPointerException.class, ()-> blame.checkCommentsInit(null,extension));
+            assertThrows(NullPointerException.class, ()-> blame.checkCommentsInit(null,extension,""));
 
         }
     }
 
     @Nested
     public class StringWorkTest{
-        private StringWork sW = new StringWork();
+        private final StringWork sW = new StringWork();
 
         @Test
         public void checkLocalPathFromGitURL()  throws IOException{
             String repositoryURL = "https://gitlab.com/Contributor/Project";
             String repositoryURL2 = "https://gitlab.com/Contributor/Project2";
-            assertEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"gitlab.com"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL));
-            assertNotEquals(Paths.get("").toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"gitlab.com"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL2));
+            Path path = Paths.get("");
+            assertEquals(path.toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"gitlab.com"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL));
+            assertNotEquals(path.toAbsolutePath()+File.separator+"GitDataBase"+File.separator+"gitlab.com"+File.separator+"Contributor"+File.separator+"Project",sW.localPathFromURI(repositoryURL2));
         }
 
         @Test
@@ -88,7 +88,7 @@ public class BlameTest{
 
     @Nested
     public class JGitBlameTest{
-        private JGitBlame jGit = new JGitBlame();
+        private final JGitBlame jGit = new JGitBlame();
 
 
         @Test
@@ -111,7 +111,6 @@ public class BlameTest{
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), null,git));
             assertThrows(NullPointerException.class,()->GitTools.checkAndClone(localPath, new File(localPath), repositoryURL,null));
             //assertThrows(NullPointerException.class,()->jGit.displayBlame(null,git));
-            assertThrows(NullPointerException.class,()->jGit.displayInformations(null));
 
         }
     }

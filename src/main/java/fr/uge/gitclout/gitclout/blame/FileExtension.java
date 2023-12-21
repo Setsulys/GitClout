@@ -12,54 +12,34 @@ public record FileExtension(String file, String extension) {
     }
     /**
      * Convert extensions to type of extensions
-     * @param extension
-     * @return
+     * @param extension last part of the file, after the dot
+     * @return an enum of the extension
      */
     public static Extensions extensionDescription(String extension) {
         Objects.requireNonNull(extension);
         return switch(extension.toLowerCase()) {
-            case "c" -> Extensions.C;
-            case "h" -> Extensions.C;
+            case "c", "h" -> Extensions.C;
             case "java" -> Extensions.JAVA;
             case "js" -> Extensions.JAVASCRIPT;
             case "html" -> Extensions.HTML;
             case "css" -> Extensions.CSS;
             case "py" -> Extensions.PYTHON;
-            case "cpp" -> Extensions.CPLUSPLUS;
-            case "hpp" -> Extensions.CPLUSPLUS;
-            case "c++" -> Extensions.CPLUSPLUS;
-            case "cc" -> Extensions.CPLUSPLUS;
-            case "hh" -> Extensions.CPLUSPLUS;
+            case "cpp", "hpp", "c++", "hh", "cc" -> Extensions.CPLUSPLUS;
             case "php" -> Extensions.PHP;
             case "ts" -> Extensions.TYPESCRPIPT;
             case "rb" -> Extensions.RUBY;
             case "cs" -> Extensions.CSHARP;
 
-            case "xml" -> Extensions.BUILD;
-            case "yml" -> Extensions.BUILD;
+            case "xml", "yml" -> Extensions.BUILD;
 
             case "md" -> Extensions.DOC;
 
-            case "csv" -> Extensions.RESSOURCES;
-            case "docx" -> Extensions.RESSOURCES;
-            case "txt" -> Extensions.RESSOURCES;
+            case "csv", "docx", "txt" -> Extensions.RESSOURCES;
 
-            case "mp3" -> Extensions.MEDIA;
-            case "mp4" -> Extensions.MEDIA;
-            case "wav" -> Extensions.MEDIA;
-            case "mkv" -> Extensions.MEDIA;
-            case "jpg" -> Extensions.MEDIA;
-            case "png" -> Extensions.MEDIA;
-            case "jpeg" -> Extensions.MEDIA;
-            case "webm" -> Extensions.MEDIA;
-            case "jiff" -> Extensions.MEDIA;
-            case "gif" -> Extensions.MEDIA;
-            case "xls" -> Extensions.MEDIA;
+            case "mp3", "mp4", "wav", "mkv", "jpg", "png", "jpeg", "webm", "jiff", "gif", "xls" -> Extensions.MEDIA;
 
-            case "git" -> Extensions.CONFIGURATION;
-            case "gitignore" -> Extensions.CONFIGURATION;
+            case "git", "gitignore", "project" -> Extensions.CONFIGURATION;
             case "makefile" -> Extensions.MAKEFILE;
-            case "project" -> Extensions.CONFIGURATION;
 
             default -> Extensions.OTHER;
         };

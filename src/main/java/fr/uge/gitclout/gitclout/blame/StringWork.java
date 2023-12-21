@@ -27,7 +27,7 @@ public class StringWork {
      * create folder with URL name and project and return localpath of the folder
      * @param repositoryURL string of the git url
      * @return localpath local path of the git
-     * @throws IOException
+     * @throws IOException exception
      */
     public String localPathFromURI(String repositoryURL) throws IOException {
         Objects.requireNonNull(repositoryURL);
