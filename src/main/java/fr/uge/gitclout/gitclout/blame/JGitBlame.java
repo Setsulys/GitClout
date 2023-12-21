@@ -84,7 +84,7 @@ public class JGitBlame {
     private void displayInformations(Git git) {
         Objects.requireNonNull(git);
         System.out.println("\n\n"+GitTools.getAuthorCredentials(git));
-        System.out.println(getTagOfProjectString());
+        //System.out.println(getTagOfProjectString());
     }
 
     /**
@@ -109,6 +109,7 @@ public class JGitBlame {
     private void checkEndedTask() {
         scheduler.scheduleAtFixedRate(() -> {
             percentOfFinished = Double.valueOf(finishedTask)*100/Double.valueOf(tagOfProject.size());
+            //percentOfFinished = finishedTask*100/tagOfProject.size();
             System.out.println("Task ended : " + df.format(percentOfFinished) +"%" + " == "+finishedTask+"/"+tagOfProject.size());
         }, 1, 2, TimeUnit.SECONDS);
     }
@@ -163,13 +164,12 @@ public class JGitBlame {
     /**
      * The method used for using this class
      * @param repositoryURL link of the repo
-     * @return true if this repository is a git, false otherwise
      */
-    public boolean run(String repositoryURL) {
+    public void run(String repositoryURL) {
         try {
-            if(!UtilsMethods.isGitRepo(repositoryURL)){
+/*            if(!UtilsMethods.isGitRepo(repositoryURL)){
                 return false;
-            }
+            }*/
             System.out.println("-----Pulling or cloning-----");
             String localPath = new StringWork().localPathFromURI(repositoryURL);
             String gitPath  = localPath + "/.git";
@@ -184,8 +184,6 @@ public class JGitBlame {
         System.out.println("Task ended :100.00%" + " == "+finishedTask+"/"+tagOfProject.size());
         System.out.println("work done");
         System.out.println(blameList.stream().map(e-> e.blameDatas().stream().map(i-> i.toString()+"\n").collect(Collectors.toList()).toString()).collect(Collectors.joining("\n")));
-
-        return true;
     }
 
     /**
@@ -196,6 +194,9 @@ public class JGitBlame {
         return blameList;
     }
 
+    public double PercentOfFinishedTask(){
+        return percentOfFinished;
+    }
     public static void main(String[] args) throws IOException {
         var jgit = new JGitBlame();
         jgit.run("https://gitlab.com/Setsulys/the_light_corridor.git");

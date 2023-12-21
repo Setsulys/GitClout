@@ -212,8 +212,7 @@ public class Blame {
 		for(var contributor : contributorData) {
 			var line =countline.getOrDefault(contributor, null);
 			var data = new Data(currentTag, contributor,file,line!=null?line:0);
-
-			System.out.println(data);
+			//System.out.println(data);
 			blameData.add(data);
 		}
 	}

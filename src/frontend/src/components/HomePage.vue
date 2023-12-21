@@ -1,12 +1,20 @@
 
 <template>
-    <h1>{{msg}}</h1>
-    <h3> revenez plus tard</h3>
-    <h3>Inserez votre lien GIT</h3>
-    <div class="ui large action input">
-      <input class="wide-input" v-model="text" @keyup.enter="onclick" placeholder="https://gitlab.com/nom/projet">
-        <div class="ui button" @click="onclick" >Gitclouting</div>
+  <h1>{{msg}}</h1>
+  <h3> revenez plus tard</h3>
+  <h3>Inserez votre lien GIT</h3>
+  <div class="ui large action input">
+    <input class="wide-input" v-model="text" @keyup.enter="onclick" placeholder="https://gitlab.com/nom/projet">
+    <div class="ui button" @click="onclick" >Gitclouting</div>
+  </div>
+  <div class="title">
+    <div class v-if="loading">
+      <div class="ui active centered inline loader"></div>
+      <p>{{percent}}%</p>
+      <p>Traitement du git</p>
     </div>
+  </div>
+
   <div class="title">
     <div class v-if="!isFirstTime">
       <div class v-if="!isRunnable">
@@ -42,17 +50,19 @@ export default {
       text: '',
       isRunnable:false,
       isFirstTime:true,
+      loading:false,
+      percent:0,
     };
   },
 
   methods: {
-
     reloadCurrentPage(){
       window.location.reload();
     },
     onclick(){
       this.submit();
       this.openNewTab();
+      this.loading=true;
     },
     openNewTab(){
       /*      const newTab = './HelloWorld.vue';
@@ -65,22 +75,39 @@ export default {
       const data = {
         gitLink: this.text,
       };
-      axios
-          .post('/app/rest/toTheBack', data)
+      axios.post('/app/rest/toTheBack', data)
           .then((response) => {
             console.log(response.data);
             this.isRunnable=response.data;
             if(this.isRunnable){
+
               this.reloadCurrentPage();
+
             }
-            else{
-              this.isRunnable=false;
-            }
+            this.isRunnable=false;
             this.isFirstTime=false;
+            this.loading=false;
+            return response.data;
           })
           .catch((error) => {
             console.error(error);
           });
+
+    },
+    checkPercent(){
+      const data = {
+        gitLink: this.text,
+      };
+      axios.post('app/rest/percentFinished',data)
+          .then((response)=>{
+            console.log(response.data);
+            if(response.data!=null){
+              this.percent=Number(response.data).toFixed(2);
+            }
+
+          }).catch(error=>{
+        console.error('Error fetching percent',error);
+      });
     },
   },
 
@@ -93,6 +120,10 @@ export default {
         .catch((error) => {
           console.error('Error fetching data:', error);
         });
+    this.checkPercent();
+    setInterval(() =>{
+      this.checkPercent();
+    },2000);
   },
 
 };
@@ -105,5 +136,12 @@ width: 50%;
 
 .error{
   color: darkred;
+}
+.title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5vh;
+  margin-bottom: 1vh;
 }
 </style>

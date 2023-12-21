@@ -98,4 +98,11 @@ export default {
   flex-grow: 1;
   display:flex;
 }
+.title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5vh;
+  margin-bottom: 1vh;
+}
 </style>

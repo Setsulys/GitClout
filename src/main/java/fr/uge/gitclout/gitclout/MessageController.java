@@ -19,6 +19,12 @@ public class MessageController {
         return back.tryAndAdd(gitLink);
     }
 
+    @RequestMapping("/percentFinished")
+    public double percentFinished(@RequestBody GitLinkRequest gitLinkRequest){
+        String gitLink = gitLinkRequest.getGitLink();
+        return back.getPercentageOfProject(gitLink);
+    }
+
 
     @GetMapping("/getlink")
     @ResponseBody
