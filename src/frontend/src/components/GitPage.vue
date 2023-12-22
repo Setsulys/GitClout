@@ -49,10 +49,14 @@ export default {
         .then(response => response.json())
         .then(data =>{
           this.links= data;
+          if(this.links.length!==0){
+            this.$emit("haveData");
+          }
         })
         .catch(error=>{
           console.error('Erreur lors de la récupération des liens', error);
         });
+
   }
 }
 </script>

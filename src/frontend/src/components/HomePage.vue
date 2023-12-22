@@ -8,7 +8,7 @@
     <div class="ui button" @click="onclick" >Gitclouting</div>
   </div>
   <div class="title">
-    <div class v-if="loading">
+    <div class v-show="loading">
       <div class="ui active centered inline loader"></div>
       <p>{{percent}}%</p>
       <p>Traitement du git</p>
@@ -16,8 +16,7 @@
   </div>
 
   <div class="title">
-    <div class v-if="!isFirstTime">
-      <div class v-if="!isRunnable">
+      <div class v-show="!isRunnable">
         <div class="title">
           <h2 class="ui header">
             <i class="exclamation circle icon error"></i>
@@ -27,28 +26,32 @@
           </h2>
         </div>
       </div>
-    </div>
   </div>
-
-  <div class="ui compact menu">
-    <div class="ui simple dropdown item">
-      <i class="tag icon red"></i>
-      {{ selectedTag ? selectedTag : 'Project Tag' }}
-      <i class="dropdown icon"></i>
-      <div class="menu">
-        <div class="choice">
-          <div class="item" v-for="choice in choices" :key="choice" @click="selectTag(choice)">
-            <i class="tags icon red"></i>
-            {{ choice }}
+  <div v-show="showElement">
+    <div v-show="isRunnable">
+      <div class="ui compact menu">
+        <div class="ui simple dropdown item">
+          <i class="tag icon red"></i>
+          {{ selectedTag==='undo'?'Project Tag':selectedTag }}
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="choice">
+              <div class="item" v-for="choice in choices" :key="choice" @click="selectTag(choice)">
+                <i class="tags icon red"></i>
+                {{ choice }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div id="selectedChoice">Selected Tag: {{ selectedTag }}</div>
-
-  <GitPage/>
-  <chart-page/>
+  <div v-show="selectedTag !== 'undo'">
+    <div v-show="isRunnable">
+      <chart-page/>
+    </div>
+  </div>
+  <GitPage @haveData="handleGitEvent"/>
 </template>
 
 <script>
@@ -66,27 +69,35 @@ export default {
     return {
       msg: '',
       text: '',
-      isRunnable:false,
-      isFirstTime:true,
+      isRunnable:true,
       loading:false,
       percent:0,
       choices: [
-        'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', 'Choice 5',
-        'Choice 6', 'Choice 7', 'Choice 8', 'Choice 9', 'Choice 10',
-        'Choice 11', 'Choice 12', 'Choice 13', 'Choice 14', 'Choice 15'
+          'undo',
+        'Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5',
+        'Tag 6', 'Tag 7', 'Tag 8', 'Tag 9', 'Tag 10',
+        'Tag 11', 'Tag 12', 'Tag 13', 'Tag 14', 'Tag 15'
       ],
-      selectedTag: '',
+      selectedTag: 'undo',
+      showElement:false,
     };
   },
 
   methods: {
+    handleGitEvent(){
+      this.showElement=true;
+    },
     selectTag(choice) {
+      if(choice==='undo'){
+        this.selectedTag='';
+      }
       this.selectedTag = choice;
     },
     reloadCurrentPage(){
       window.location.reload();
     },
     onclick(){
+      localStorage.setItem('isNotFirstTime', 'true');
       this.submit();
       this.loading=true;
     },
@@ -99,12 +110,8 @@ export default {
             console.log(response.data);
             this.isRunnable=response.data;
             if(this.isRunnable){
-
               this.reloadCurrentPage();
-
             }
-            this.isRunnable=false;
-            this.isFirstTime=false;
             this.loading=false;
             return response.data;
           })
