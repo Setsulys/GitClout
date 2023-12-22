@@ -29,6 +29,24 @@
       </div>
     </div>
   </div>
+
+  <div class="ui compact menu">
+    <div class="ui simple dropdown item">
+      <i class="tag icon red"></i>
+      {{ selectedTag ? selectedTag : 'Project Tag' }}
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <div class="choice">
+          <div class="item" v-for="choice in choices" :key="choice" @click="selectTag(choice)">
+            <i class="tags icon red"></i>
+            {{ choice }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="selectedChoice">Selected Tag: {{ selectedTag }}</div>
+
   <GitPage/>
   <chart-page/>
 </template>
@@ -52,24 +70,25 @@ export default {
       isFirstTime:true,
       loading:false,
       percent:0,
+      choices: [
+        'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', 'Choice 5',
+        'Choice 6', 'Choice 7', 'Choice 8', 'Choice 9', 'Choice 10',
+        'Choice 11', 'Choice 12', 'Choice 13', 'Choice 14', 'Choice 15'
+      ],
+      selectedTag: '',
     };
   },
 
   methods: {
+    selectTag(choice) {
+      this.selectedTag = choice;
+    },
     reloadCurrentPage(){
       window.location.reload();
     },
     onclick(){
       this.submit();
-      this.openNewTab();
       this.loading=true;
-    },
-    openNewTab(){
-      /*      const newTab = './HelloWorld.vue';
-            window.open(newTab,'_blank');*/
-      //this.$router.push({name:'HelloWorld'})
-      const newTab = window.open('', '_blank');
-      newTab.location.href = this.$router.resolve({ name: 'NewFile' }).href;
     },
     submit() {
       const data = {
@@ -143,5 +162,9 @@ width: 50%;
   align-items: center;
   margin-top: 5vh;
   margin-bottom: 1vh;
+}
+.choice{
+  overflow-y:auto;
+  max-height: 30vh;
 }
 </style>
