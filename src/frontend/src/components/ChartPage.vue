@@ -2,10 +2,12 @@
   <div class ="chartMenu">
     <div class="title">
       <h2 class="ui header">
-        <i class="chart bar icon"></i>
-        <div class="content">
-          Statistiques du git blamé
-          <div class="sub header">Valeurs en dur</div>
+        <i class="chart bar icon white"></i>
+        <div class="content white">
+          <div class="white">
+            Statistiques du git blamé
+          </div>
+          <div class="sub header white">Valeurs en dur</div>
         </div>
       </h2>
     </div>
@@ -179,10 +181,10 @@ export default {
   padding: 20px;
   border-radius: 20px;
   border: solid 3px rgba(0, 0, 0, 1);
-  background: white;
   align-items: center;
   justify-content: center;
   margin-top: 1vh;
+  background-color: rgb(13,19,15,0.3);
 }
 
 .colLarge{
@@ -202,5 +204,6 @@ export default {
   align-items: center;
   margin-top: 5vh;
   margin-bottom: 1vh;
+  color:white;
 }
 </style>

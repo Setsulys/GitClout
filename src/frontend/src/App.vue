@@ -7,7 +7,6 @@
 
   </div>
   </body>
-
 </template>
 
 <script>
@@ -29,14 +28,15 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  background-color: rgba(43,49,55,0.7);
   margin-top: 60px;
 }
 img{
   width: 18%;
 }
 body{
-  background-color: rgb(150, 153, 201,0.7);
+  background-color: rgba(43,49,55,0.7);
+  color:white;
 }
 </style>
 

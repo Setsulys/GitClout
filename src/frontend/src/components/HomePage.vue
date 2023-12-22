@@ -4,7 +4,7 @@
   <h3> revenez plus tard</h3>
   <h3>Inserez votre lien GIT</h3>
   <div class="ui large action input">
-    <input class="wide-input" v-model="text" @keyup.enter="onclick" placeholder="https://gitlab.com/nom/projet">
+    <input class="wide-input grayBackground" v-model="text" @keyup.enter="onclick" placeholder="https://gitlab.com/nom/projet">
     <div class="ui button" @click="onclick" >Gitclouting</div>
   </div>
   <div class="title">
@@ -29,8 +29,8 @@
   </div>
   <div v-show="showElement">
     <div v-show="isRunnable">
-      <div class="ui compact menu">
-        <div class="ui simple dropdown item">
+      <div class="ui compact menu grayBackground">
+        <div class="ui simple dropdown item grayBackground">
           <i class="tag icon red"></i>
           {{ selectedTag==='undo'?'Project Tag':selectedTag }}
           <i class="dropdown icon"></i>
@@ -130,7 +130,6 @@ export default {
             if(response.data!=null){
               this.percent=Number(response.data).toFixed(2);
             }
-
           }).catch(error=>{
         console.error('Error fetching percent',error);
       });
@@ -161,7 +160,7 @@ width: 50%;
 }
 
 .error{
-  color: darkred;
+  color: darkgoldenrod;
 }
 .title{
   display: flex;
@@ -173,5 +172,9 @@ width: 50%;
 .choice{
   overflow-y:auto;
   max-height: 30vh;
+}
+
+.grayBackground{
+  background-color: rgb(23,29,25,0.3);
 }
 </style>

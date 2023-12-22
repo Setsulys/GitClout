@@ -4,10 +4,14 @@
   <div class ="gitMenu">
     <div class="title">
       <h2 class="ui header">
-        <i class="github icon"></i>
-        <div class="content">
+        <i class="github icon white"></i>
+        <div class="content white">
           Liens des projets deja Blamés
-          <div class="sub header">Cliquez dessus</div>
+          <div class="sub header">
+            <div class="white">
+              Cliquez dessus
+            </div>
+          </div>
         </div>
       </h2>
     </div>
@@ -86,7 +90,7 @@ export default {
   padding: 20px;
   border-radius: 20px;
   border: solid 3px rgba(0, 0, 0, 1);
-  background: white;
+  background-color: rgb(43,49,55,0.7);
   overflow-y:auto;
 }
 
@@ -108,5 +112,9 @@ export default {
   align-items: center;
   margin-top: 5vh;
   margin-bottom: 1vh;
+  color:white;
+}
+.white{
+  color:white;
 }
 </style>
