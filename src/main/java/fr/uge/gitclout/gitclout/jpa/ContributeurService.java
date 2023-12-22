@@ -16,7 +16,9 @@ public class ContributeurService {
         Contributeur contributeur = new Contributeur();
         contributeur.setGitId(gitId);
         contributeur.setName(name);
-
+        if(entityManager.contains(contributeur)){
+            return;
+        }
         entityManager.persist(contributeur);
     }
 

@@ -231,6 +231,8 @@ public class Blame {
 		return currentTag;
 	}
 
+
+
 	public int currentRefPosition() {
 		return currentTagPosition;
 	}

@@ -11,8 +11,6 @@ public class Participation {
 
     private int nbLignesCode;
 
-    private int nbLignesCom;
-
 
     public int getLignes() {
         return nbLignesCode;
@@ -22,13 +20,6 @@ public class Participation {
         this.nbLignesCode = lignes;
     }
 
-    public int getNbLignesCom() {
-        return nbLignesCom;
-    }
-
-    public void setNbLignesCom(int nbLignesCom) {
-        this.nbLignesCom = nbLignesCom;
-    }
 
     public ParticipationPrimaryKey getId() {
         return id;

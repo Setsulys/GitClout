@@ -2,6 +2,7 @@ package fr.uge.gitclout.gitclout.blame;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,6 +33,8 @@ public class JGitBlame {
     private int finishedTask =0;
     private double percentOfFinished=0;
     private static final DecimalFormat df = new DecimalFormat("0.00");
+
+    private String gito = null;
 
     /**
      * Get the date of all the refs
@@ -140,6 +143,7 @@ public class JGitBlame {
             File tmpDir  = new File(gitPath);
             Repository repos =getRepos(gitPath);
             Git git = new Git(repos);
+            gito = repositoryURL.substring(8,repositoryURL.length()-4);
             GitTools.checkAndClone(localPath, tmpDir, repositoryURL,git);
             displayInformations(git);
             checkRepositoryTags(git, repositoryURL);
@@ -180,6 +184,15 @@ public class JGitBlame {
     public ArrayList<Blame> projectData(){
         return blameList;
     }
+
+    public String getGit(){
+        return gito;
+    }
+
+    public HashMap<Ref,java.sql.Date> getDateMap(){
+        return tagDate;
+    }
+
 
 
     public static void main(String[] args) throws IOException {

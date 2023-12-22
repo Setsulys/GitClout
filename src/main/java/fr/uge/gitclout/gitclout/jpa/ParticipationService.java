@@ -22,13 +22,14 @@ public class ParticipationService {
         id.setFichierId(fichierId);
         participation.setId(id);
         participation.setNbLignesCode(nbLignesCode);
-        participation.setNbLignesCom(nbLignesCom);
-
+        if(entityManager.contains(participation)){
+            return;
+        }
         entityManager.persist(participation);
     }
 
     public List<Object[]> getData(String tagParameter) {
-        String jpql = "SELECT c.name, t.nomTag, f.nomFichier, p.nbLignesCode, p.nbLignesCom " +
+        String jpql = "SELECT c.name, t.nomTag, f.nomFichier, p.nbLignesCode " +
                 "FROM Participation p " +
                 "JOIN Contributeur c ON p.id.gitId = c.gitId " +
                 "JOIN Tag t ON p.id.tagId = t.TagId " +

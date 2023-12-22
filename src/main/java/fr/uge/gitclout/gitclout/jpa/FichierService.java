@@ -14,7 +14,9 @@ public class FichierService {
         Fichier file = new Fichier();
         file.setNomFichier(name);
         file.setLangage(langage);
-
+        if(entityManager.contains(file)){
+            return;
+        }
         entityManager.persist(file);
     }
 

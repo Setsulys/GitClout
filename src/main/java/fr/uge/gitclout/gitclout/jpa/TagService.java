@@ -17,6 +17,9 @@ public class TagService {
         tag.setTagId(TagId);
         tag.setNomTag(nomTag);
         tag.setProject(project);
+        if(entityManager.contains(tag)){
+            return;
+        }
 
         entityManager.persist(tag);
     }

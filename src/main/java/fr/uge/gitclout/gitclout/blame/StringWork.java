@@ -13,7 +13,7 @@ public class StringWork {
      * @param file split the file and put it in a record
      * @return the file and it extension in a record
      */
-    public FileExtension splitExtention(String file) {
+    public static FileExtension splitExtention(String file) {
         Objects.requireNonNull(file);
         String[] split =file.split("[.]",2);
         //System.out.println(Arrays.asList(split).stream().collect(Collectors.joining(",")));
