@@ -153,9 +153,8 @@ public class JGitBlame {
      */
     private void executeForEveryTag(Git git) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException {
         for(var i =0; i < tagOfProject.size();i++) {
-            var j= i;
-            System.out.println("start --------------------------" + tagOfProject.get(j).getName());
-            runByTag(git,tagOfProject,j);
+            System.out.println("start --------------------------" + tagOfProject.get(i).getName());
+            runByTag(git,tagOfProject,i);
             finishedTask++;
         }
         scheduler.shutdown();
@@ -176,11 +175,13 @@ public class JGitBlame {
             prepareTag(git,tmpDir,repositoryURL,localPath);
             executeForEveryTag(git);
         } catch (Exception e) {
-            throw new AssertionError(e);
+            throw new AssertionError("Problem in run",e);
         }
         System.out.println("Task ended :100.00%" + " == "+finishedTask+"/"+tagOfProject.size());
         System.out.println("work done");
-        System.out.println(blameList.stream().map(e-> e.blameDatas().stream().map(i-> i.toString()+"\n").collect(Collectors.toList()).toString()).collect(Collectors.joining("\n")));
+        //System.out.println(blameList.stream().map(e-> e.blameDatas().toString()).collect(Collectors.joining("\n")));
+        //System.out.println("-------------------------------------------------------");
+        //System.out.println(blameList.stream().map(Blame::DataString).collect(Collectors.joining("\n")));
 
     }
 

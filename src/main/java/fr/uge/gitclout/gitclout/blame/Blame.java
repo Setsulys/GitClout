@@ -106,7 +106,6 @@ public class Blame {
 				checkCommentsInit(blameResult,description);
 			}
 			else if(changedFiles.contains(filePath)) {//Check if the current file is modified
-				//System.out.println(changedFiles.size()+" & " +filePath +" is present ");
 				checkCommentsInit(blameResult,description);
 			}
 		}
@@ -167,7 +166,6 @@ public class Blame {
 	 * @param pattern is the pattern get from the method regex
 	 * @param extension is the extension of the file
 	 * @param codeCount a hashmap collecting contributors and it contribution on codes lines
-	 * @throws ExecutionException exception
 	 */
 	public void checkComments(BlameResult blame,RawText rawText, Pattern pattern,Extensions extension, HashMap<Contributor,Integer> codeCount){
 		Objects.requireNonNull(blame);
@@ -217,6 +215,10 @@ public class Blame {
 	 */
 	public ArrayList<Data> blameDatas(){
 		return new ArrayList<>(datas.values());
+	}
+
+	public String DataString(){
+		return datas.values().stream().map(e ->blameDatas().toString()+"\n").collect(Collectors.joining("\n"));
 	}
 }
 

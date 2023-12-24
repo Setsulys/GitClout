@@ -18,6 +18,7 @@ public class BackApplication{
         if(runnable){
             urlAndData.put(gitLink,jGit);
             jGit.run(gitLink);
+            System.out.println(jGit.projectData().stream().map(e-> e.blameDatas().toString()).collect(Collectors.joining("\n")));
         }
         return runnable;
     }
