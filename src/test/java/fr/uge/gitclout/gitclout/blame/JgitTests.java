@@ -61,7 +61,7 @@ public class BlameTest{
             assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, null,0,diffs));
             assertThrows(NullPointerException.class, ()-> new Blame(git, treeWalk, tagTree, getTags,0,null));
 
-            assertThrows(NullPointerException.class, ()-> blame.checkCommentsInit(null,extension,""));
+            assertThrows(NullPointerException.class, ()-> blame.checkCommentsInit(null,extension));
 
         }
     }
@@ -138,7 +138,7 @@ public class BlameTest{
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("c++"));
             assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("cpp"));
             assertEquals(Extensions.PHP,FileExtension.extensionDescription("php"));
-            assertEquals(Extensions.TYPESCRPIPT,FileExtension.extensionDescription("ts"));
+            assertEquals(Extensions.TYPESCRIPT,FileExtension.extensionDescription("ts"));
             assertEquals(Extensions.CSHARP,FileExtension.extensionDescription("cs"));
             assertEquals(Extensions.RUBY,FileExtension.extensionDescription("rb"));
             assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mp3"));

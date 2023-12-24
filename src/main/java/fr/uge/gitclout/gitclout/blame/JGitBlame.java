@@ -48,7 +48,7 @@ public class JGitBlame {
             } catch (IOException e) {
                 throw new AssertionError(e);
             }
-        })).map(e -> e).collect(Collectors.toList()));
+        })).collect(Collectors.toList()));
         tagOfProject.addAll(list);
     }
 
@@ -59,7 +59,7 @@ public class JGitBlame {
      * @return all the tags presents in the project
      */
     public String getTagOfProjectString() {
-        return tagOfProject.stream().map(e -> e.getName()).collect(Collectors.joining("\n","----------TAGS----------\n","\n------------------------\n"));
+        return tagOfProject.stream().map(Ref::getName).collect(Collectors.joining("\n","----------TAGS----------\n","\n------------------------\n"));
     }
 
 
@@ -68,7 +68,7 @@ public class JGitBlame {
      * Get the local repository
      * @param gitPath gitpath in local
      * @return a Repository of the current gitPath
-     * @throws IOException
+     * @throws IOException exception
      */
     public Repository getRepos(String gitPath) throws IOException {
         Objects.requireNonNull(gitPath);
@@ -79,7 +79,7 @@ public class JGitBlame {
 
     /**
      * Display the information of the project (like tags of the project and contributors)
-     * @param git
+     * @param git git of the current project
      */
     private void displayInformations(Git git) {
         Objects.requireNonNull(git);
@@ -167,9 +167,6 @@ public class JGitBlame {
      */
     public void run(String repositoryURL) {
         try {
-/*            if(!UtilsMethods.isGitRepo(repositoryURL)){
-                return false;
-            }*/
             System.out.println("-----Pulling or cloning-----");
             String localPath = new StringWork().localPathFromURI(repositoryURL);
             String gitPath  = localPath + "/.git";
@@ -184,6 +181,7 @@ public class JGitBlame {
         System.out.println("Task ended :100.00%" + " == "+finishedTask+"/"+tagOfProject.size());
         System.out.println("work done");
         System.out.println(blameList.stream().map(e-> e.blameDatas().stream().map(i-> i.toString()+"\n").collect(Collectors.toList()).toString()).collect(Collectors.joining("\n")));
+
     }
 
     /**
@@ -202,6 +200,5 @@ public class JGitBlame {
         jgit.run("https://gitlab.com/Setsulys/the_light_corridor.git");
         //jgit.run("https://github.com/openjdk/jdk.git");
         //jgit.run("https://gitlab.ow2.org/asm/asm.git");
-        //jgit.projectData();
     }
 }

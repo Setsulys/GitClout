@@ -184,7 +184,7 @@ export default {
   align-items: center;
   justify-content: center;
   margin-top: 1vh;
-  background-color: rgb(13,19,15,0.3);
+  background-color: rgba(243,249,245,0.7);
 }
 
 .colLarge{

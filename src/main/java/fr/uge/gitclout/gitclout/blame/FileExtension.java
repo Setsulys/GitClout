@@ -26,7 +26,7 @@ public record FileExtension(String file, String extension) {
             case "py" -> Extensions.PYTHON;
             case "cpp", "hpp", "c++", "hh", "cc" -> Extensions.CPLUSPLUS;
             case "php" -> Extensions.PHP;
-            case "ts" -> Extensions.TYPESCRPIPT;
+            case "ts" -> Extensions.TYPESCRIPT;
             case "rb" -> Extensions.RUBY;
             case "cs" -> Extensions.CSHARP;
 
@@ -43,17 +43,6 @@ public record FileExtension(String file, String extension) {
 
             default -> Extensions.OTHER;
         };
-    }
-
-
-    @Override
-    public String file() {
-        return file;
-    }
-
-    @Override
-    public String extension() {
-        return extension;
     }
 
     @Override

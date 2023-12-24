@@ -9,7 +9,7 @@ public enum Extensions {
     PYTHON,
     CPLUSPLUS,
     PHP,
-    TYPESCRPIPT,
+    TYPESCRIPT,
     CSHARP,
     RUBY,
     DOC,
