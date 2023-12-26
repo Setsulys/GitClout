@@ -1,6 +1,7 @@
 package fr.uge.gitclout.gitclout.jpa;
 
 import fr.uge.gitclout.gitclout.blame.Blame;
+import fr.uge.gitclout.gitclout.blame.Extensions;
 import fr.uge.gitclout.gitclout.blame.FileExtension;
 import fr.uge.gitclout.gitclout.blame.StringWork;
 import org.eclipse.jgit.lib.Ref;
@@ -22,12 +23,15 @@ public class DatabaseManager {
     private TagService tagService;
     private ParticipationService participationService;
 
+
+
     @Autowired
     public DatabaseManager(ContributeurService contributeurService, LangageService langageService, TagService tagService, ParticipationService participationService) {
         this.participationService = participationService;
         this.tagService = tagService;
         this.langageService = langageService;
         this.contributeurService = contributeurService;
+        fillLanguages();
     }
 
 
@@ -48,7 +52,6 @@ public class DatabaseManager {
 
                 Langage langage = new Langage();
                 langage.setLangage(datas.get(a).getExtension().toString());
-                langageService.insertLangage(langage);
 
                 Tag tag = new Tag();
                 tag.setTagId(tago.toString());
@@ -74,6 +77,14 @@ public class DatabaseManager {
         }
         System.out.println(langageService.selectLangage());
 
+    }
+
+    public void fillLanguages(){
+        for(var ex : Extensions.values()){
+            Langage langage = new Langage();
+            langage.setLangage(ex.toString());
+            langageService.insertLangage(langage);
+        }
     }
 
 
