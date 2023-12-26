@@ -1,33 +1,24 @@
 package fr.uge.gitclout.gitclout.jpa;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Service
 public class ContributeurService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-
-    public void insertContributeur(String gitId, String name) {
-        Contributeur contributeur = new Contributeur();
-        contributeur.setGitId(gitId);
-        contributeur.setName(name);
-        if(entityManager.contains(contributeur)){
-            return;
-        }
-        entityManager.persist(contributeur);
+    private ContributeurRepo contributeurRepo;
+    @Autowired
+    public ContributeurService(ContributeurRepo contributeurRepo){
+        this.contributeurRepo = contributeurRepo;
     }
 
-    public void getData() {
-        var contributeurs = entityManager.createQuery("SELECT c FROM Contributeur c", Contributeur.class).getResultList();
 
-        for (Contributeur contributeur : contributeurs) {
-            System.out.println(contributeur.getName() + " - " + contributeur.getGitId());
-        }
+    public void insertContributeur(Contributeur con) {
+        contributeurRepo.save(con);
     }
+
 
 }

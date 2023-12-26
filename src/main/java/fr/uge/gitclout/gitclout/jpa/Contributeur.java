@@ -1,5 +1,10 @@
 package fr.uge.gitclout.gitclout.jpa;
-import javax.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.Set;
 
 @Entity
 
@@ -8,6 +13,17 @@ public class Contributeur {
     private String gitId;
 
     private String name;
+    @OneToMany
+    private Set<Participation> participation;
+
+    public Contributeur() {
+    }
+
+    public Contributeur(String gitId,String name, Set<Participation> participation) {
+        this.gitId = gitId;
+        this.name =name;
+        this.participation = participation;
+    }
 
     public String getGitId(){
         return gitId;

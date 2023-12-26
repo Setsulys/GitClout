@@ -1,37 +1,25 @@
 <template>
+  <body>
   <img src="./assets/gclout.png">
-  <HomePage @openNewFile ="openNewFile"/>
-    <NewFile v-if="showNewFile  " @closeNewFile = "closeNewFile"/>
+  <HomePage/>
+<!--  <NewFile/>-->
   <div id="app">
 
   </div>
+  </body>
+
 </template>
 
 <script>
 import HomePage from './components/HomePage.vue'
-import NewFile from "@/components/NewFile.vue";
+/*import NewFile from "@/components/NewFile.vue";*/
 
 export default {
   name: 'App',
   components: {
     HomePage,
-    NewFile,
+/*    NewFile,*/
   },
-  data(){
-    return{
-      showNewFile : false,
-    };
-  },
-
-  methods:{
-    openNewFile(){
-      this.showNewFile = true;
-    },
-    closeNewFile(){
-      this.showNewFile = false;
-    }
-
-  }
 }
 </script>
 
@@ -46,6 +34,9 @@ export default {
 }
 img{
   width: 18%;
+}
+body{
+  background-color: rgb(150, 153, 201,0.7);
 }
 </style>
 

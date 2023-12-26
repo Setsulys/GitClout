@@ -1,150 +1,114 @@
 
 <template>
-    <h1>{{msg}}</h1>
-    <h3> revenez plus tard</h3>
-    <h3>Inserez votre lien GIT</h3>
-
-    <div class="ui large action input">
-          <input class="wide-input" v-model="text" placeholder="https://gitlab.com/nom/projet">
-          <div class="ui button" @click="onclick" >Gitclouting</div>
+  <h1>{{msg}}</h1>
+  <h3> revenez plus tard</h3>
+  <h3>Inserez votre lien GIT</h3>
+  <div class="ui large action input">
+    <input class="wide-input" v-model="text" @keyup.enter="onclick" placeholder="https://gitlab.com/nom/projet">
+    <div class="ui button" @click="onclick" >Gitclouting</div>
+  </div>
+  <div class="title">
+    <div class v-if="loading">
+      <div class="ui active centered inline loader"></div>
+      <p>{{percent}}%</p>
+      <p>Traitement du git</p>
     </div>
+  </div>
 
-  <div class ="chartMenu">
-    <div class="chartCard">
-      <div class ="chartBox">
-        <div class="wrapper">
-          <div class ="colLarge">
-            <div class="box">
-              <canvas id="myChart"></canvas>
+  <div class="title">
+    <div class v-if="!isFirstTime">
+      <div class v-if="!isRunnable">
+        <div class="title">
+          <h2 class="ui header">
+            <i class="exclamation circle icon error"></i>
+            <div class="content">
+              <small class="error">Ce n'est pas un repo git</small>
             </div>
-          </div>
+          </h2>
         </div>
       </div>
     </div>
   </div>
+  <GitPage/>
+  <chart-page/>
 </template>
 
 <script>
 import axios from 'axios';
-import Chart from 'chart.js/auto';
+import ChartPage from "@/components/ChartPage.vue";
+import GitPage from "@/components/GitPage.vue";
 
 export default {
   name: 'HomePage',
+  components:{
+    ChartPage,
+    GitPage,
+  },
   data() {
     return {
       msg: '',
       text: '',
-      chartData: {
-        labels: [], // Populate this dynamically
-        datasets: [
-          {
-            label: 'javascript',
-            backgroundColor: 'Orange',
-            data: [], // Populate this dynamically
-            barThickness: 20,
-          },
-          {
-            label: 'java',
-            backgroundColor: 'Yellow',
-            data: [], // Populate this dynamically
-            barThickness: 20,
-          },
-          {
-            label: 'markdown',
-            backgroundColor: 'lightblue',
-            data: [], // Populate this dynamically
-            barThickness: 20,
-          },
-          {
-            label: 'makefile',
-            backgroundColor: 'gray',
-            data: [], // Populate this dynamically
-            barThickness: 20,
-          },
-          {
-            label: 'configuration',
-            backgroundColor: 'purple',
-            data: [], // Populate this dynamically
-            barThickness: 20,
-          },
-        ],
-      },
+      isRunnable:false,
+      isFirstTime:true,
+      loading:false,
+      percent:0,
     };
   },
 
   methods: {
+    reloadCurrentPage(){
+      window.location.reload();
+    },
     onclick(){
       this.submit();
       this.openNewTab();
+      this.loading=true;
     },
     openNewTab(){
       /*      const newTab = './HelloWorld.vue';
             window.open(newTab,'_blank');*/
       //this.$router.push({name:'HelloWorld'})
-/*      const newTab = window.open('', '_blank');
-      newTab.location.href = this.$router.resolve({ name: 'NewFile' }).href;*/
-  this.$emit('openNewFile');
+      const newTab = window.open('', '_blank');
+      newTab.location.href = this.$router.resolve({ name: 'NewFile' }).href;
     },
     submit() {
       const data = {
         gitLink: this.text,
       };
-      axios
-          .post('/app/rest/toTheBack', data)
+      axios.post('/app/rest/toTheBack', data)
           .then((response) => {
             console.log(response.data);
-            // Update chart data based on the response if needed
+            this.isRunnable=response.data;
+            if(this.isRunnable){
+
+              this.reloadCurrentPage();
+
+            }
+            this.isRunnable=false;
+            this.isFirstTime=false;
+            this.loading=false;
+            return response.data;
           })
           .catch((error) => {
             console.error(error);
           });
+
     },
+    checkPercent(){
+      const data = {
+        gitLink: this.text,
+      };
+      axios.post('app/rest/percentFinished',data)
+          .then((response)=>{
+            console.log(response.data);
+            if(response.data!=null){
+              this.percent=Number(response.data).toFixed(2);
+            }
 
-    initializeChart() {
-      const box = document.querySelector('.box');
-      const boxWidth = Math.max(this.chartData.labels.length*150 ,10)
-      box.style.width = `calc(${boxWidth}px)`;
-
-      const ctx = document.getElementById('myChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: this.chartData,
-        options: {
-          tooltips: {
-            displayColors: true,
-            callbacks: {
-              mode: 'x',
-            },
-          },
-          scales: {
-            xAxes: [
-              {
-                barPercentage: 1,
-                categoryPercentage: 0.5,
-                stacked: true,
-                gridLines: {
-                  display: false,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                stacked: true,
-                ticks: {
-                  beginAtZero: true,
-                },
-                type: 'linear',
-              },
-            ],
-          },
-          responsive: true,
-          maintainAspectRatio: this.chartData.labels.length < 10,
-          legend: { position: 'left' },
-        },
+          }).catch(error=>{
+        console.error('Error fetching percent',error);
       });
     },
-
-    // Other methods can go here if needed
   },
 
   mounted() {
@@ -152,22 +116,16 @@ export default {
         .then((response) => response.text())
         .then((data) => {
           this.msg = data;
-          // Update chart data based on the received data if needed
-          this.chartData.labels = ["Steven","julien","kingue","yassine","christophe","stephane","kevin","ben","alexandre","carine","carine","carine","carine","carine","julien","kingue","yassine","christophe","stephane","kevin","ben","alexandre","carine","carine","carine","carine","carine","julien"]; // Populate labels array
-          this.chartData.datasets[0].data = [20, 559, 5, 56, 58,68, 59, 2, 45,18]; // Populate javascript data array
-          this.chartData.datasets[1].data = [1200, 59, 5, 56, 58,12, 59, 85, 23]; // Populate java data array
-          this.chartData.datasets[2].data = [12, 59, 5, 56, 58, 12, 59, 12, 74]; // Populate markdown data array
-          this.chartData.datasets[3].data = [20, 0, 0, 0, 0, 0, 0, 0, 0]; // Populate makefile data array
-          this.chartData.datasets[4].data = [150, 59, 0, 0, 0, 0, 0, 0, 0]; // Populate configuration data array
-
-
-          // Call the method to initialize or update the chart
-          this.initializeChart();
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
         });
+    this.checkPercent();
+    setInterval(() =>{
+      this.checkPercent();
+    },2000);
   },
+
 };
 </script>
 <style>
@@ -176,33 +134,14 @@ min-width: 600px;
 width: 50%;
 }
 
-.chartMenu p{
-  padding: 10px;
-  font-size: 20px;
+.error{
+  color: darkred;
 }
-
-.chartCard{
-  width: 100vw;
-  height: calc(100vh - 40px);
+.title{
   display: flex;
-  align-items: center;
   justify-content: center;
-}
-
-.chartBox{
-  width: 700px;
-  padding: 20px;
-  border-radius: 20px;
-  border: solid 3px rgba(255, 26, 104, 1);
-  background: white;
-}
-
-.colLarge{
-  max-width: 700px;
-  overflow-x: auto;
-}
-.box{
-  width: calc(4000px - 35px);
-  height: 500px;
+  align-items: center;
+  margin-top: 5vh;
+  margin-bottom: 1vh;
 }
 </style>

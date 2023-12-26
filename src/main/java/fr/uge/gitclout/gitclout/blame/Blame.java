@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -36,15 +38,15 @@ public class Blame {
 	/**
 	 * Constructor of blame class
 	 * @param git the git on what we blame
-	 * @param treeWalk
-	 * @param tagTree
+	 * @param treeWalk permit to walk across the files
+	 * @param tagTree reference of the current tree of the tag
 	 * @param allTag list of all tags, chronologicaly sorted
 	 * @param currentTagPosition is the current position of the tag in the allTag list
 	 * @param filesChanged list of changed files
-	 * @throws MissingObjectException
-	 * @throws IncorrectObjectTypeException
-	 * @throws CorruptObjectException
-	 * @throws IOException
+	 * @throws MissingObjectException exception
+	 * @throws IncorrectObjectTypeException exception
+	 * @throws CorruptObjectException exception
+	 * @throws IOException exception
 	 */
 	public Blame(Git git, TreeWalk treeWalk, RevTree tagTree,List<Ref> allTag,int currentTagPosition,List<String> filesChanged) throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException{
 		Objects.requireNonNull(git);
@@ -82,45 +84,51 @@ public class Blame {
 
 	/**
 	 * Principal method of this class that check the blame of git files, this will look upon the lines of codes and lines of comments
-	 * @throws MissingObjectException
-	 * @throws IncorrectObjectTypeException
-	 * @throws CorruptObjectException
-	 * @throws IOException
-	 * @throws GitAPIException
+	 * @throws MissingObjectException exception
+	 * @throws IncorrectObjectTypeException exception
+	 * @throws CorruptObjectException exception
+	 * @throws IOException exception
+	 * @throws GitAPIException exception
 	 */
-	public void blaming() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException  {
-		var sW = new StringWork();
-		System.out.println("-------------------------------------------");
-		while(treeWalk.next()) {
-			String filePath = treeWalk.getPathString();
-			checkBlame(sW,filePath);
-
+	public void blaming() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException, GitAPIException, InterruptedException {
+		try (ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*3/4)) {
+			while (treeWalk.next()) {
+				String filePath = treeWalk.getPathString();
+				executor.submit(() -> {
+					try {
+						checkBlame(filePath);
+					} catch (GitAPIException e) {
+						throw new AssertionError(e);
+					}
+				});
+			}
 		}
 	}
 
 	/**
 	 * check if a file has been modified, deleted or added
 	 * if the condition is matching the method will blame the file
-	 * @param sW is the stringWork class that permit to split or do anything on the file
 	 * @param filePath name of the file
-	 * @throws GitAPIException
+	 * @throws GitAPIException exception
 	 */
-	private void checkBlame(StringWork sW,String filePath) throws GitAPIException {
-		if(sW.splitExtention(filePath)!=null) {
-			var extension = sW.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
-			if(FileExtension.extensionDescription(extension)!=Extensions.OTHER && FileExtension.extensionDescription(extension)!=Extensions.RESSOURCES) {
-				var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
-				//System.out.println(extension +" to do" + FileExtension.extensionDescription(extension));
-				if(currentTagPosition==0) { //we need to blame the first tag
-					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
-				}
-				else if(changedFiles.contains(filePath)) {//Check if the current file is modified
-					//System.out.println(changedFiles.size()+" & " +filePath +" is present ");
-					checkCommentsInit(blameResult,FileExtension.extensionDescription(extension));
-				}
-			}
-			addFilesForExtensions(FileExtension.extensionDescription(extension), filePath);
+	private void checkBlame(String filePath) throws GitAPIException {
+		Objects.requireNonNull(filePath);
+		var extension = StringWork.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
+		var description = FileExtension.extensionDescription(extension);
+		if(description.equals(Extensions.OTHER) || description.equals(Extensions.MEDIA)) {
+			return;
 		}
+		else {
+			var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
+			if(currentTagPosition==0) { //we need to blame the first tag
+				checkCommentsInit(blameResult,description,filePath);
+			}
+			else if(changedFiles.contains(filePath)) {//Check if the current file is modified
+				//System.out.println(changedFiles.size()+" & " +filePath +" is present ");
+				checkCommentsInit(blameResult,description,filePath);
+			}
+		}
+		addFilesForExtensions(description, filePath);
 	}
 
 
@@ -142,7 +150,8 @@ public class Blame {
 		case Extensions.TYPESCRPIPT -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
 		case Extensions.RUBY -> "(#.*$|^=begin(\s(.?))*(=end\s*$))";
 		case Extensions.CSHARP -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
-		default ->  "";
+		case Extensions.CONFIGURATION ->"#.*$";
+		default ->  "a^";
 		};
 
 	}
@@ -151,9 +160,10 @@ public class Blame {
 	 * @param blame blame result of the file
 	 * @param extension extension of the current file language
 	 */
-	public void checkCommentsInit(BlameResult blame,Extensions extension) {
+	public void checkCommentsInit(BlameResult blame,Extensions extension,String filePath) {
 		Objects.requireNonNull(blame);
 		Objects.requireNonNull(extension);
+		Objects.requireNonNull(filePath);
 		var codeCount = contributorData.stream().collect(Collectors.toMap(person -> person,person -> 0,(oldValue,newValue)->newValue,HashMap::new));
 		if(extension.equals(Extensions.OTHER) || extension.equals(Extensions.MEDIA)) {
 			return;
@@ -162,7 +172,7 @@ public class Blame {
 		String regex = regex(extension);
 		Pattern pattern = Pattern.compile(regex);
 		try {
-			checkComments(blame,rawText,pattern,codeCount);
+			checkComments(blame,rawText,pattern,filePath,codeCount);
 		} catch (Exception e) {
 			return;
 		}
@@ -174,12 +184,14 @@ public class Blame {
 	 * @param rawText is the result content of the blame
 	 * @param pattern is the pattern get from the method regex
 	 * @param codeCount a hashmap collecting contributors and it contribution on codes lines
-	 * @throws ExecutionException
+	 * @throws ExecutionException exception
 	 */
-	public void checkComments(BlameResult blame,RawText rawText, Pattern pattern, HashMap<Contributor,Integer> codeCount) throws InterruptedException{
+	public void checkComments(BlameResult blame,RawText rawText, Pattern pattern,String filePath, HashMap<Contributor,Integer> codeCount) throws InterruptedException{
 		Objects.requireNonNull(blame);
 		Objects.requireNonNull(rawText);
 		Objects.requireNonNull(codeCount);
+//		System.out.println(filePath);
+//		System.out.println(changedFiles.contains(filePath));
 		for(int i =0;i < rawText.size();i++) {
 			var author = blame.getSourceAuthor(i); //getmail
 			var contr = new Contributor(author.getName(),author.getEmailAddress());
@@ -189,7 +201,7 @@ public class Blame {
 				codeCount.compute(contr, (k,v)->(v==null)?1:v+1);
 			};
 		}
-		divideIntoData(treeWalk.getPathString(), codeCount);
+		divideIntoData(filePath, codeCount);
 	}
 	/**
 	 * Get all information for the actual file ( number of line of code/line of comments)  and put it in an arraylist of record Data
@@ -199,8 +211,9 @@ public class Blame {
 	private void divideIntoData(String file,Map<Contributor,Integer> countline) {
 		for(var contributor : contributorData) {
 			var line =countline.getOrDefault(contributor, null);
-			//System.out.println(new Data(currentTag, contributor,file,line!=null?line:0).toString());
-			blameData.add(new Data(currentTag, contributor,file,line!=null?line:0));
+			var data = new Data(currentTag, contributor,file,line!=null?line:0);
+			//System.out.println(data);
+			blameData.add(data);
 		}
 	}
 

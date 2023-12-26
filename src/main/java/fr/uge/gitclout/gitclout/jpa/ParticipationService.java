@@ -1,5 +1,6 @@
 package fr.uge.gitclout.gitclout.jpa;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -10,36 +11,16 @@ import java.util.List;
 @Service
 public class ParticipationService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    private ParticipationRepo participationRepo;
 
-
-    public void insertParticipation(String gitId, String TagId, int fichierId, int nbLignesCode, int nbLignesCom) {
-        Participation participation = new Participation();
-        ParticipationPrimaryKey id = new ParticipationPrimaryKey();
-        id.setGitId(gitId);
-        id.setTagId(TagId);
-        id.setFichierId(fichierId);
-        participation.setId(id);
-        participation.setNbLignesCode(nbLignesCode);
-        if(entityManager.contains(participation)){
-            return;
-        }
-        entityManager.persist(participation);
+    @Autowired
+    public ParticipationService(ParticipationRepo participationRepo){
+        this.participationRepo = participationRepo;
     }
 
-    public List<Object[]> getData(String tagParameter) {
-        String jpql = "SELECT c.name, t.nomTag, f.nomFichier, p.nbLignesCode " +
-                "FROM Participation p " +
-                "JOIN Contributeur c ON p.id.gitId = c.gitId " +
-                "JOIN Tag t ON p.id.tagId = t.TagId " +
-                "JOIN Fichier f ON p.id.fichierId = f.fichierId " +
-                "WHERE t.nomTag = :tagParameter";
 
-        TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
-        query.setParameter("tagParameter", tagParameter);
-
-        return query.getResultList();
+    public void insertParticipation(Participation participation) {
+        participationRepo.save(participation);
     }
 
 

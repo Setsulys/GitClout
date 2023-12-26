@@ -9,11 +9,11 @@ public class ParticipationPrimaryKey implements Serializable {
     @JoinColumn(name = "gitId", referencedColumnName = "gitId")
     private String gitId;
 
-    @JoinColumn(name = "tagId", referencedColumnName = "TagId")
+    @JoinColumn(name = "tagId", referencedColumnName = "tagId")
     private String tagId;
 
-    @JoinColumn(name = "fichierId", referencedColumnName = "fichierId")
-    private int fichierId;
+    @JoinColumn(name = "languageName", referencedColumnName = "languageName")
+    private String languageName;
 
     public String getGitId() {
         return gitId;
@@ -31,11 +31,11 @@ public class ParticipationPrimaryKey implements Serializable {
         this.tagId = tagId;
     }
 
-    public int getFichierId() {
-        return fichierId;
+    public String getLanguageName() {
+        return languageName;
     }
 
-    public void setFichierId(int fichierId) {
-        this.fichierId = fichierId;
+    public void setLanguageName(String languageName) {
+        this.languageName = languageName;
     }
 }

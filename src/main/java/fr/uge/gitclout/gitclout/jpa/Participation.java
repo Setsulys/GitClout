@@ -1,7 +1,9 @@
 package fr.uge.gitclout.gitclout.jpa;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Participation {
@@ -10,6 +12,25 @@ public class Participation {
     private ParticipationPrimaryKey id;
 
     private int nbLignesCode;
+
+    @ManyToOne
+    private Contributeur contributeur;
+    @ManyToOne
+    private Langage langage;
+    @ManyToOne
+    private Tag tag;
+
+    public Participation(){
+
+    }
+
+    public Participation(ParticipationPrimaryKey id, int nbLignesCode, Contributeur contributeur, Langage langage, Tag tag){
+        this.id = id;
+        this.nbLignesCode = nbLignesCode;
+        this.contributeur = contributeur;
+        this.langage = langage;
+        this.tag = tag;
+    }
 
 
     public int getLignes() {
