@@ -139,7 +139,7 @@ public class JGitBlame {
             blameList.add(blame);
             blame.blaming();
         }catch(Exception e ) {
-            throw new AssertionError(e);
+            throw new AssertionError("run by tag",e);
         }
     }
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -88,15 +89,13 @@ public class GitTools {
      * @return list of Contributors data
      */
     public static ArrayList<Contributor> authorCredentials(Git git) {
-        var list = new ArrayList<Contributor>();
+        var list = new HashSet<Contributor>();
         try {
             for(var commit : git.log().all().call()) {
                 var authorIdent = commit.getAuthorIdent();
-                if(!list.contains(new Contributor(authorIdent.getName(), authorIdent.getEmailAddress()))) {
-                    list.add(new Contributor(authorIdent.getName(), authorIdent.getEmailAddress()));
-                }
+                list.add(new Contributor(authorIdent.getName(), authorIdent.getEmailAddress()));
             }
-            return list;
+            return new ArrayList<>(list);
         }catch(Exception e) {
             throw new AssertionError();
         }
