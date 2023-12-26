@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 
 @Service
 public class TagService {
@@ -19,6 +20,10 @@ public class TagService {
 
     public void insertTag(Tag tag) {
         tagRepo.save(tag);
+    }
+
+    public ArrayList<Tag> findTagsByProject(String project){
+        return tagRepo.findByProject(project);
     }
 
 }

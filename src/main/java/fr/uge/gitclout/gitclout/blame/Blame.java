@@ -33,6 +33,7 @@ public class Blame {
 	private final ArrayList<Contributor> contributorData ;
 	private final List<String> changedFiles;
 	private final HashMap<ContributorLanguage,Data> datas = new HashMap<>();
+	private final Object lock = new Object();
 
 
 	/**
@@ -188,19 +189,28 @@ public class Blame {
 	 * @param countline a hashmap collecting contributors and it contribution on codes lines
 	 */
 	private void divideIntoData(Extensions extension,Map<Contributor,Integer> countline) {
-		for(var contributor : contributorData) {
-			var line =countline.getOrDefault(contributor, null);
-			var ce =new ContributorLanguage(contributor, extension);
-			if(datas.containsKey(ce) && line !=null) {
-				datas.get(ce).addLines(line);
-			}
-			else if(line != null){
-				var data =new Data(currentTag, contributor,extension);
-				data.addLines(line);
-				datas.put(ce, data);
-			}
+		synchronized (lock){
+			for(var contributor : contributorData) {
+				var line =countline.getOrDefault(contributor, null);
+				var ce =new ContributorLanguage(contributor, extension);
+				if(datas.containsKey(ce) && line !=null) {
+					datas.get(ce).addLines(line);
+				}
+				else if(!datas.containsKey(ce) && line != null){
+					var data =new Data(currentTag, contributor,extension);
+					data.addLines(line);
+					datas.put(ce, data);
+				}
+				else if(!datas.containsKey(ce) && line == null){
+					var data =new Data(currentTag, contributor,extension);
+					data.addLines(0);
+					datas.put(ce, data);
+				}
 
+
+			}
 		}
+
 	}
 
 

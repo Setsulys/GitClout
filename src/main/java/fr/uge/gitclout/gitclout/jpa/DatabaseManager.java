@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,20 +39,23 @@ public class DatabaseManager {
     public void fillDatabase(ArrayList<Blame> listo, String git, HashMap<Ref, java.sql.Date> map) {
 
 
-        for (int i = 0; i < listo.size(); i++) {
-
-            Blame rec = listo.get(i);
+        for (var rec : listo) {
             var datas = rec.blameDatas();
             var tago = rec.currentRef();
-            for (int a = 0; a < datas.size(); a++) {
 
+
+            for (var data : datas) {
+//                if(data == null){
+//                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHH" + tago);
+//                    continue;
+//                }
                 Contributeur con = new Contributeur();
-                con.setGitId(datas.get(a).getContributor().mail());
-                con.setName(datas.get(a).getContributor().name());
+                con.setGitId(data.getContributor().mail());
+                con.setName(data.getContributor().name());
                 contributeurService.insertContributeur(con);
 
                 Langage langage = new Langage();
-                langage.setLangage(datas.get(a).getExtension().toString());
+                langage.setLangage(data.getExtension().toString());
 
                 Tag tag = new Tag();
                 tag.setTagId(tago.toString());
@@ -62,20 +66,21 @@ public class DatabaseManager {
                 tagService.insertTag(tag);
 
                 ParticipationPrimaryKey participationPK = new ParticipationPrimaryKey();
-                participationPK.setGitId(datas.get(a).getContributor().mail());
+                participationPK.setGitId(data.getContributor().mail());
                 participationPK.setLanguageName(langage.getLanguageName());
                 participationPK.setTagId(tago.toString());
 
                 Participation participation = new Participation();
                 participation.setId(participationPK);
-                participation.setNbLignesCode(datas.get(a).nbLine());
+                participation.setNbLignesCode(data.nbLine());
 
                 participationService.insertParticipation(participation);
 
             }
 
         }
-        System.out.println(langageService.selectLangage());
+        //System.out.println(langageService.selectLangage());
+        //System.out.println(tagService.findTagsByProject("gitlab.com/Setsulys/the_light_corridor"));
 
     }
 
