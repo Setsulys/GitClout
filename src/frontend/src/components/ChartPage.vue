@@ -15,8 +15,7 @@
       <div class ="chartBox">
         <div class="wrapper">
           <div class ="colLarge">
-            <div class="box">
-              <canvas id="radarChart" width="400" height="400"></canvas>
+            <div class="barBox">
               <canvas id="barChart"></canvas>
             </div>
           </div>
@@ -38,49 +37,38 @@ export default {
             label: 'javascript',
             backgroundColor: 'Orange',
             data: [], // Populate this dynamically
-            barThickness: 20,
+            //barThickness: 20,
           },
           {
             label: 'java',
             backgroundColor: 'Yellow',
             data: [], // Populate this dynamically
-            barThickness: 20,
+            //barThickness: 20,
           },
           {
             label: 'markdown',
             backgroundColor: 'lightblue',
             data: [], // Populate this dynamically
-            barThickness: 20,
+            //barThickness: 20,
           },
           {
             label: 'makefile',
             backgroundColor: 'gray',
             data: [], // Populate this dynamically
-            barThickness: 20,
+            //barThickness: 20,
           },
           {
             label: 'configuration',
             backgroundColor: 'purple',
             data: [], // Populate this dynamically
-            barThickness: 20,
+            //barThickness: 20,
           },
         ],
-      },
-      radarChartData:{
-        labels: [],
-        datasets: [{
-          label: 'nb of lines for a Language',
-          data: [],
-          backgroundColor: 'rgba(64, 120, 192, 0.7)',
-        }]
       },
     };
   },
   methods:{
     initializeChart() {
-      const box = document.querySelector('.box');
-      const boxWidth = Math.max(this.chartData.labels.length*150 ,10)
-      box.style.width = `calc(${boxWidth}px)`;
       const config ={
         type: 'bar',
         data: this.chartData,
@@ -91,71 +79,29 @@ export default {
               mode: 'x',
             },
           },
-          scales: {
-            xAxes: [
-              {
-                barPercentage: 1,
-                categoryPercentage: 0.5,
-                stacked: true,
-                gridLines: {
-                  display: false,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                stacked: true,
-                ticks: {
-                  beginAtZero: true,
-                },
-                type: 'linear',
-              },
-            ],
-          },
           responsive: true,
           maintainAspectRatio: this.chartData.labels.length < 10,
           legend: { position: 'left' },
+          scales : {
+            x:{
+              barPercentage :0.9,
+            }
+          },
         },
       };
       const ctx = document.getElementById('barChart').getContext('2d');
       new Chart(ctx, config);
     },
-    initializeRadarChart(){
-      const config = {
-        type: 'radar',
-        data: this.radarChartData,
-        options: {
-          responsive: false,
-          maintainAspectRatio: false,
-          width: 2000,
-          height: 2000,
-          elements: {
-            line: {
-              borderWidth: 3
-            }
-          }
-        },
-      };
-
-      var ctx = document.getElementById("radarChart").getContext('2d');
-      new Chart(ctx,config);
-    }
   },
   mounted() {
-    this.chartData.labels = ["Steven","julien","kingue","yassine","christophe","stephane","kevin","ben","alexandre","carine","carine","carine","carine","carine","julien","kingue","yassine","christophe","stephane","kevin","ben","alexandre","carine","carine","carine","carine","carine","julien"]; // Populate labels array
+    this.chartData.labels = ["Steven","julien","kingue","yassine","christophe","stephane","kevin","ben","alexandre","catherine","aurélie","hugo","pierre","sylvain","lucas","jean","michael","max","lewis"]; // Populate labels array
     this.chartData.datasets[0].data = [20, 559, 5, 56, 58,68, 59, 2, 45,18]; // Populate javascript data array
     this.chartData.datasets[1].data = [1200, 59, 5, 56, 58,12, 59, 85, 23]; // Populate java data array
     this.chartData.datasets[2].data = [12, 59, 5, 56, 58, 12, 59, 12, 74]; // Populate markdown data array
     this.chartData.datasets[3].data = [20, 0, 0, 0, 0, 0, 0, 0, 0]; // Populate makefile data array
     this.chartData.datasets[4].data = [150, 59, 0, 0, 0, 0, 0, 0, 0]; // Populate configuration data array
 
-    this.radarChartData.labels=['java', 'markdown', 'makefile', 'javascript', 'git'];
-    this.radarChartData.datasets[0].data =[800, 500, 20, 500, 100];
-
-
-    // Call the method to initialize or update the chart
     this.initializeChart();
-    this.initializeRadarChart();
   }
 }
 
@@ -181,21 +127,20 @@ export default {
   padding: 20px;
   border-radius: 20px;
   border: solid 3px rgba(0, 0, 0, 1);
+  background: rgba(243,249,245,0.7);
+  display: gl;
   align-items: center;
   justify-content: center;
   margin-top: 1vh;
-  background-color: rgba(243,249,245,0.7);
 }
 
 .colLarge{
-  display: flex;
   max-width: 100%;
   overflow-x: auto;
 }
-.box{
-  width: calc(4000px - 35px);
+.barBox{
   height: 500px;
-  display:flex;
+  width: calc(4000px - 35px);
 }
 
 .title{

@@ -80,7 +80,7 @@ public class DatabaseManager {
 
         }
         //System.out.println(langageService.selectLangage());
-        //System.out.println(tagService.findTagsByProject("gitlab.com/Setsulys/the_light_corridor"));
+        System.out.println(tagService.findTagsByProject("gitlab.com/Setsulys/the_light_corridor"));
 
     }
 

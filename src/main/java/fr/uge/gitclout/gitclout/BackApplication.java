@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class BackApplication{
 
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
 
     private final HashMap<String,JGitBlame> urlAndData = new HashMap<>();

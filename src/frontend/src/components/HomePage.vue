@@ -48,9 +48,11 @@
   </div>
   <div v-show="selectedTag !== 'undo'">
     <div v-show="isRunnable">
-      <chart-page/>
+      <ChartPage/>
+      <RadarChartPage/>
     </div>
   </div>
+
   <GitPage @haveData="handleGitEvent"/>
 </template>
 
@@ -58,12 +60,14 @@
 import axios from 'axios';
 import ChartPage from "@/components/ChartPage.vue";
 import GitPage from "@/components/GitPage.vue";
+import RadarChartPage from "@/components/RadarChartPage.vue";
 
 export default {
   name: 'HomePage',
   components:{
     ChartPage,
     GitPage,
+    RadarChartPage,
   },
   data() {
     return {
