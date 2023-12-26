@@ -128,7 +128,7 @@ export default {
   border-radius: 20px;
   border: solid 3px rgba(0, 0, 0, 1);
   background: rgba(243,249,245,0.7);
-  display: gl;
+  //display: gl;
   align-items: center;
   justify-content: center;
   margin-top: 1vh;
