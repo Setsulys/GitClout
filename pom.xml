@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<nodeVersion>v18.18.0</nodeVersion>
-		<npmVersion>9.8.1</npmVersion>
+		<npmVersion>10.2.5</npmVersion>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -111,7 +111,7 @@
 				<version>1.7.6</version>
 				<configuration>
 					<nodeVersion>v18.18.0</nodeVersion>
-					<npmVersion>9.8.1</npmVersion>
+					<npmVersion>10.2.5</npmVersion>
 					<workingDirectory>${basedir}/src/frontend</workingDirectory>
 					<installDirectory>${project.build.directory}</installDirectory>
 				</configuration>

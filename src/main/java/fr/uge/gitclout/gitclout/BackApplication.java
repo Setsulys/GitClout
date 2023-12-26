@@ -33,7 +33,7 @@ public class BackApplication{
             urlAndData.put(gitLink,jGit);
             jGit.run(gitLink);
             databaseManager.fillDatabase(jGit.projectData(),jGit.getGit(),jGit.getDateMap());
-
+            System.out.println(jGit.projectData().stream().map(e-> e.blameDatas().toString()).collect(Collectors.joining("\n")));
         }
         return runnable;
     }

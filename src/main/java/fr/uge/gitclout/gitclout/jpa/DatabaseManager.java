@@ -42,12 +42,12 @@ public class DatabaseManager {
             for (int a = 0; a < datas.size(); a++) {
 
                 Contributeur con = new Contributeur();
-                con.setGitId(datas.get(a).contributor().mail());
-                con.setName(datas.get(a).contributor().name());
+                con.setGitId(datas.get(a).getContributor().mail());
+                con.setName(datas.get(a).getContributor().name());
                 contributeurService.insertContributeur(con);
 
                 Langage langage = new Langage();
-                langage.setLangage(FileExtension.extensionDescription(StringWork.splitExtention(datas.get(a).file()).extension()).toString());
+                langage.setLangage(datas.get(a).getExtension().toString());
                 langageService.insertLangage(langage);
 
                 Tag tag = new Tag();
@@ -59,13 +59,13 @@ public class DatabaseManager {
                 tagService.insertTag(tag);
 
                 ParticipationPrimaryKey participationPK = new ParticipationPrimaryKey();
-                participationPK.setGitId(datas.get(a).contributor().mail());
+                participationPK.setGitId(datas.get(a).getContributor().mail());
                 participationPK.setLanguageName(langage.getLanguageName());
                 participationPK.setTagId(tago.toString());
 
                 Participation participation = new Participation();
                 participation.setId(participationPK);
-                participation.setNbLignesCode(datas.get(a).lines());
+                participation.setNbLignesCode(datas.get(a).nbLine());
 
                 participationService.insertParticipation(participation);
 

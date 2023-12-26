@@ -4,11 +4,11 @@
   <h3> revenez plus tard</h3>
   <h3>Inserez votre lien GIT</h3>
   <div class="ui large action input">
-    <input class="wide-input" v-model="text" @keyup.enter="onclick" placeholder="https://gitlab.com/nom/projet">
+    <input class="wide-input grayBackground" v-model="text" @keyup.enter="onclick" placeholder="https://gitlab.com/nom/projet">
     <div class="ui button" @click="onclick" >Gitclouting</div>
   </div>
   <div class="title">
-    <div class v-if="loading">
+    <div class v-show="loading">
       <div class="ui active centered inline loader"></div>
       <p>{{percent}}%</p>
       <p>Traitement du git</p>
@@ -16,8 +16,7 @@
   </div>
 
   <div class="title">
-    <div class v-if="!isFirstTime">
-      <div class v-if="!isRunnable">
+      <div class v-show="!isRunnable">
         <div class="title">
           <h2 class="ui header">
             <i class="exclamation circle icon error"></i>
@@ -27,10 +26,32 @@
           </h2>
         </div>
       </div>
+  </div>
+  <div v-show="showElement">
+    <div v-show="isRunnable">
+      <div class="ui compact menu grayBackground">
+        <div class="ui simple dropdown item grayBackground">
+          <i class="tag icon red"></i>
+          {{ selectedTag==='undo'?'Project Tag':selectedTag }}
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <div class="choice">
+              <div class="item" v-for="choice in choices" :key="choice" @click="selectTag(choice)">
+                <i class="tags icon red"></i>
+                {{ choice }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <GitPage/>
-  <chart-page/>
+  <div v-show="selectedTag !== 'undo'">
+    <div v-show="isRunnable">
+      <chart-page/>
+    </div>
+  </div>
+  <GitPage @haveData="handleGitEvent"/>
 </template>
 
 <script>
@@ -48,28 +69,37 @@ export default {
     return {
       msg: '',
       text: '',
-      isRunnable:false,
-      isFirstTime:true,
+      isRunnable:true,
       loading:false,
       percent:0,
+      choices: [
+          'undo',
+        'Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5',
+        'Tag 6', 'Tag 7', 'Tag 8', 'Tag 9', 'Tag 10',
+        'Tag 11', 'Tag 12', 'Tag 13', 'Tag 14', 'Tag 15'
+      ],
+      selectedTag: 'undo',
+      showElement:false,
     };
   },
 
   methods: {
+    handleGitEvent(){
+      this.showElement=true;
+    },
+    selectTag(choice) {
+      if(choice==='undo'){
+        this.selectedTag='';
+      }
+      this.selectedTag = choice;
+    },
     reloadCurrentPage(){
       window.location.reload();
     },
     onclick(){
+      localStorage.setItem('isNotFirstTime', 'true');
       this.submit();
-      this.openNewTab();
       this.loading=true;
-    },
-    openNewTab(){
-      /*      const newTab = './HelloWorld.vue';
-            window.open(newTab,'_blank');*/
-      //this.$router.push({name:'HelloWorld'})
-      const newTab = window.open('', '_blank');
-      newTab.location.href = this.$router.resolve({ name: 'NewFile' }).href;
     },
     submit() {
       const data = {
@@ -80,12 +110,8 @@ export default {
             console.log(response.data);
             this.isRunnable=response.data;
             if(this.isRunnable){
-
               this.reloadCurrentPage();
-
             }
-            this.isRunnable=false;
-            this.isFirstTime=false;
             this.loading=false;
             return response.data;
           })
@@ -104,7 +130,6 @@ export default {
             if(response.data!=null){
               this.percent=Number(response.data).toFixed(2);
             }
-
           }).catch(error=>{
         console.error('Error fetching percent',error);
       });
@@ -135,7 +160,7 @@ width: 50%;
 }
 
 .error{
-  color: darkred;
+  color: darkgoldenrod;
 }
 .title{
   display: flex;
@@ -143,5 +168,13 @@ width: 50%;
   align-items: center;
   margin-top: 5vh;
   margin-bottom: 1vh;
+}
+.choice{
+  overflow-y:auto;
+  max-height: 30vh;
+}
+
+.grayBackground{
+  background-color: rgb(23,29,25,0.3);
 }
 </style>

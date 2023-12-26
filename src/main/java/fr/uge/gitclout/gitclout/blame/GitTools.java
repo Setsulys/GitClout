@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,9 +45,8 @@ public class GitTools {
             if(!tmpDir.exists()) {
                 cloneRepository(repositoryURL, localPath);
             }
-        }else {
-            pullRepository(git, repositoryURL, localPath);
         }
+        System.out.println("START BLAMING");
     }
 
     /**
@@ -66,31 +66,6 @@ public class GitTools {
             System.out.println(" -----------------\n|Repository cloned|\n -----------------");
         }
     }
-
-    /**
-     * If the repository already exist, try to pull new information to analyse
-     * @param git the git on what we blame
-     * @param repositoryURL url of the git repository
-     * @param localPath local path where the git is stored
-     * @throws GitAPIException exception
-     * @throws IOException exception
-     */
-    public static void pullRepository(Git git,String repositoryURL,String localPath) throws GitAPIException, IOException{
-        Objects.requireNonNull(repositoryURL);
-        Objects.requireNonNull(localPath);
-        var localHead = git.getRepository().resolve("HEAD");
-        var remoteHead = git.fetch().call().getAdvertisedRefs().iterator().next().getObjectId();
-        if(!localHead.equals(remoteHead)) {
-            git.pull().call();
-            System.out.println(" ------------\n|pull réussis|\n ------------");
-        }
-        else {
-            System.out.println(" -----------------\n|Repos déja à jour|\n -----------------");
-        }
-    }
-
-
-
 
     /**
      * return the commit date of the tag
@@ -114,15 +89,13 @@ public class GitTools {
      * @return list of Contributors data
      */
     public static ArrayList<Contributor> authorCredentials(Git git) {
-        var list = new ArrayList<Contributor>();
+        var list = new HashSet<Contributor>();
         try {
             for(var commit : git.log().all().call()) {
                 var authorIdent = commit.getAuthorIdent();
-                if(!list.contains(new Contributor(authorIdent.getName(), authorIdent.getEmailAddress()))) {
-                    list.add(new Contributor(authorIdent.getName(), authorIdent.getEmailAddress()));
-                }
+                list.add(new Contributor(authorIdent.getName(), authorIdent.getEmailAddress()));
             }
-            return list;
+            return new ArrayList<>(list);
         }catch(Exception e) {
             throw new AssertionError();
         }
