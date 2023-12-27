@@ -93,8 +93,8 @@ public class DatabaseManager {
 //        System.out.println(participationService.findParticipationsByLanguage("C"));
 //        System.out.println(participationService.findParticipationsByLanguageAndContributor("C","steven.ly412@gmail.com"));
 //        System.out.println(participationService.findParticipationsByContributor("steven.ly412@gmail.com"));
-//        System.out.println(MapOfPartByTag("refs/tags/v2.0"));
-//        System.out.println("GNEEEE" + MapOfPartFull("gitlab.com/Setsulys/the_light_corridor"));
+       System.out.println(MapOfPartByTag("refs/tags/v2.0"));
+        System.out.println("GNEEEE" + MapOfPartFull("gitlab.com/Setsulys/the_light_corridor"));
         System.out.println("GNEEEE " + MapOfAverage("gitlab.com/Setsulys/the_light_corridor"));
 
     }
@@ -118,7 +118,7 @@ public class DatabaseManager {
             for( var x : listo){
                 map.put(x.getLangage().getLanguageName(),x.getLignes());
             }
-            mapFinal.put(con.getGitId(),forFront(map));
+            mapFinal.put(con.getName(),forFront(map));
         }
         return mapFinal;
     }
@@ -139,7 +139,7 @@ public class DatabaseManager {
             for( var x : listo){
                 map.put(x.getLangage().getLanguageName(),x.getLignes() / nbTag);
             }
-            mapFinal.put(con.getGitId(),map);
+            mapFinal.put(con.getName(),map);
         }
         return mapFinal;
 
@@ -163,7 +163,7 @@ public class DatabaseManager {
                 map.put(x.getLangage().getLanguageName(),x.getLignes());
             }
             mapTag.put(nomTag,forFront(map));
-            mapFinal.put(con.getGitId(),mapTag);
+            mapFinal.put(con.getName(),mapTag);
         }
         return mapFinal;
     }
