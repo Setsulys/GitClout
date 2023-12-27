@@ -95,6 +95,7 @@ public class DatabaseManager {
 //        System.out.println(participationService.findParticipationsByContributor("steven.ly412@gmail.com"));
 //        System.out.println(MapOfPartByTag("refs/tags/v2.0"));
 //        System.out.println("GNEEEE" + MapOfPartFull("gitlab.com/Setsulys/the_light_corridor"));
+        System.out.println("GNEEEE " + MapOfAverage("gitlab.com/Setsulys/the_light_corridor"));
 
     }
 
@@ -124,12 +125,26 @@ public class DatabaseManager {
 
 
 
-//    public HashMap<String, HashMap<String ,Integer>> MapOfAverage(String project){
-//        int nbTag = tagService.sizeOfTagsByProject(project);
-//        var listContributor = contributeurService.findAllContributor();
-//
-//
-//    }
+    public HashMap<String, HashMap<String ,Integer>> MapOfAverage(String project){
+        int nbTag = tagService.sizeOfTagsByProject(project);
+        var listContributor = contributeurService.findAllContributor();
+        var mapFinal = new HashMap<String, HashMap<String, Integer>>();
+
+        for( var con : listContributor){
+            var map = new HashMap<String,Integer>();
+            var mapTag = new HashMap<String,ArrayList<Integer>>();
+            var listo = participationService.findParticipationsByProjectAndContributor(project, con.getGitId());
+
+
+            for( var x : listo){
+                map.put(x.getLangage().getLanguageName(),x.getLignes() / nbTag);
+            }
+            mapFinal.put(con.getGitId(),map);
+        }
+        return mapFinal;
+
+
+    }
 
     public HashMap<String,HashMap<String, ArrayList<Integer>>> MapOfPartByTag(String nomTag){
         var listContributor = contributeurService.findAllContributor();
