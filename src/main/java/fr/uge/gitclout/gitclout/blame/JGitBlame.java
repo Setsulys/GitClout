@@ -31,7 +31,7 @@ public class JGitBlame {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private int finishedTask =0;
     private double percentOfFinished=0;
-    private static final DecimalFormat df = new DecimalFormat("0.00");
+    private final DecimalFormat df = new DecimalFormat("0.00");
     private final HashMap<Ref,java.sql.Date> tagDate = new HashMap<>();
 
 
