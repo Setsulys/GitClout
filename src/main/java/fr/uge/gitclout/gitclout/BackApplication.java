@@ -39,6 +39,10 @@ public class BackApplication{
         return runnable;
     }
 
+/*    public String getDatas(String gitLink){
+        databaseManager.MapOfPartFull();
+        return "yo";
+    }*/
     public ArrayList<Blame> projectData(String gitLink){
         return urlAndData.get(gitLink).projectData();
     }
