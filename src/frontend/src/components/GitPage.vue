@@ -18,12 +18,12 @@
     <div class="gitCard">
       <div class ="gitBox">
         <div class="wrapper">
-          <div class ="gitcolLarge">
-            <div class="gitboxbox">
+          <div class ="gitColLarge">
+            <div class="gitBoxBox">
               <div class="ui relaxed divided list">
                 <div v-for="(item, index) in links" :key="index" class="item">
-                  <i class="large github middle aligned icon"   @click="openInNewTab('https://www.youtube.com/watch?v=GtL1huin9EE')"></i>
-                  <div class="content" @click="openInNewTab('https://www.youtube.com/watch?v=GtL1huin9EE')">
+                  <i class="large github middle aligned icon"></i>
+                  <div class="content"> <!--@click="openInNewTab('https://www.youtube.com/watch?v=GtL1huin9EE')">-->
                     <a class="header">{{ item }}</a>
                   </div>
                 </div>
@@ -94,14 +94,14 @@ export default {
   overflow-y:auto;
 }
 
-.gitcolLarge{
+.gitColLarge{
   display: flex;
   justify-content: center;
   max-width: 100%;
   overflow-x: auto;
 //overflow-y: auto;
 }
-.gitboxbox{
+.gitBoxBox{
   width: auto;
   flex-grow: 1;
   display:flex;

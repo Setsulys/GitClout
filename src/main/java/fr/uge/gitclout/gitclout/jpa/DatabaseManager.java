@@ -87,12 +87,14 @@ public class DatabaseManager {
             }
 
         }
+
 //        System.out.println(langageService.selectLangage());
 //        System.out.println(tagService.findTagsByProject("gitlab.com/Setsulys/the_light_corridor"));
 //        System.out.println(participationService.findParticipationsByLanguage("C"));
 //        System.out.println(participationService.findParticipationsByLanguageAndContributor("C","steven.ly412@gmail.com"));
 //        System.out.println(participationService.findParticipationsByContributor("steven.ly412@gmail.com"));
 //        System.out.println(MapOfPart());
+
     }
 
     public void fillLanguages(){
