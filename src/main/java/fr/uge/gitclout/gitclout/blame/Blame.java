@@ -40,7 +40,7 @@ public class Blame {
 	 * @param git the git on what we blame
 	 * @param treeWalk permit to walk across the files
 	 * @param tagTree reference of the current tree of the tag
-	 * @param allTag list of all tags, chronologicaly sorted
+	 * @param allTag list of all tags, chronologically sorted
 	 * @param currentTagPosition is the current position of the tag in the allTag list
 	 * @param filesChanged list of changed files
 	 * @throws MissingObjectException exception
@@ -73,7 +73,6 @@ public class Blame {
 	 * @throws IncorrectObjectTypeException exception
 	 * @throws CorruptObjectException exception
 	 * @throws IOException exception
-	 * @throws GitAPIException exception
 	 */
 	public void blaming() throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException {
 		try (ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*3/4)) {
@@ -105,9 +104,6 @@ public class Blame {
 			if(currentTagPosition==0 || changedFiles.contains(filePath)) { //we need to blame the first tag
 				checkCommentsInit(blameResult,description);
 			}
-/*			else if(changedFiles.contains(filePath)) {//Check if the current file is modified
-				checkCommentsInit(blameResult,description);
-			}*/
 		}
 	}
 
@@ -186,26 +182,21 @@ public class Blame {
 	/**
 	 * Get all information for the actual file ( number of line of code/line of comments)  and put it in an arraylist of record Data
 	 * @param extension is the extension of this file
-	 * @param countline a hashmap collecting contributors and it contribution on codes lines
+	 * @param countLine a hashmap collecting contributors and it contribution on codes lines
 	 */
-	private void divideIntoData(Extensions extension,Map<Contributor,Integer> countline) {
+	private void divideIntoData(Extensions extension,Map<Contributor,Integer> countLine) {
 		synchronized (lock){
 			for(var contributor : contributorData) {
-				var line =countline.getOrDefault(contributor, null);
+				var line =countLine.getOrDefault(contributor, null);
 				var ce =new ContributorLanguage(contributor, extension);
-				if(datas.containsKey(ce) /*&& line !=null*/) {
+				if(datas.containsKey(ce)) {
 					datas.get(ce).addLines(line!=null?line:0);
 				}
-				else /*if(!datas.containsKey(ce) *//*&& line != null*//*)*/{
+				else{
 					var data =new Data(currentTag, contributor,extension);
 					data.addLines(line!=null?line:0);
 					datas.put(ce, data);
 				}
-/*				else if(!datas.containsKey(ce) && line == null){
-					var data =new Data(currentTag, contributor,extension);
-					data.addLines(0);
-					datas.put(ce, data);
-				}*/
 			}
 		}
 
@@ -225,15 +216,9 @@ public class Blame {
 		return new ArrayList<>(datas.values());
 	}
 
-
-
 	public Ref currentRef() {
 		return currentTag;
 	}
 
-	public String DataString(){
-		return datas.values().stream().map(e ->blameDatas().toString()+"\n").collect(Collectors.joining("\n"));
-
-	}
 }
 
