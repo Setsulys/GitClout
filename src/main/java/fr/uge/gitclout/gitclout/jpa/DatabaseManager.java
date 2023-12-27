@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 @Service
@@ -82,7 +83,6 @@ public class DatabaseManager {
                 participation.setNbLignesCode(data.nbLine());
 
                 participationService.insertParticipation(participation);
-                System.out.println("ici : " + participation);
 
             }
 
@@ -94,6 +94,7 @@ public class DatabaseManager {
 //        System.out.println(participationService.findParticipationsByLanguageAndContributor("C","steven.ly412@gmail.com"));
 //        System.out.println(participationService.findParticipationsByContributor("steven.ly412@gmail.com"));
 //        System.out.println(MapOfPartByTag("refs/tags/v2.0"));
+//        System.out.println("GNEEEE" + MapOfPartFull("gitlab.com/Setsulys/the_light_corridor"));
 
     }
 
@@ -105,13 +106,13 @@ public class DatabaseManager {
         }
     }
 
-    public HashMap<String, ArrayList<Integer>> MapOfPartFull(){
+    public HashMap<String, ArrayList<Integer>> MapOfPartFull(String project){
         var listContributor = contributeurService.findAllContributor();
         var mapFinal = new HashMap<String,ArrayList<Integer>>();
 
         for( var con : listContributor){
             var map = new HashMap<String,Integer>();
-            var listo = participationService.findParticipationsByContributor(con.getGitId());
+            var listo = participationService.findParticipationsByProjectAndContributor(project, con.getGitId());
 
             for( var x : listo){
                 map.put(x.getLangage().getLanguageName(),x.getLignes());
@@ -121,20 +122,14 @@ public class DatabaseManager {
         return mapFinal;
     }
 
-    /*public HashMap<String, HashMap<String ,ArrayList<Integer>>> MapOfPartTag(){
-        var listContributor = contributeurService.findAllContributor();
-        var mapFinal = new HashMap<String,ArrayList<Integer>>();
 
-        for( var con : listContributor){
-            var map = new HashMap<String,Integer>();
-            var listo = participationService.findParticipationsByContributor(con.getGitId());
-            for( var x : listo){
-                map.put(x.getLangage().getLanguageName(),x.getLignes());
-            }
-            mapFinal.put(con.getGitId(),forFront(map));
-        }
-        return mapFinal;
-    }*/
+
+//    public HashMap<String, HashMap<String ,Integer>> MapOfAverage(String project){
+//        int nbTag = tagService.sizeOfTagsByProject(project);
+//        var listContributor = contributeurService.findAllContributor();
+//
+//
+//    }
 
     public HashMap<String,HashMap<String, ArrayList<Integer>>> MapOfPartByTag(String nomTag){
         var listContributor = contributeurService.findAllContributor();

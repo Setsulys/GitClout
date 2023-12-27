@@ -26,4 +26,8 @@ public class TagService {
         return tagRepo.findByProject(project);
     }
 
+    public int sizeOfTagsByProject(String project){
+        return findTagsByProject(project).size();
+    }
+
 }

@@ -44,6 +44,10 @@ public class ParticipationService {
         return participationRepo.findParticipationsByTagAndContributeur(nomTag,gitId);
     }
 
+    public ArrayList <Participation> findParticipationsByProjectAndContributor(String project, String gitId){
+        return participationRepo.findParticipationsByProjectAndContributor(project,gitId);
+    }
+
 
 
 
