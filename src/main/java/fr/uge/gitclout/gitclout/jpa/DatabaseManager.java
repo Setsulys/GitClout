@@ -93,7 +93,7 @@ public class DatabaseManager {
 //        System.out.println(participationService.findParticipationsByLanguage("C"));
 //        System.out.println(participationService.findParticipationsByLanguageAndContributor("C","steven.ly412@gmail.com"));
 //        System.out.println(participationService.findParticipationsByContributor("steven.ly412@gmail.com"));
-//        System.out.println(MapOfPart());
+//        System.out.println(MapOfPartByTag("refs/tags/v2.0"));
 
     }
 
@@ -105,7 +105,23 @@ public class DatabaseManager {
         }
     }
 
-    public HashMap<String, ArrayList<Integer>> MapOfPart(){
+    public HashMap<String, ArrayList<Integer>> MapOfPartFull(){
+        var listContributor = contributeurService.findAllContributor();
+        var mapFinal = new HashMap<String,ArrayList<Integer>>();
+
+        for( var con : listContributor){
+            var map = new HashMap<String,Integer>();
+            var listo = participationService.findParticipationsByContributor(con.getGitId());
+
+            for( var x : listo){
+                map.put(x.getLangage().getLanguageName(),x.getLignes());
+            }
+            mapFinal.put(con.getGitId(),forFront(map));
+        }
+        return mapFinal;
+    }
+
+    /*public HashMap<String, HashMap<String ,ArrayList<Integer>>> MapOfPartTag(){
         var listContributor = contributeurService.findAllContributor();
         var mapFinal = new HashMap<String,ArrayList<Integer>>();
 
@@ -116,6 +132,28 @@ public class DatabaseManager {
                 map.put(x.getLangage().getLanguageName(),x.getLignes());
             }
             mapFinal.put(con.getGitId(),forFront(map));
+        }
+        return mapFinal;
+    }*/
+
+    public HashMap<String,HashMap<String, ArrayList<Integer>>> MapOfPartByTag(String nomTag){
+        var listContributor = contributeurService.findAllContributor();
+
+        var mapFinal = new HashMap<String,HashMap<String, ArrayList<Integer>>>();
+
+        for( var con : listContributor){
+            var map = new HashMap<String,Integer>();
+            var mapTag = new HashMap<String,ArrayList<Integer>>();
+            var listo = participationService.findParticipationsByTagAndContributor(nomTag,con.getGitId());
+            if(listo.isEmpty()){
+                continue;
+            }
+
+            for( var x : listo){
+                map.put(x.getLangage().getLanguageName(),x.getLignes());
+            }
+            mapTag.put(nomTag,forFront(map));
+            mapFinal.put(con.getGitId(),mapTag);
         }
         return mapFinal;
     }

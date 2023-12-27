@@ -53,7 +53,7 @@ public class Participation {
     }
 
     public String toString(){
-        return "contributeur : " + this.getId().getGitId() + ", langage : " + this.getId().getLanguageName() + ", pour le tag : " + this.getId().getTagId() + ", avec  le nombre de ligne : " + this.nbLignesCode;
+        return "contributeur : " + this.getId().getGitId() + ", langage : " + this.getId().getLanguageName() + ", pour le tag : " + this.getTag().getNomTag() + ", avec  le nombre de ligne : " + this.nbLignesCode;
     }
 
     public Contributeur getContributeur() {
