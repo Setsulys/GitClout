@@ -7,7 +7,6 @@ import org.eclipse.jgit.lib.Ref;
 public final class Data{
 
     private final Ref tag;
-
     private final Contributor contributor;
 
     private final Extensions extension;
@@ -21,18 +20,35 @@ public final class Data{
         this.contributor=contributor;
         this.extension=extension;
     }
+
+    /**
+     * Permit to add a number of line to the data
+     * @param lines number of lines added
+     */
     public void addLines(int lines) {
         nbLine+=lines;
     }
 
+    /**
+     * return the current number of line of this class
+     * @return the current number of line of this class
+     */
     public int nbLine() {
         return nbLine;
     }
 
+    /**
+     * Return the contributor of this class
+     * @return the contributor of this class
+     */
     public Contributor getContributor() {
         return contributor;
     }
 
+    /**
+     * return the extension of the data
+     * @return the extension of the data
+     */
     public Extensions getExtension() {
         return extension;
     }

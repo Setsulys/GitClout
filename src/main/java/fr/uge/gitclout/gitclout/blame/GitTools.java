@@ -103,7 +103,7 @@ public class GitTools {
 
     /**
      * return a string of the authors in the project
-     * @param git the git on what we blaming
+     * @param git the git on what we're blaming
      * @return a string of the authors in the project
      */
     public static String getAuthorCredentials(Git git) {

@@ -33,7 +33,6 @@ import Chart from 'chart.js/auto';
 export default {
   data() {
     return {
-      // Create an array of radar chart data
       chartDataList: [
         {
           labels: ['java', 'markdown', 'makefile', 'javascript', 'git'],
@@ -93,7 +92,6 @@ export default {
     }
   },
   mounted() {
-    // Initialize radar charts for each set of data
     this.chartDataList.forEach((data, index) => {
       this.initializeRadarChart(index);
     });
