@@ -30,6 +30,23 @@ import Chart from 'chart.js/auto';
 export default {
   data(){
     return {
+      colorMapping:{
+        'c': 'brown',
+        'java':'orange',
+        'javascript':'yellow',
+        'html':'blue',
+        'css':'lightblue',
+        'cplusplus':'noir',
+        'php':'purple',
+        'typescript':'darkyellow',
+        'ruby':'red',
+        'csharp':'darkblue',
+        'build':'lightgrey',
+        'doc':'green',
+        'ressources':'lightgreen',
+        'configuration':'grey',
+        'makefile':'pink',
+      },
       chartData: {
         labels: [], // Populate this dynamically
         datasets: [
