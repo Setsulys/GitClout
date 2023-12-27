@@ -49,6 +49,10 @@ public class DatabaseManager {
 //                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHH" + tago);
 //                    continue;
 //                }
+
+                if(data.nbLine() == 0){
+                    continue;
+                }
                 Contributeur con = new Contributeur();
                 con.setGitId(data.getContributor().mail());
                 con.setName(data.getContributor().name());
@@ -71,16 +75,25 @@ public class DatabaseManager {
                 participationPK.setTagId(tago.toString());
 
                 Participation participation = new Participation();
+                participation.setTag(tag);
+                participation.setContributeur(con);
+                participation.setLangage(langage);
                 participation.setId(participationPK);
                 participation.setNbLignesCode(data.nbLine());
 
                 participationService.insertParticipation(participation);
+                System.out.println("ici : " + participation);
 
             }
 
         }
-        //System.out.println(langageService.selectLangage());
-        System.out.println(tagService.findTagsByProject("gitlab.com/Setsulys/the_light_corridor"));
+
+//        System.out.println(langageService.selectLangage());
+//        System.out.println(tagService.findTagsByProject("gitlab.com/Setsulys/the_light_corridor"));
+//        System.out.println(participationService.findParticipationsByLanguage("C"));
+//        System.out.println(participationService.findParticipationsByLanguageAndContributor("C","steven.ly412@gmail.com"));
+//        System.out.println(participationService.findParticipationsByContributor("steven.ly412@gmail.com"));
+//        System.out.println(MapOfPart());
 
     }
 
@@ -90,6 +103,37 @@ public class DatabaseManager {
             langage.setLangage(ex.toString());
             langageService.insertLangage(langage);
         }
+    }
+
+    public HashMap<String, ArrayList<Integer>> MapOfPart(){
+        var listContributor = contributeurService.findAllContributor();
+        var mapFinal = new HashMap<String,ArrayList<Integer>>();
+
+        for( var con : listContributor){
+            var map = new HashMap<String,Integer>();
+            var listo = participationService.findParticipationsByContributor(con.getGitId());
+            for( var x : listo){
+                map.put(x.getLangage().getLanguageName(),x.getLignes());
+            }
+            mapFinal.put(con.getGitId(),forFront(map));
+        }
+        return mapFinal;
+    }
+
+    public static ArrayList<Integer> forFront(HashMap<String,Integer> map){
+        var list = new ArrayList<Integer>();
+        for( var x : Extensions.values()){
+            if(x == Extensions.OTHER){
+                continue;
+            }
+            var iter = map.get(x.toString());
+            if(iter == null){
+                list.add(0);
+            } else {
+                list.add(iter);
+            }
+        }
+        return list;
     }
 
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +22,22 @@ public class ParticipationService {
 
     public void insertParticipation(Participation participation) {
         participationRepo.save(participation);
+    }
+
+    public ArrayList<Participation> findall(){
+        return new ArrayList<>(participationRepo.findAll());
+    }
+
+    public ArrayList<Participation> findParticipationsByLanguage(String languageName) {
+        return participationRepo.findParticipationsByLangage(languageName);
+    }
+
+    public ArrayList<Participation> findParticipationsByLanguageAndContributor(String languageName, String gitId) {
+        return participationRepo.findParticipationsByLanguageAndContributor(languageName, gitId);
+    }
+
+    public ArrayList<Participation> findParticipationsByContributor(String gitId){
+        return participationRepo.findParticipationsByContributor(gitId);
     }
 
 
