@@ -39,11 +39,11 @@ public class JGitBlame {
 
     /**
      * Get the date of all the refs
-     * @param git the git on what we blaming
+     * @param git the git on what we're blaming
      * @param allTag list of all tags, chronologicaly sorted
-     * @throws IncorrectObjectTypeException
-     * @throws MissingObjectException
-     * @throws IOException
+     * @throws IncorrectObjectTypeException exception
+     * @throws MissingObjectException exception
+     * @throws IOException exception
      */
     private void dateFromTag(Git git, List<Ref> allTag) throws IncorrectObjectTypeException, MissingObjectException, IOException {
         Objects.requireNonNull(git);
@@ -59,7 +59,7 @@ public class JGitBlame {
 
     /**
      * GEt tags from remote
-     * @param git the git on what we blaming
+     * @param git the git on what we're blaming
      * @param repositoryURL url of the current repo
      * @throws GitAPIException exception
      */

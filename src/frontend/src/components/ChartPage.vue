@@ -26,53 +26,89 @@
 </template>
 <script>
 import Chart from 'chart.js/auto';
+import axios from 'axios';
 
 export default {
   data(){
     return {
-      colorMapping:{
-        'c': 'brown',
-        'java':'orange',
-        'javascript':'yellow',
-        'html':'blue',
-        'css':'lightblue',
-        'cplusplus':'noir',
-        'php':'purple',
-        'typescript':'darkyellow',
-        'ruby':'red',
-        'csharp':'darkblue',
-        'build':'lightgrey',
-        'doc':'green',
-        'ressources':'lightgreen',
-        'configuration':'grey',
-        'makefile':'pink',
-      },
+      projectName:'',
+      tag:'',
       chartData: {
         labels: [],
         datasets: [
           {
-            label: 'javascript',
+            label: 'C',
+            backgroundColor: 'Brown',
+            data: [],
+          },
+          {
+            label: 'JAVA',
             backgroundColor: 'Orange',
             data: [],
           },
           {
-            label: 'java',
+            label: 'JAVASCRIPT',
             backgroundColor: 'Yellow',
             data: [],
           },
           {
-            label: 'markdown',
-            backgroundColor: 'lightblue',
+            label: 'HTML',
+            backgroundColor: 'Blue',
             data: [],
           },
           {
-            label: 'makefile',
-            backgroundColor: 'gray',
+            label: 'CSS',
+            backgroundColor: 'Lightblue',
             data: [],
           },
           {
-            label: 'configuration',
-            backgroundColor: 'purple',
+            label: 'CPLUSPLUS',
+            backgroundColor: 'Black',
+            data: [],
+          },
+          {
+            label: 'PHP',
+            backgroundColor: 'Purple',
+            data: [],
+          },
+          {
+            label: 'TYPESCRIPT',
+            backgroundColor: 'Darkyellow',
+            data: [],
+          },
+          {
+            label: 'RUBY',
+            backgroundColor: 'Red',
+            data: [],
+          },
+          {
+            label: 'CSHARP',
+            backgroundColor: 'Darkblue',
+            data: [],
+          },
+          {
+            label: 'BUILD',
+            backgroundColor: 'Lightgrey',
+            data: [],
+          },
+          {
+            label: 'DOC',
+            backgroundColor: 'Green',
+            data: [],
+          },
+          {
+            label: 'RESSOURCE',
+            backgroundColor: 'Lightgreen',
+            data: [],
+          },
+          {
+            label: 'CONFIGURATION',
+            backgroundColor: 'grey',
+            data: [],
+          },
+          {
+            label: 'MAKEFILE',
+            backgroundColor: 'pink',
             data: [],
           },
         ],
@@ -105,6 +141,14 @@ export default {
       new Chart(ctx, config);
     },
   },
+/*  initData(){
+    const data = {
+      gitLink: this.projectName,
+    };
+    axios.post('app/rest/RadarData')
+        .then
+
+  },*/
   mounted() {
     this.chartData.labels = ["Steven","julien","kingue","yassine","christophe","stephane","kevin","ben","alexandre","catherine","aurélie","hugo","pierre","sylvain","lucas","jean","michael","max","lewis"]; // Populate labels array
     this.chartData.datasets[0].data = [20, 559, 5, 56, 58,68, 59, 2, 45,18];
@@ -112,6 +156,16 @@ export default {
     this.chartData.datasets[2].data = [12, 59, 5, 56, 58, 12, 59, 12, 74];
     this.chartData.datasets[3].data = [20, 0, 0, 0, 0, 0, 0, 0, 0];
     this.chartData.datasets[4].data = [150, 59, 0, 0, 0, 0, 0, 0, 0];
+    this.chartData.datasets[5].data = [20, 559, 5, 56, 58,68, 59, 2, 45,18];
+    this.chartData.datasets[6].data = [1200, 59, 5, 56, 58,12, 59, 85, 23];
+    this.chartData.datasets[7].data = [12, 59, 5, 56, 58, 12, 59, 12, 74];
+    this.chartData.datasets[8].data = [20, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.chartData.datasets[9].data = [150, 59, 0, 0, 0, 0, 0, 0, 0];
+    this.chartData.datasets[10].data = [20, 559, 5, 56, 58,68, 59, 2, 45,18];
+    this.chartData.datasets[11].data = [1200, 59, 5, 56, 58,12, 59, 85, 23];
+    this.chartData.datasets[12].data = [12, 59, 5, 56, 58, 12, 59, 12, 74];
+    this.chartData.datasets[13].data = [20, 0, 0, 0, 0, 0, 0, 0, 0];
+    this.chartData.datasets[14].data = [150, 59, 0, 0, 0, 0, 0, 0, 0];
 
     this.initializeChart();
   }
