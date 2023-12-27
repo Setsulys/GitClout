@@ -93,9 +93,9 @@ public class DatabaseManager {
 //        System.out.println(participationService.findParticipationsByLanguage("C"));
 //        System.out.println(participationService.findParticipationsByLanguageAndContributor("C","steven.ly412@gmail.com"));
 //        System.out.println(participationService.findParticipationsByContributor("steven.ly412@gmail.com"));
-       System.out.println(MapOfPartByTag("refs/tags/v2.0"));
-        System.out.println("GNEEEE" + MapOfPartFull("gitlab.com/Setsulys/the_light_corridor"));
-        System.out.println("GNEEEE " + MapOfAverage("gitlab.com/Setsulys/the_light_corridor"));
+        System.out.println(MapOfPartByTagAndProject("refs/tags/v2.0","gitlab.com/Setsulys/the_light_corridor"));
+        System.out.println("GNEEEE" + MapOfAverage("gitlab.com/Setsulys/the_light_corridor"));
+        System.out.println("GNEEEE " + MapOfPartFull("gitlab.com/Setsulys/the_light_corridor"));
 
     }
 
@@ -114,9 +114,12 @@ public class DatabaseManager {
         for( var con : listContributor){
             var map = new HashMap<String,Integer>();
             var listo = participationService.findParticipationsByProjectAndContributor(project, con.getGitId());
-
             for( var x : listo){
-                map.put(x.getLangage().getLanguageName(),x.getLignes());
+                if(map.containsKey(x.getLangage().getLanguageName())){
+                    map.put(x.getLangage().getLanguageName(),x.getLignes() + map.get(x.getLangage().getLanguageName()));
+                } else {
+                    map.put(x.getLangage().getLanguageName(),x.getLignes());
+                }
             }
             mapFinal.put(con.getName(),forFront(map));
         }
@@ -135,9 +138,13 @@ public class DatabaseManager {
             var mapTag = new HashMap<String,ArrayList<Integer>>();
             var listo = participationService.findParticipationsByProjectAndContributor(project, con.getGitId());
 
-
             for( var x : listo){
-                map.put(x.getLangage().getLanguageName(),x.getLignes() / nbTag);
+                if(map.containsKey(x.getLangage().getLanguageName())){
+                    map.put(x.getLangage().getLanguageName(),x.getLignes() + map.get(x.getLangage().getLanguageName()));
+                } else {
+                    map.put(x.getLangage().getLanguageName(),x.getLignes() / nbTag);
+                }
+
             }
             mapFinal.put(con.getName(),map);
         }
@@ -146,7 +153,7 @@ public class DatabaseManager {
 
     }
 
-    public HashMap<String,HashMap<String, ArrayList<Integer>>> MapOfPartByTag(String nomTag){
+    public HashMap<String,HashMap<String, ArrayList<Integer>>> MapOfPartByTagAndProject(String nomTag, String project){
         var listContributor = contributeurService.findAllContributor();
 
         var mapFinal = new HashMap<String,HashMap<String, ArrayList<Integer>>>();
@@ -160,7 +167,11 @@ public class DatabaseManager {
             }
 
             for( var x : listo){
-                map.put(x.getLangage().getLanguageName(),x.getLignes());
+                if(map.containsKey(x.getLangage().getLanguageName())){
+                    map.put(x.getLangage().getLanguageName(),x.getLignes() + map.get(x.getLangage().getLanguageName()));
+                } else {
+                    map.put(x.getLangage().getLanguageName(),x.getLignes());
+                }
             }
             mapTag.put(nomTag,forFront(map));
             mapFinal.put(con.getName(),mapTag);
