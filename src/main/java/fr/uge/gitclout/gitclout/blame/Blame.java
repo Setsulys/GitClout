@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -103,18 +102,19 @@ public class Blame {
 		var description = FileExtension.extensionDescription(extension);
 		if(!(description.equals(Extensions.OTHER) || description.equals(Extensions.MEDIA))) {
 			var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
-			if(currentTagPosition==0) { //we need to blame the first tag
+			if(currentTagPosition==0 || changedFiles.contains(filePath)) { //we need to blame the first tag
 				checkCommentsInit(blameResult,description);
 			}
-			else if(changedFiles.contains(filePath)) {//Check if the current file is modified
+/*			else if(changedFiles.contains(filePath)) {//Check if the current file is modified
 				checkCommentsInit(blameResult,description);
-			}
+			}*/
 		}
 	}
 
 
 	/**
 	 * return a regex of the language comments
+	 * Its best to have a regex for each type of file instead of a big one
 	 * @param extension extension of the current file language
 	 * @return a regex of the language comments
 	 */
@@ -193,21 +193,19 @@ public class Blame {
 			for(var contributor : contributorData) {
 				var line =countline.getOrDefault(contributor, null);
 				var ce =new ContributorLanguage(contributor, extension);
-				if(datas.containsKey(ce) && line !=null) {
-					datas.get(ce).addLines(line);
+				if(datas.containsKey(ce) /*&& line !=null*/) {
+					datas.get(ce).addLines(line!=null?line:0);
 				}
-				else if(!datas.containsKey(ce) && line != null){
+				else /*if(!datas.containsKey(ce) *//*&& line != null*//*)*/{
 					var data =new Data(currentTag, contributor,extension);
-					data.addLines(line);
+					data.addLines(line!=null?line:0);
 					datas.put(ce, data);
 				}
-				else if(!datas.containsKey(ce) && line == null){
+/*				else if(!datas.containsKey(ce) && line == null){
 					var data =new Data(currentTag, contributor,extension);
 					data.addLines(0);
 					datas.put(ce, data);
-				}
-
-
+				}*/
 			}
 		}
 
