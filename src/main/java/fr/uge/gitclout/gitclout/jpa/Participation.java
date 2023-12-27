@@ -13,6 +13,8 @@ public class Participation {
 
     private int nbLignesCode;
 
+
+
     @ManyToOne
     private Contributeur contributeur;
     @ManyToOne
@@ -49,4 +51,34 @@ public class Participation {
     public void setId(ParticipationPrimaryKey id) {
         this.id = id;
     }
+
+    public String toString(){
+        return "contributeur : " + this.getId().getGitId() + ", langage : " + this.getId().getLanguageName() + ", pour le tag : " + this.getId().getTagId() + ", avec  le nombre de ligne : " + this.nbLignesCode;
+    }
+
+    public Contributeur getContributeur() {
+        return contributeur;
+    }
+
+    public void setContributeur(Contributeur contributeur) {
+        this.contributeur = contributeur;
+    }
+
+    public Langage getLangage() {
+        return langage;
+    }
+
+    public void setLangage(Langage langage) {
+        this.langage = langage;
+    }
+
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
 }
+
+

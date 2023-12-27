@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+
 @Service
 public class ContributeurService {
 
@@ -18,6 +20,10 @@ public class ContributeurService {
 
     public void insertContributeur(Contributeur con) {
         contributeurRepo.save(con);
+    }
+
+    public ArrayList<Contributeur> findAllContributor(){
+        return new ArrayList<>(contributeurRepo.findAll());
     }
 
 
