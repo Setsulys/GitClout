@@ -14,6 +14,8 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class DatabaseManager {
@@ -140,12 +142,13 @@ public class DatabaseManager {
 
             for( var x : listo){
                 if(map.containsKey(x.getLangage().getLanguageName())){
-                    map.put(x.getLangage().getLanguageName(),x.getLignes()  / nbTag + map.get(x.getLangage().getLanguageName()));
+                    map.put(x.getLangage().getLanguageName(),x.getLignes()+ map.get(x.getLangage().getLanguageName()));
                 } else {
-                    map.put(x.getLangage().getLanguageName(),x.getLignes() / nbTag);
+                    map.put(x.getLangage().getLanguageName(),x.getLignes());
                 }
 
             }
+            map.forEach((k,v) -> map.replace(k,v/nbTag));
             mapFinal.put(con.getName(),map);
         }
         return mapFinal;
