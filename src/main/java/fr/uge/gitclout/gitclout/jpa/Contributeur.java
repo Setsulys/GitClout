@@ -16,6 +16,9 @@ public class Contributeur {
     @OneToMany
     private Set<Participation> participation;
 
+    /**
+     * JPA Class of a contributor
+     */
     public Contributeur() {
     }
 
@@ -23,6 +26,11 @@ public class Contributeur {
         this.gitId = gitId;
         this.name =name;
         this.participation = participation;
+    }
+
+    public Contributeur(String gitId,String name){
+        this.gitId = gitId;
+        this.name = name;
     }
 
     public String getGitId(){

@@ -10,7 +10,9 @@ import java.util.ArrayList;
 
 @Service
 public class ContributeurService {
-
+    /**
+     * JPA Service class for contributor
+     */
     private ContributeurRepo contributeurRepo;
     @Autowired
     public ContributeurService(ContributeurRepo contributeurRepo){

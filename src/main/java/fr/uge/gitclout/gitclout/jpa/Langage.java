@@ -13,7 +13,9 @@ public class Langage {
     private String languageName;
     @OneToMany
     private Set<Participation> participation;
-
+    /**
+     * JPA Class of a Language
+     */
     public Langage(){
 
     }
@@ -23,6 +25,9 @@ public class Langage {
         this.participation = participation;
     }
 
+    public Langage(String languageName){
+        this.languageName = languageName;
+    }
 
 
     public String getLanguageName() {

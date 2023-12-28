@@ -21,7 +21,9 @@ public class Participation {
     private Langage langage;
     @ManyToOne
     private Tag tag;
-
+    /**
+     * JPA Class of the associative table Participe of the database
+     */
     public Participation(){
 
     }

@@ -18,7 +18,9 @@ public class Tag {
 
     @OneToMany
     private Set<Participation> participation;
-
+    /**
+     * JPA Class of Tags
+     */
     public Tag(){
 
     }
@@ -27,7 +29,15 @@ public class Tag {
         this.tagId = tagId;
         this.nomTag = nomTag;
         this.date = date;
+        this.project = project;
         this.participation = participation;
+    }
+
+    public Tag(String tagId,String nomTag, String project, Date date){
+        this.tagId = tagId;
+        this.nomTag = nomTag;
+        this.date = date;
+        this.project = project;
     }
 
     public String getTagId() {
