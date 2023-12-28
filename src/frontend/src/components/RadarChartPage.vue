@@ -7,7 +7,7 @@
           <div class="white">
             Moyenne de ligne écrite par personne par langage
           </div>
-          <div class="sub header white">Valeurs en dur</div>
+          <div class="sub header white">Valeurs en dur : {{projectName}}</div>
         </div>
       </h2>
     </div>
@@ -29,19 +29,23 @@
 
 <script>
 import Chart from 'chart.js/auto';
+import axios from 'axios';
 
 export default {
+  props:{
+    projectName:String,
+  },
   data() {
     return {
       chartDataList: [
         {
           labels: ['java', 'markdown', 'makefile', 'javascript', 'git'],
           datasets: [{
-            label: 'Moyenne de ligne pour Steven',
+            label: 'Test',
             data: [800, 500, 20, 500, 100],
             backgroundColor: 'rgba(64, 120, 192, 0.7)',
           }]
-        },
+        },/*
         {
           labels: ['java', 'markdown', 'makefile', 'javascript', 'git'],
           datasets: [{
@@ -49,7 +53,7 @@ export default {
             data: [300, 200, 50, 200, 30],
             backgroundColor: 'rgba(64, 120, 192, 0.7)',
           }]
-        },
+        },*//*
         {
           labels: ['java', 'markdown', 'makefile', 'javascript', 'git'],
           datasets: [{
@@ -65,7 +69,7 @@ export default {
             data: [200, 600, 30, 100, 70],
             backgroundColor: 'rgba(64, 120, 192, 0.7)',
           }]
-        },
+        },*/
       ],
     };
   },
@@ -86,15 +90,46 @@ export default {
           }
         },
       };
-
       const ctx = document.getElementById(`radarChartpage${index}`).getContext('2d');
       new Chart(ctx, config);
-    }
+    },
+    gatherData(){
+      const data ={
+        gitLink:this.projectName,
+      };
+      axios.post('app/rest/RadarData',data)
+          .then((response)=>{
+            const upperMap = response.data;
+            Object.keys(upperMap).forEach((key/*,index*/)=>{
+              console.log(`Key: ${key}`);
+              const newDataElement = {
+                labels:['java','python','C'],
+                datasets:[{
+                  label:`Moyenne pour ${key}`,
+                  data:[510,123,52],
+                  backgroundColor: 'rgba(64, 120, 192, 0.7)',
+                }]
+              };
+              this.chartDataList.push(newDataElement);
+            });
+            this.$nextTick(() => {
+              console.log(this.chartDataList.length);
+              this.chartDataList.forEach((chartData, index) => {
+                console.log('data :' + chartData.labels);
+                console.log('data : ' + chartData.datasets);
+                console.log('index : '+ index);
+                this.initializeRadarChart(index);
+              });
+            });
+          })
+          .catch((error)=>{
+            console.error('Error fetching data:',error);
+          });
+    },
   },
   mounted() {
-    this.chartDataList.forEach((data, index) => {
-      this.initializeRadarChart(index);
-    });
+    this.gatherData();
+
   }
 }
 </script>

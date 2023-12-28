@@ -47,12 +47,11 @@
     </div>
   </div>
   <div v-show="selectedTag !== 'undo'">
-    <div v-show="isRunnable">
-      <ChartPage/>
-      <RadarChartPage/>
+    <div v-if="isRunnable">
+      <ChartPage :selected-tag-name="selectedTag"/>
+      <RadarChartPage :project-name="text"/>
     </div>
   </div>
-
   <GitPage @haveData="handleGitEvent"/>
 </template>
 
@@ -72,7 +71,7 @@ export default {
   data() {
     return {
       msg: '',
-      text: '',
+      text: localStorage.getItem('projectText') || '',
       isRunnable:true,
       loading:false,
       percent:0,
@@ -98,6 +97,7 @@ export default {
       this.selectedTag = choice;
     },
     reloadCurrentPage(){
+      localStorage.setItem('projectText', this.text); // Stocker la valeur dans localStorage
       window.location.reload();
     },
     onclick(){
