@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceContext;
+import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 @Service
 public class BackApplication{
 
@@ -39,12 +42,15 @@ public class BackApplication{
         return runnable;
     }
 
-/*    public String getDatas(String gitLink){
-        databaseManager.MapOfPartFull();
-        return "yo";
-    }*/
-    public ArrayList<Blame> projectData(String gitLink){
-        return urlAndData.get(gitLink).projectData();
+    public BarData barData(String gitLink){
+        var backData = databaseManager.MapOfAverage(gitLink);
+        var names = new ArrayList<>(backData.keySet());
+        var toFrontData = IntStream.range(0,new ArrayList<>(backData.values()).get(0).size()).mapToObj(i -> backData.values().stream().map(list-> list.get(i)).toList()).toList();
+        return new BarData(names,toFrontData);
+    }
+
+    public HashMap<String,HashMap<String,Integer>> radarData(String gitLink){
+        return databaseManager.MapOfAverage(gitLink);
     }
     public List<String> displayProjects(){
         return new ArrayList<>(urlAndData.keySet());

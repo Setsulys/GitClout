@@ -1,8 +1,9 @@
 package fr.uge.gitclout.gitclout;
-import fr.uge.gitclout.gitclout.blame.*;
-import fr.uge.gitclout.gitclout.jpa.DatabaseManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -32,11 +33,16 @@ public class MessageController {
 
     }
 
-
     @GetMapping("/getlink")
     @ResponseBody
     public List<String> displayGit(){
         return back.displayProjects();
     }
 
+
+    @RequestMapping("/RadarData")
+    public HashMap<String, HashMap<String, Integer>> radarData(@RequestBody GitLinkRequest gitLinkRequest){
+        String gitLink = gitLinkRequest.getGitLink();
+        return back.radarData(gitLink);
+    }
 }

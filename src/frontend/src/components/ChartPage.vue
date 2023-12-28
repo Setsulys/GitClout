@@ -5,7 +5,7 @@
         <i class="chart bar icon white"></i>
         <div class="content white">
           <div class="white">
-            Statistiques du git blamé
+            Statistiques du Tag : {{ selectedTagName }}
           </div>
           <div class="sub header white">Valeurs en dur</div>
         </div>
@@ -26,11 +26,16 @@
 </template>
 <script>
 import Chart from 'chart.js/auto';
-import axios from 'axios';
+//import axios from 'axios';
 
 export default {
+  props: {
+    selectedTagName: String,
+    selectedTagShawan:String,
+  },
   data(){
     return {
+
       projectName:'',
       tag:'',
       chartData: {
