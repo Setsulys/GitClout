@@ -22,8 +22,13 @@ public class TagService {
         tagRepo.save(tag);
     }
 
+
     public ArrayList<Tag> findTagsByProject(String project){
         return tagRepo.findByProject(project);
+    }
+
+    public ArrayList<Tag> findAllTags(){
+        return new ArrayList<>(tagRepo.findAll());
     }
 
     public int sizeOfTagsByProject(String project){

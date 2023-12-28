@@ -9,4 +9,5 @@ import java.util.ArrayList;
 public interface TagRepo extends JpaRepository<Tag, String> {
 
     ArrayList<Tag> findByProject(String project);
+
 }
