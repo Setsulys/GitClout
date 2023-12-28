@@ -128,6 +128,19 @@ public class DatabaseManager {
 
     }
 
+    public HashMap<String, Integer> MapOfAverageContributor(String contributor,String project){
+        int nbTag = tagService.sizeOfTagsByProject(project);
+        var mapFinal = new HashMap<String, HashMap<String, Integer>>();
+
+        var map = new HashMap<String,Integer>();
+        var listo = participationService.findParticipationsByProjectAndContributor(project, contributor);
+
+        arrayListo(map,listo);
+        map.forEach((k,v) -> map.replace(k,v/nbTag));
+        return map;
+
+    }
+
     /**
      * Method which returns a map containing the number of lines by contributors by languages over a tag of a project
      * @param nomTag The tag
@@ -174,6 +187,7 @@ public class DatabaseManager {
         return list;
     }
 
+
     public static HashMap<String,Integer> arrayListo(HashMap<String,Integer> map, ArrayList<Participation> listo){
         for( var x : listo){
             if(map.containsKey(x.getLangage().getLanguageName())){
@@ -184,6 +198,8 @@ public class DatabaseManager {
         }
         return map;
     }
+
+
 
     public ArrayList<Tag> retreiveTags(String project){
       return tagService.findTagsByProject(project);
