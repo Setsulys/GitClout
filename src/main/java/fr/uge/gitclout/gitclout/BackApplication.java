@@ -7,6 +7,7 @@ import fr.uge.gitclout.gitclout.blame.UtilsMethods;
 import fr.uge.gitclout.gitclout.jpa.Contributeur;
 import fr.uge.gitclout.gitclout.jpa.ContributeurService;
 import fr.uge.gitclout.gitclout.jpa.DatabaseManager;
+import fr.uge.gitclout.gitclout.jpa.Tag;
 import jdk.jshell.execution.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,16 +43,14 @@ public class BackApplication{
         return runnable;
     }
 
-    public BarData barData(String gitLink){
-        var backData = databaseManager.MapOfAverage(gitLink);
-        var names = new ArrayList<>(backData.keySet());
-        var toFrontData = IntStream.range(0,new ArrayList<>(backData.values()).get(0).size()).mapToObj(i -> backData.values().stream().map(list-> list.get(i)).toList()).toList();
-        return new BarData(names,toFrontData);
-    }
-
     public HashMap<String,HashMap<String,Integer>> radarData(String gitLink){
         return databaseManager.MapOfAverage(gitLink);
     }
+
+/*    public ArrayList<Tag> getTagOfProject(String gitLink){
+        return databaseManager.retreiveTags(gitLink);
+    }*/
+
     public List<String> displayProjects(){
         return new ArrayList<>(urlAndData.keySet());
     }

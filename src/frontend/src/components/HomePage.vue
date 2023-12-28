@@ -75,7 +75,7 @@ export default {
       isRunnable:true,
       loading:false,
       percent:0,
-      choices: [
+      choices:[
           'undo',
         'Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5',
         'Tag 6', 'Tag 7', 'Tag 8', 'Tag 9', 'Tag 10',
@@ -97,13 +97,15 @@ export default {
       this.selectedTag = choice;
     },
     reloadCurrentPage(){
-      localStorage.setItem('projectText', this.text); // Stocker la valeur dans localStorage
+      localStorage.setItem('projectText', this.text);
       window.location.reload();
+
     },
     onclick(){
       localStorage.setItem('isNotFirstTime', 'true');
       this.submit();
       this.loading=true;
+
     },
     submit() {
       const data = {
@@ -113,9 +115,11 @@ export default {
           .then((response) => {
             console.log(response.data);
             this.isRunnable=response.data;
+/*            this.getTags();*/
             if(this.isRunnable){
               this.reloadCurrentPage();
             }
+
             this.loading=false;
             return response.data;
           })
@@ -130,7 +134,7 @@ export default {
       };
       axios.post('app/rest/percentFinished',data)
           .then((response)=>{
-            console.log(response.data);
+/*            console.log(response.data);*/
             if(response.data!=null){
               this.percent=Number(response.data).toFixed(2);
             }
@@ -138,7 +142,20 @@ export default {
         console.error('Error fetching percent',error);
       });
     },
+    /*getTags(){
+      const data = {
+        gitLink: this.text,
+      };
+      axios.post('app/rest/getTags',data)
+          .then((response)=>{
+            const r = response.data;
+            this.choices.push(r.tag);
+          }).catch(error=>{
+            console.error('Error fetching tags',error);
+      });
+    },*/
   },
+
 
   mounted() {
     fetch('/app/rest/hello')

@@ -7,7 +7,4 @@ public class GitLinkRequest {
         return gitLink;
     }
 
-    public void setGitLink(String gitLink){
-        this.gitLink=gitLink;
-    }
 }

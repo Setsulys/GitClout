@@ -1,8 +1,11 @@
 package fr.uge.gitclout.gitclout;
 
+import fr.uge.gitclout.gitclout.jpa.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,33 +19,36 @@ public class MessageController {
         this.back = back;
     }
     @GetMapping("/hello")
-    public String hello(){
-        return "GITCLOUT DE JULIEN ET STEVEN";
+    public ResponseEntity<String> hello(){
+
+        return ResponseEntity.ok("GITCLOUT DE JULIEN ET STEVEN");
     }
 
-    @RequestMapping("/toTheBack")
-    public boolean displayLink(@RequestBody GitLinkRequest gitLinkRequest){
-        String gitLink = gitLinkRequest.getGitLink();
-        return back.tryAndAdd(gitLink);
+    @PostMapping("/toTheBack")
+    public ResponseEntity<Boolean> displayLink(@RequestBody GitLinkRequest gitLinkRequest){
+        return ResponseEntity.ok(back.tryAndAdd(gitLinkRequest.getGitLink()));
     }
 
     @RequestMapping("/percentFinished")
-    public double percentFinished(@RequestBody GitLinkRequest gitLinkRequest){
-        String gitLink = gitLinkRequest.getGitLink();
-        return back.getPercentageOfProject(gitLink);
+    public ResponseEntity<Double> percentFinished(@RequestBody GitLinkRequest gitLinkRequest){
+        return ResponseEntity.ok(back.getPercentageOfProject(gitLinkRequest.getGitLink()));
 
     }
 
     @GetMapping("/getlink")
     @ResponseBody
-    public List<String> displayGit(){
-        return back.displayProjects();
+    public ResponseEntity<List<String>> displayGit(){
+        return ResponseEntity.ok(back.displayProjects());
     }
 
+/*    @PostMapping("getTags")
+    public ResponseEntity<ArrayList<Tag>> getTagOfProject(@RequestBody GitLinkRequest gitLinkRequest){
+        System.out.println(back.getTagOfProject(gitLinkRequest.getGitLink()));
+        return ResponseEntity.ok(back.getTagOfProject(gitLinkRequest.getGitLink()));
+    }*/
 
-    @RequestMapping("/RadarData")
-    public HashMap<String, HashMap<String, Integer>> radarData(@RequestBody GitLinkRequest gitLinkRequest){
-        String gitLink = gitLinkRequest.getGitLink();
-        return back.radarData(gitLink);
+    @PostMapping("/RadarData")
+    public ResponseEntity<HashMap<String, HashMap<String, Integer>>> radarData(@RequestBody GitLinkRequest gitLinkRequest){
+        return ResponseEntity.ok(back.radarData(gitLinkRequest.getGitLink()));
     }
 }
