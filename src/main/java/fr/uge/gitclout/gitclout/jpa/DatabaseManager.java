@@ -140,7 +140,7 @@ public class DatabaseManager {
 
             for( var x : listo){
                 if(map.containsKey(x.getLangage().getLanguageName())){
-                    map.put(x.getLangage().getLanguageName(),x.getLignes() + map.get(x.getLangage().getLanguageName()));
+                    map.put(x.getLangage().getLanguageName(),x.getLignes()  / nbTag + map.get(x.getLangage().getLanguageName()));
                 } else {
                     map.put(x.getLangage().getLanguageName(),x.getLignes() / nbTag);
                 }
@@ -194,6 +194,8 @@ public class DatabaseManager {
         }
         return list;
     }
+
+
 
 
 
