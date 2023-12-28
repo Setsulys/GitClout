@@ -185,8 +185,8 @@ public class DatabaseManager {
         return map;
     }
 
-    public ArrayList<Tag> retreiveTags(){
-      return tagService.findAllTags();
+    public ArrayList<Tag> retreiveTags(String project){
+      return tagService.findTagsByProject(project);
     }
 
 
