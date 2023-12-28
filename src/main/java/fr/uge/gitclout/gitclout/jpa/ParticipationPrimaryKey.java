@@ -15,7 +15,7 @@ public class ParticipationPrimaryKey implements Serializable {
     @JoinColumn(name = "languageName", referencedColumnName = "languageName")
     private String languageName;
     public ParticipationPrimaryKey(){
-        
+
     }
 
     public ParticipationPrimaryKey(String gitId,String tagId, String languageName){
