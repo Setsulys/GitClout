@@ -185,6 +185,10 @@ public class DatabaseManager {
         return map;
     }
 
+    public ArrayList<Tag> retreiveTags(){
+      return tagService.findAllTags();
+    }
+
 
 
 
