@@ -110,19 +110,13 @@ public class DatabaseManager {
     }
 
     public HashMap<String, ArrayList<Integer>> MapOfPartFull(String project){
-        var listContributor = contributeurService.findAllContributor();
+        var listContributor = contributeurService.findContributorsByProject(project);
         var mapFinal = new HashMap<String,ArrayList<Integer>>();
 
         for( var con : listContributor){
             var map = new HashMap<String,Integer>();
             var listo = participationService.findParticipationsByProjectAndContributor(project, con.getGitId());
-            for( var x : listo){
-                if(map.containsKey(x.getLangage().getLanguageName())){
-                    map.put(x.getLangage().getLanguageName(),x.getLignes() + map.get(x.getLangage().getLanguageName()));
-                } else {
-                    map.put(x.getLangage().getLanguageName(),x.getLignes());
-                }
-            }
+            arrayListo(map,listo);
             mapFinal.put(con.getName(),forFront(map));
         }
         return mapFinal;
@@ -132,22 +126,14 @@ public class DatabaseManager {
 
     public HashMap<String, HashMap<String ,Integer>> MapOfAverage(String project){
         int nbTag = tagService.sizeOfTagsByProject(project);
-        var listContributor = contributeurService.findAllContributor();
+        var listContributor = contributeurService.findContributorsByProject(project);
         var mapFinal = new HashMap<String, HashMap<String, Integer>>();
 
         for( var con : listContributor){
             var map = new HashMap<String,Integer>();
             var mapTag = new HashMap<String,ArrayList<Integer>>();
             var listo = participationService.findParticipationsByProjectAndContributor(project, con.getGitId());
-
-            for( var x : listo){
-                if(map.containsKey(x.getLangage().getLanguageName())){
-                    map.put(x.getLangage().getLanguageName(),x.getLignes()+ map.get(x.getLangage().getLanguageName()));
-                } else {
-                    map.put(x.getLangage().getLanguageName(),x.getLignes());
-                }
-
-            }
+            arrayListo(map,listo);
             map.forEach((k,v) -> map.replace(k,v/nbTag));
             mapFinal.put(con.getName(),map);
         }
@@ -157,7 +143,7 @@ public class DatabaseManager {
     }
 
     public HashMap<String,HashMap<String, ArrayList<Integer>>> MapOfPartByTagAndProject(String nomTag, String project){
-        var listContributor = contributeurService.findAllContributor();
+        var listContributor = contributeurService.findContributorsByProject(project);
 
         var mapFinal = new HashMap<String,HashMap<String, ArrayList<Integer>>>();
 
@@ -169,13 +155,7 @@ public class DatabaseManager {
                 continue;
             }
 
-            for( var x : listo){
-                if(map.containsKey(x.getLangage().getLanguageName())){
-                    map.put(x.getLangage().getLanguageName(),x.getLignes() + map.get(x.getLangage().getLanguageName()));
-                } else {
-                    map.put(x.getLangage().getLanguageName(),x.getLignes());
-                }
-            }
+            arrayListo(map,listo);
             mapTag.put(nomTag,forFront(map));
             mapFinal.put(con.getName(),mapTag);
         }
@@ -197,6 +177,18 @@ public class DatabaseManager {
         }
         return list;
     }
+
+    public static HashMap<String,Integer> arrayListo(HashMap<String,Integer> map, ArrayList<Participation> listo){
+        for( var x : listo){
+            if(map.containsKey(x.getLangage().getLanguageName())){
+                map.put(x.getLangage().getLanguageName(),x.getLignes() + map.get(x.getLangage().getLanguageName()));
+            } else {
+                map.put(x.getLangage().getLanguageName(),x.getLignes());
+            }
+        }
+        return map;
+    }
+
 
 
 

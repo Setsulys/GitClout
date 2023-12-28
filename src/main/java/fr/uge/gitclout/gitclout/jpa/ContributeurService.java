@@ -28,5 +28,9 @@ public class ContributeurService {
         return new ArrayList<>(contributeurRepo.findAll());
     }
 
+    public ArrayList<Contributeur> findContributorsByProject(String project) {
+        return contributeurRepo.findContributorsByProject(project);
+    }
+
 
 }
