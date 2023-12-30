@@ -2,7 +2,6 @@ package fr.uge.gitclout.gitclout.blame;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -146,7 +144,6 @@ public class JGitBlame {
             throw new IllegalArgumentException();
         }
         try {
-            @SuppressWarnings("resource")
             var tagTree = new RevWalk(git.getRepository()).parseCommit(allTag.get(actualTag).getObjectId()).getTree(); //take for the first tag
             var treewalk = new TreeWalk(git.getRepository()); //init the treewalk
             var filesChange = GitTools.checkModifiedFiles(git, tagOfProject, actualTag);

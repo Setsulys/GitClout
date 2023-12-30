@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import jakarta.persistence.*;
+/*import jakarta.persistence.*;*/
 
 import java.util.ArrayList;
 

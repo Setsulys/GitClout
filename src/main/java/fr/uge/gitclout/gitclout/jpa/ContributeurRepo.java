@@ -1,9 +1,9 @@
 package fr.uge.gitclout.gitclout.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+/*import org.springframework.data.jpa.repository.Query;
 
-import java.util.ArrayList;
+import java.util.ArrayList;*/
 
 
 public interface ContributeurRepo extends JpaRepository<Contributeur, String> {
