@@ -151,7 +151,7 @@ public class Blame {
 		try {
 			checkComments(blame,rawText,pattern,extension,codeCount);
 		} catch (Exception e) {
-			return;
+			throw new AssertionError(e);
 		}
 	}
 
