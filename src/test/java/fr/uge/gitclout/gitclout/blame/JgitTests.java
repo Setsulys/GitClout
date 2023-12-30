@@ -128,43 +128,43 @@ public class BlameTest{
 
         @Test
         public void testAllExtensionsReturn() {
-            assertEquals(Extensions.C,FileExtension.extensionDescription("c"));
-            assertEquals(Extensions.C,FileExtension.extensionDescription("h"));
-            assertEquals(Extensions.JAVA,FileExtension.extensionDescription("java"));
-            assertEquals(Extensions.JAVASCRIPT,FileExtension.extensionDescription("js"));
-            assertEquals(Extensions.HTML,FileExtension.extensionDescription("html"));
-            assertEquals(Extensions.CSS,FileExtension.extensionDescription("css"));
-            assertEquals(Extensions.PYTHON,FileExtension.extensionDescription("py"));
-            assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("c++"));
-            assertEquals(Extensions.CPLUSPLUS,FileExtension.extensionDescription("cpp"));
-            assertEquals(Extensions.PHP,FileExtension.extensionDescription("php"));
-            assertEquals(Extensions.TYPESCRIPT,FileExtension.extensionDescription("ts"));
-            assertEquals(Extensions.CSHARP,FileExtension.extensionDescription("cs"));
-            assertEquals(Extensions.RUBY,FileExtension.extensionDescription("rb"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mp3"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mp4"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("wav"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("mkv"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jpg"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("png"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jpeg"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("webm"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("jiff"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("gif"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("png"));
-            assertEquals(Extensions.MEDIA,FileExtension.extensionDescription("xls"));
-            assertEquals(Extensions.OTHER,FileExtension.extensionDescription("pdf"));
-            assertEquals(Extensions.BUILD,FileExtension.extensionDescription("xml"));
-            assertEquals(Extensions.BUILD,FileExtension.extensionDescription("yml"));
-            assertEquals(Extensions.DOC,FileExtension.extensionDescription("md"));
-            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("csv"));
-            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("docx"));
-            assertEquals(Extensions.RESSOURCES,FileExtension.extensionDescription("txt"));
-            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("git"));
-            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("project"));
-            assertEquals(Extensions.CONFIGURATION,FileExtension.extensionDescription("gitignore"));
-            assertEquals(Extensions.MAKEFILE,FileExtension.extensionDescription("makefile"));
-            assertEquals(Extensions.OTHER,FileExtension.extensionDescription("pdf"));
+            assertEquals(Extensions.C,UtilsMethods.extensionDescription("c"));
+            assertEquals(Extensions.C,UtilsMethods.extensionDescription("h"));
+            assertEquals(Extensions.JAVA,UtilsMethods.extensionDescription("java"));
+            assertEquals(Extensions.JAVASCRIPT,UtilsMethods.extensionDescription("js"));
+            assertEquals(Extensions.HTML,UtilsMethods.extensionDescription("html"));
+            assertEquals(Extensions.CSS,UtilsMethods.extensionDescription("css"));
+            assertEquals(Extensions.PYTHON,UtilsMethods.extensionDescription("py"));
+            assertEquals(Extensions.CPLUSPLUS,UtilsMethods.extensionDescription("c++"));
+            assertEquals(Extensions.CPLUSPLUS,UtilsMethods.extensionDescription("cpp"));
+            assertEquals(Extensions.PHP,UtilsMethods.extensionDescription("php"));
+            assertEquals(Extensions.TYPESCRIPT,UtilsMethods.extensionDescription("ts"));
+            assertEquals(Extensions.CSHARP,UtilsMethods.extensionDescription("cs"));
+            assertEquals(Extensions.RUBY,UtilsMethods.extensionDescription("rb"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("mp3"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("mp4"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("wav"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("mkv"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("jpg"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("png"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("jpeg"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("webm"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("jiff"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("gif"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("png"));
+            assertEquals(Extensions.MEDIA,UtilsMethods.extensionDescription("xls"));
+            assertEquals(Extensions.OTHER,UtilsMethods.extensionDescription("pdf"));
+            assertEquals(Extensions.BUILD,UtilsMethods.extensionDescription("xml"));
+            assertEquals(Extensions.BUILD,UtilsMethods.extensionDescription("yml"));
+            assertEquals(Extensions.DOC,UtilsMethods.extensionDescription("md"));
+            assertEquals(Extensions.RESSOURCES,UtilsMethods.extensionDescription("csv"));
+            assertEquals(Extensions.RESSOURCES,UtilsMethods.extensionDescription("docx"));
+            assertEquals(Extensions.RESSOURCES,UtilsMethods.extensionDescription("txt"));
+            assertEquals(Extensions.CONFIGURATION,UtilsMethods.extensionDescription("git"));
+            assertEquals(Extensions.CONFIGURATION,UtilsMethods.extensionDescription("project"));
+            assertEquals(Extensions.CONFIGURATION,UtilsMethods.extensionDescription("gitignore"));
+            assertEquals(Extensions.MAKEFILE,UtilsMethods.extensionDescription("makefile"));
+            assertEquals(Extensions.OTHER,UtilsMethods.extensionDescription("pdf"));
 
         }
 
@@ -172,7 +172,7 @@ public class BlameTest{
         public void preconditions() {
             assertThrows(NullPointerException.class, ()-> new FileExtension("Test.java", null));
             assertThrows(NullPointerException.class, ()-> new FileExtension(null, "java"));
-            assertThrows(NullPointerException.class, ()->FileExtension.extensionDescription(null));
+            assertThrows(NullPointerException.class, ()->UtilsMethods.extensionDescription(null));
         }
     }
 

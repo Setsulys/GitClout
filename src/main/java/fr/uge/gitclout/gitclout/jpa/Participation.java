@@ -37,19 +37,34 @@ public class Participation {
     }
 
 
+    /**
+     * return the number of line in current participation
+     * @return the number of line in current participation
+     */
     public int getLignes() {
         return nbLignesCode;
     }
 
+    /**
+     * Set number of line of this participation
+     * @param lignes number of lines of code
+     */
     public void setNbLignesCode(int lignes) {
         this.nbLignesCode = lignes;
     }
 
-
+    /**
+     * get primary key of this class
+     * @return primary key
+     */
     public ParticipationPrimaryKey getId() {
         return id;
     }
 
+    /**
+     * Set the primary key of this class
+     * @param id primary key
+     */
     public void setId(ParticipationPrimaryKey id) {
         this.id = id;
     }
@@ -59,26 +74,51 @@ public class Participation {
     }
 
 
+    /**
+     * NOT FINISHED, MAYBE WANTED TO USE IT
+     * param contributeur return the contributors of the current participation
+     * @param contributeur return the contributors of the current participation
+     */
 /*    public Contributeur getContributeur() {
         return contributeur;
     }*/
 
+    /**
+     * Set the contributor for current participation
+     * @param contributeur contributor
+     */
     public void setContributeur(Contributeur contributeur) {
         this.contributeur = contributeur;
     }
 
+    /**
+     * get the language of current participation
+     * @return the language of current participation
+     */
     public Langage getLangage() {
         return langage;
     }
 
+    /**
+     * set the language of current participation
+     * @param langage the language of current participation
+     */
     public void setLangage(Langage langage) {
         this.langage = langage;
     }
 
+    /**
+     * Get current tag
+     * @return a tag
+     */
     public Tag getTag() {
         return tag;
     }
 
+    /**
+     * Set current participation tag
+     * @param tag a tag
+     */
     public void setTag(Tag tag) {
         this.tag = tag;
     }

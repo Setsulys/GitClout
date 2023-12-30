@@ -18,9 +18,21 @@ public interface ParticipationRepo extends JpaRepository<Participation,Participa
     @Query("SELECT p FROM Participation p WHERE p.contributeur.gitId = :gitId")
     ArrayList<Participation> findParticipationsByContributor(String gitId);*/
 
+    /**
+     * return all participation on this tag by the contributor
+     * @param nomTag name of the tag
+     * @param gitId email of the contributor
+     * @return all participation on this tag by the contributor
+     */
     @Query("SELECT p FROM Participation p WHERE p.tag.nomTag = :nomTag AND p.contributeur.gitId = :gitId")
     ArrayList<Participation> findParticipationsByTagAndContributeur(String nomTag,String gitId);
 
+    /**
+     * return all participation on this project by the contributor
+     * @param project link of the project
+     * @param gitId email of the contributor
+     * @return all participation on this project by the contributor
+     */
     @Query("SELECT p FROM Participation p WHERE p.tag.project = :project AND p.contributeur.gitId = :gitId")
     ArrayList<Participation> findParticipationsByProjectAndContributor(String project, String gitId);
 

@@ -40,34 +40,66 @@ public class Tag {
         this.project = project;
     }
 
+    /**
+     * Get tag id
+     * @return shawan
+     */
     public String getTagId() {
         return tagId;
     }
 
+    /**
+     * Set tag id
+     * @param tagId the shawan of the tag
+     */
     public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
+    /**
+     * get tag name
+     * @return tag name
+     */
     public String getNomTag() {
         return nomTag;
     }
 
+    /**
+     * set tag name
+     * @param nomTag tag name
+     */
     public void setNomTag(String nomTag) {
         this.nomTag = nomTag;
     }
 
+    /**
+     * get project link
+     * @return project link
+     */
     public String getProject() {
         return project;
     }
 
+    /**
+     * Set project name
+     * @param project link
+     */
     public void setProject(String project) {
         this.project = project;
     }
 
+    /**
+     * get tag date
+     * @return tag date
+     */
     public Date getDate() {
         return date;
     }
 
+    /**
+     * Set the date for the tag
+     * @param date a date of tag
+     */
     public void setDate(Date date) {
         this.date = date;
     }

@@ -16,9 +16,9 @@ public class Langage {
     /**
      * JPA Class of a Language
      */
-    public Langage(){
+/*    public Langage(){
 
-    }
+    }*/
 
 
     /**

@@ -70,17 +70,12 @@ public class ParticipationService {
     }
 
     /**
-     *
-     * @param project
-     * @param gitId
-     * @return
+     * return participation by project and contributor
+     * @param project project link
+     * @param gitId email of the contributor
+     * @return participation by project and contributor
      */
     public ArrayList <Participation> findParticipationsByProjectAndContributor(String project, String gitId){
         return participationRepo.findParticipationsByProjectAndContributor(project,gitId);
     }
-
-
-
-
-
 }

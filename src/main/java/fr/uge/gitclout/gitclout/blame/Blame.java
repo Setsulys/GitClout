@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import jdk.jshell.execution.Util;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.blame.BlameResult;
@@ -98,7 +99,7 @@ public class Blame {
 	private void checkBlame(String filePath) throws GitAPIException {
 		Objects.requireNonNull(filePath);
 		var extension = StringWork.splitExtention(filePath).extension(); //get file extension from record Extension(File,extension)
-		var description = FileExtension.extensionDescription(extension);
+		var description = UtilsMethods.extensionDescription(extension);
 		if(!(description.equals(Extensions.OTHER) || description.equals(Extensions.MEDIA))) {
 			var blameResult = git.blame().setStartCommit(currentTag.getObjectId()).setFilePath(filePath).call();
 			if(currentTagPosition==0 || changedFiles.contains(filePath)) { //we need to blame the first tag
