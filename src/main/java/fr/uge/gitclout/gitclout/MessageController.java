@@ -41,11 +41,11 @@ public class MessageController {
         return ResponseEntity.ok(back.displayProjects());
     }
 
-/*    @PostMapping("getTags")
-    public ResponseEntity<ArrayList<Tag>> getTagOfProject(@RequestBody GitLinkRequest gitLinkRequest){
+    @PostMapping("getTags")
+    public ResponseEntity<ArrayList<String>> getTagOfProject(@RequestBody GitLinkRequest gitLinkRequest){
         System.out.println(back.getTagOfProject(gitLinkRequest.getGitLink()));
         return ResponseEntity.ok(back.getTagOfProject(gitLinkRequest.getGitLink()));
-    }*/
+    }
 
     @PostMapping("/RadarData")
     public ResponseEntity<HashMap<String, HashMap<String, Integer>>> radarData(@RequestBody GitLinkRequest gitLinkRequest){

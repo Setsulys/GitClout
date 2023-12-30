@@ -23,7 +23,7 @@
               <div class="ui relaxed divided list">
                 <div v-for="(item, index) in links" :key="index" class="item">
                   <i class="large github middle aligned icon"></i>
-                  <div class="content"> <!--@click="openInNewTab('https://www.youtube.com/watch?v=GtL1huin9EE')">-->
+                  <div class="content">
                     <a class="header">{{ item }}</a>
                   </div>
                 </div>
@@ -44,9 +44,6 @@ export default {
   };
   },
   methods:{
-    openInNewTab(url) {
-      window.open(url, '_blank', 'noreferrer');
-    },
   },
   mounted(){
     fetch('/app/rest/getlink')

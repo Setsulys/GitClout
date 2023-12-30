@@ -20,20 +20,19 @@ public class Langage {
 
     }
 
-    public Langage(String languageName, Set<Participation> participation){
-        this.languageName = languageName;
-        this.participation = participation;
-    }
 
-    public Langage(String languageName){
-        this.languageName = languageName;
-    }
-
-
+    /**
+     * Get the language
+     * @return the language
+     */
     public String getLanguageName() {
         return languageName;
     }
 
+    /**
+     * Set language in current tag
+     * @param languageName language name
+     */
     public void setLangage(String languageName) {
         this.languageName = languageName;
     }

@@ -58,9 +58,10 @@ public class Participation {
         return "contributeur : " + this.getId().getGitId() + ", langage : " + this.getId().getLanguageName() + ", pour le tag : " + this.getTag().getNomTag() + ", avec  le nombre de ligne : " + this.nbLignesCode;
     }
 
-    public Contributeur getContributeur() {
+
+/*    public Contributeur getContributeur() {
         return contributeur;
-    }
+    }*/
 
     public void setContributeur(Contributeur contributeur) {
         this.contributeur = contributeur;

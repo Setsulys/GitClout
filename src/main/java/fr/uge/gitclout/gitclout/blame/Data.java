@@ -30,6 +30,7 @@ public final class Data{
     }
 
     /**
+     * USED IN DATABASEMANAGER
      * return the current number of line of this class
      * @return the current number of line of this class
      */

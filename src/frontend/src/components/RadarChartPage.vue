@@ -71,7 +71,7 @@ export default {
             console.log(upperMap);
             Object.entries(upperMap).forEach(([key,value])=>{
               console.log(`Key: ${key}`);
-              console.log(`value : ${value}`)
+              console.log(`value : ${value}`);
               const newDataElement = {
                 labels:['java','python','C'],
                 datasets:[{

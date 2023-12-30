@@ -18,32 +18,56 @@ public class ParticipationPrimaryKey implements Serializable {
 
     }
 
-    public ParticipationPrimaryKey(String gitId,String tagId, String languageName){
+/*    public ParticipationPrimaryKey(String gitId,String tagId, String languageName){
         this.gitId = gitId;
         this.tagId = tagId;
         this.languageName = languageName;
-    }
+    }*/
 
+    /**
+     * Get the email of contributor
+     * @return email of contributor
+     */
     public String getGitId() {
         return gitId;
     }
 
+    /**
+     * set for current participation, the contributor
+     * @param gitId contributor email
+     */
     public void setGitId(String gitId) {
         this.gitId = gitId;
     }
 
+    /**
+     * Get the participation tagID
+     * @return the tagID
+     */
     public String getTagId() {
         return tagId;
     }
 
+    /**
+     * Set the tagId for the current participation
+     * @param tagId id of the tag blamed
+     */
     public void setTagId(String tagId) {
         this.tagId = tagId;
     }
 
+    /**
+     * Get the language
+     * @return language
+     */
     public String getLanguageName() {
         return languageName;
     }
 
+    /**
+     * set the language for current participation
+     * @param languageName language name
+     */
     public void setLanguageName(String languageName) {
         this.languageName = languageName;
     }

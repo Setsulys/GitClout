@@ -8,8 +8,14 @@ import java.util.ArrayList;
 
 public interface ContributeurRepo extends JpaRepository<Contributeur, String> {
 
-    @Query("SELECT DISTINCT c FROM Contributeur c JOIN c.participation p WHERE p.tag.project = :project")
-    ArrayList<Contributeur> findContributorsByProject( String project);
+    /**
+     * NOT FINISHED, WANTED TO USE IT
+     * Find all contributors of a precise project
+     * @param project link of the project
+     * @return list of all contributor
+     */
+/*    @Query("SELECT DISTINCT c FROM Contributeur c JOIN c.participation p WHERE p.tag.project = :project")
+    ArrayList<Contributeur> findContributorsByProject( String project);*/
 }
 
 

@@ -78,8 +78,7 @@ export default {
       choices:[
           'undo',
         'Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5',
-        'Tag 6', 'Tag 7', 'Tag 8', 'Tag 9', 'Tag 10',
-        'Tag 11', 'Tag 12', 'Tag 13', 'Tag 14', 'Tag 15'
+        'Tag 6', 'Tag 7'
       ],
       selectedTag: 'undo',
       showElement:false,
@@ -115,9 +114,11 @@ export default {
           .then((response) => {
             console.log(response.data);
             this.isRunnable=response.data;
-/*            this.getTags();*/
+
             if(this.isRunnable){
+              this.getTags();
               this.reloadCurrentPage();
+
             }
 
             this.loading=false;
@@ -134,7 +135,6 @@ export default {
       };
       axios.post('app/rest/percentFinished',data)
           .then((response)=>{
-/*            console.log(response.data);*/
             if(response.data!=null){
               this.percent=Number(response.data).toFixed(2);
             }
@@ -142,18 +142,22 @@ export default {
         console.error('Error fetching percent',error);
       });
     },
-    /*getTags(){
+    getTags(){
       const data = {
         gitLink: this.text,
       };
       axios.post('app/rest/getTags',data)
           .then((response)=>{
             const r = response.data;
-            this.choices.push(r.tag);
+            r.forEach(item=>{
+              console.log(item);
+              this.choices.push(item);
+            });
+
           }).catch(error=>{
             console.error('Error fetching tags',error);
       });
-    },*/
+    },
   },
 
 

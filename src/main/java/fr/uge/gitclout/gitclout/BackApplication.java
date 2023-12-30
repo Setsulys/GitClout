@@ -47,9 +47,9 @@ public class BackApplication{
         return databaseManager.MapOfAverage(gitLink);
     }
 
-/*    public ArrayList<Tag> getTagOfProject(String gitLink){
-        return databaseManager.retreiveTags(gitLink);
-    }*/
+    public ArrayList<String> getTagOfProject(String gitLink){
+        return databaseManager.getTags(gitLink);
+    }
 
     public List<String> displayProjects(){
         return new ArrayList<>(urlAndData.keySet());

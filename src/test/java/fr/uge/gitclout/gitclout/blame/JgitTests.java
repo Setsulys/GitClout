@@ -43,7 +43,7 @@ public class BlameTest{
             Repository repos = jgit.getRepos(gitPath);
             git = new Git(repos);
             var pull = Git.lsRemoteRepository().setRemote(repositoryURL).setTags(true).call();
-            var list = new ArrayList<>(pull.stream().map(e -> e).collect(Collectors.toList()));
+            var list = new ArrayList<>(new ArrayList<>(pull));
             list.add(git.fetch().call().getAdvertisedRefs().iterator().next());
             getTags = list;
             getTags.add(git.fetch().call().getAdvertisedRefs().iterator().next());;

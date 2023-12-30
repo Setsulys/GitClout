@@ -16,11 +16,20 @@ public class LangageService {
     }
 
 
+    /**
+     * Insert a language in the database
+     * @param langage language of a file
+     */
     public void insertLangage(Langage langage) {
         this.langageRepo.save(langage);
     }
 
-    public ArrayList<Langage> selectLangage(){
+    /**
+     * NOT FINISHED, WANTED TO USE IT
+     * return all languages in the database
+     * @return all languages in the database
+     */
+    /*public ArrayList<Langage> selectLangage(){
         return new ArrayList<>(langageRepo.findAll());
-    }
+    }*/
 }

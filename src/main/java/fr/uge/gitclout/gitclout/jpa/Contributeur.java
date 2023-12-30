@@ -22,17 +22,6 @@ public class Contributeur {
     public Contributeur() {
     }
 
-    public Contributeur(String gitId,String name, Set<Participation> participation) {
-        this.gitId = gitId;
-        this.name =name;
-        this.participation = participation;
-    }
-
-    public Contributeur(String gitId,String name){
-        this.gitId = gitId;
-        this.name = name;
-    }
-
     public String getGitId(){
         return gitId;
     }

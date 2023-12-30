@@ -208,10 +208,6 @@ public class JGitBlame {
         }
         System.out.println("Task ended :100.00%" + " == "+finishedTask+"/"+tagOfProject.size());
         System.out.println("work done");
-        //System.out.println(blameList.stream().map(e-> e.blameDatas().toString()).collect(Collectors.joining("\n")));
-        //System.out.println("-------------------------------------------------------");
-        //System.out.println(blameList.stream().map(Blame::DataString).collect(Collectors.joining("\n")));
-
     }
 
     /**
@@ -223,10 +219,18 @@ public class JGitBlame {
     }
 
 
+    /**
+     * retunrn
+     * @return
+     */
     public String getGit(){
         return gito;
     }
 
+    /**
+     * Return a map of ref and it tags
+     * @return  a map of ref and it tags
+     */
     public HashMap<Ref,java.sql.Date> getDateMap(){
         return tagDate;
     }
@@ -238,10 +242,10 @@ public class JGitBlame {
         return percentOfFinished;
     }
 
-    public static void main(String[] args) throws IOException {
+/*    public static void main(String[] args) throws IOException {
         var jgit = new JGitBlame();
         jgit.run("https://gitlab.com/Setsulys/the_light_corridor.git");
         //jgit.run("https://github.com/openjdk/jdk.git");
         //jgit.run("https://gitlab.ow2.org/asm/asm.git");
-    }
+    }*/
 }
