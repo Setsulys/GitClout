@@ -73,10 +73,10 @@ export default {
               console.log(`Key: ${key}`);
               console.log(`value : ${value}`);
               const newDataElement = {
-                labels:['java','python','C'],
+                labels:['Java','Python','C','Markdown','JavaScript'],
                 datasets:[{
                   label:`Moyenne pour ${key}`,
-                  data:[510,123,52],
+                  data:[510,123,52,100,14],
                   backgroundColor: 'rgba(64, 120, 192, 0.7)',
                 }]
               };
