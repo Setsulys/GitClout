@@ -78,17 +78,6 @@ public class JGitBlame {
     }
 
 
-
-    /**
-     * return all the tags presents in the project
-     * @return all the tags presents in the project
-     */
-    public String getTagOfProjectString() {
-        return tagOfProject.stream().map(Ref::getName).collect(Collectors.joining("\n","----------TAGS----------\n","\n------------------------\n"));
-    }
-
-
-
     /**
      * Get the local repository
      * @param gitPath gitpath in local

@@ -22,18 +22,34 @@ public class Contributeur {
     public Contributeur() {
     }
 
+    /**
+     * Get the git id from contributor
+     * @return the git id
+     */
     public String getGitId(){
         return gitId;
     }
 
+    /**
+     * Set contributor name
+     * @param name name of contributor
+     */
     public void setName(String name){
         this.name = name;
     }
 
+    /**
+     * Get contributor name
+     * @return contributor name
+     */
     public String getName(){
         return name;
     }
 
+    /**
+     * get contributor id
+     * @param id contributor id
+     */
     public void setGitId(String id){
         gitId = id;
     }

@@ -42,11 +42,6 @@ public class DatabaseManager {
 
 
             for (var data : datas) {
-//                if(data == null){
-//                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHH" + tago);
-//                    continue;
-//                }
-
                 if(data.nbLine() == 0){
                     continue;
                 }

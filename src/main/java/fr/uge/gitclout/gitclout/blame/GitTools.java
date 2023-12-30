@@ -205,10 +205,7 @@ public class GitTools {
         RevCommit newCommit = getCommitByRef(git,allTag.get(currentTagPosition));
         List<DiffEntry> diffEntries = getChangedFiles(git,oldCommit,newCommit);
         diffEntries.removeIf(i-> i.getPath(null).equals("/dev/null"));
-        //diffEntries.removeIf(e-> e.getChangeType().equals(ChangeType.DELETE));
-        var  diffList= diffEntries.stream().map(e -> e.getPath(null)).collect(Collectors.toList());
-        //System.out.println("tag : "+ allTag.get(currentTagPosition).getName() +"\n "+diffList);
-        return diffList;
+        return diffEntries.stream().map(e -> e.getPath(null)).collect(Collectors.toList());
     }
 
 }

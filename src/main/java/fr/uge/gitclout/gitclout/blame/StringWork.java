@@ -16,7 +16,6 @@ public class StringWork {
     public static FileExtension splitExtention(String file) {
         Objects.requireNonNull(file);
         String[] split =file.split("[.]",2);
-        //System.out.println(Arrays.asList(split).stream().collect(Collectors.joining(",")));
         if(split.length>1) {
             return split[0].isBlank()? new FileExtension(split[1], split[1]) : new FileExtension(split[0], split[1]);
         }
@@ -32,12 +31,10 @@ public class StringWork {
     public String localPathFromURI(String repositoryURL) throws IOException {
         Objects.requireNonNull(repositoryURL);
         String[] test = repositoryURL.split("/",5);
-        //System.out.println(Arrays.stream(test).map(e -> e).collect(Collectors.joining(", ","[","]")));
         String gitName = test[test.length-3];
         String name = test[test.length-2]; //get owner name
         String projectName = test[test.length-1].replace(".git", ""); // remove .git at the end of the string
-        String localPath = Paths.get("").toAbsolutePath().toString() +File.separator+"GitDataBase"+File.separator + gitName + File.separator+name +File.separator+projectName;
-        //System.out.println(localPath);
+        String localPath = Paths.get("").toAbsolutePath() +File.separator+"GitDataBase"+File.separator + gitName + File.separator+name +File.separator+projectName;
         Files.createDirectories(Paths.get(localPath));
         return localPath;
     }
