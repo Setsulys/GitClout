@@ -110,6 +110,7 @@ public class Blame {
 	/**
 	 * return a regex of the language comments
 	 * Its best to have a regex for each type of file instead of a big one
+	 * The method is longer than 10 lines because of all case
 	 * @param extension extension of the current file language
 	 * @return a regex of the language comments
 	 */
@@ -142,17 +143,17 @@ public class Blame {
 		Objects.requireNonNull(blame);
 		Objects.requireNonNull(extension);
 		var codeCount = contributorData.stream().collect(Collectors.toMap(person -> person,person -> 0,(oldValue,newValue)->newValue,HashMap::new));
-		if(extension.equals(Extensions.OTHER) || extension.equals(Extensions.MEDIA)) {
-			return;
+		if(!(extension.equals(Extensions.OTHER) || extension.equals(Extensions.MEDIA))) {
+			RawText rawText = blame.getResultContents();
+			String regex = regex(extension);
+			Pattern pattern = Pattern.compile(regex);
+			try {
+				checkComments(blame,rawText,pattern,extension,codeCount);
+			} catch (Exception e) {
+				throw new AssertionError(e);
+			}
 		}
-		RawText rawText = blame.getResultContents();
-		String regex = regex(extension);
-		Pattern pattern = Pattern.compile(regex);
-		try {
-			checkComments(blame,rawText,pattern,extension,codeCount);
-		} catch (Exception e) {
-			throw new AssertionError(e);
-		}
+
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class Blame {
 			Matcher matcher = pattern.matcher(line);
 			if(!matcher.find()) {
 				codeCount.compute(contr, (k,v)->(v==null)?1:v+1);
-			};
+			}
 		}
 		divideIntoData(extension, codeCount);
 	}

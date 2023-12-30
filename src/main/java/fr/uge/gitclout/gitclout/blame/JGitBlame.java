@@ -96,7 +96,6 @@ public class JGitBlame {
     private void displayInformations(Git git) {
         Objects.requireNonNull(git);
         System.out.println("\n\n"+GitTools.getAuthorCredentials(git));
-        //System.out.println(getTagOfProjectString());
     }
 
     /**
@@ -109,6 +108,11 @@ public class JGitBlame {
      * @throws GitAPIException exception
      */
     private void prepareTag(Git git,File tmpDir,String repositoryURL,String localPath) throws IOException, GitAPIException {
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(tmpDir);
+        Objects.requireNonNull(repositoryURL);
+        Objects.requireNonNull(localPath);
+        gito = repositoryURL.substring(8,repositoryURL.length()-4);
         GitTools.checkAndClone(localPath, tmpDir, repositoryURL,git);
         checkRepositoryTags(git, repositoryURL);
         dateFromTag(git,tagOfProject);
@@ -122,22 +126,16 @@ public class JGitBlame {
     private void checkEndedTask() {
         scheduler.scheduleAtFixedRate(() -> {
             percentOfFinished = Double.valueOf(finishedTask)*100/Double.valueOf(tagOfProject.size());
-            //percentOfFinished = finishedTask*100/tagOfProject.size();
             System.out.println("Task ended : " + df.format(percentOfFinished) +"%" + " == "+finishedTask+"/"+tagOfProject.size());
         }, 1, 2, TimeUnit.SECONDS);
     }
 
     /**
-     *
      * @param git current git
      * @param allTag list of all tags of this project
      * @param actualTag position of the current tag in the list
-     * @throws MissingObjectException exception
-     * @throws IncorrectObjectTypeException exception
-     * @throws IOException exception
-     * @throws GitAPIException exception
      */
-    private void runByTag(Git git,List<Ref> allTag, int actualTag) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException{
+    private void runByTag(Git git,List<Ref> allTag, int actualTag) {
         Objects.requireNonNull(git);
         Objects.requireNonNull(allTag);
         if(actualTag <0) {
@@ -158,12 +156,8 @@ public class JGitBlame {
     /**
      *  main loop on the tags
      * @param git current git
-     * @throws MissingObjectException exception
-     * @throws IncorrectObjectTypeException exception
-     * @throws IOException exception
-     * @throws GitAPIException exception
      */
-    private void executeForEveryTag(Git git) throws MissingObjectException, IncorrectObjectTypeException, IOException, GitAPIException {
+    private void executeForEveryTag(Git git) {
         for(var i =0; i < tagOfProject.size();i++) {
             System.out.println("start --------------------------" + tagOfProject.get(i).getName());
             runByTag(git,tagOfProject,i);
@@ -174,6 +168,7 @@ public class JGitBlame {
 
     /**
      * The method used for using this class
+     * this method is long because of all initiation that we do, it is the main entry of the analyzer
      * @param repositoryURL link of the repo
      */
     public void run(String repositoryURL) {
@@ -184,11 +179,8 @@ public class JGitBlame {
             File tmpDir  = new File(gitPath);
             Repository repos =getRepos(gitPath);
             Git git = new Git(repos);
-
-            gito = repositoryURL.substring(8,repositoryURL.length()-4);
             prepareTag(git,tmpDir,repositoryURL,localPath);
             executeForEveryTag(git);
-
         } catch (Exception e) {
             throw new AssertionError("Problem in run",e);
         }
@@ -206,8 +198,8 @@ public class JGitBlame {
 
 
     /**
-     * retunrn
-     * @return
+     * return the git folder
+     * @return the git folder
      */
     public String getGit(){
         return gito;
@@ -222,8 +214,10 @@ public class JGitBlame {
     }
 
 
-
-
+    /**
+     * number of task finished in percentage
+     * @return number of task finished in percentage
+     */
     public double PercentOfFinishedTask(){
         return percentOfFinished;
     }
