@@ -56,7 +56,7 @@ public final class Data{
 
     @Override
     public String toString() {
-        return tag.getName()+": "+extension + "----" + contributor.name() /*+"("+contributor.mail()+")"*/+" :" + nbLine;
+        return extension + "----" + contributor.name() /*+"("+contributor.mail()+")"*/+" :" + nbLine;
     }
 
 }

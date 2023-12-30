@@ -36,7 +36,7 @@ public class BackApplication{
         if(runnable){
             urlAndData.put(gitLink,jGit);
             jGit.run(gitLink);
-            System.out.println(jGit.projectData().stream().map(e-> e.blameDatas().toString()).collect(Collectors.joining("\n")));
+            System.out.println(jGit.projectData().stream().map(e-> e.currentRef().getName() +" : "+ e.blameDatas().toString()).collect(Collectors.joining("\n")));
             databaseManager.fillDatabase(jGit.projectData(),jGit.getGit(),jGit.getDateMap());
 
         }
