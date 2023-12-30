@@ -20,7 +20,6 @@ public class MessageController {
     }
     @GetMapping("/hello")
     public ResponseEntity<String> hello(){
-
         return ResponseEntity.ok("GITCLOUT DE JULIEN ET STEVEN");
     }
 

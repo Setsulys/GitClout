@@ -24,11 +24,18 @@ public class BackApplication{
     private final DatabaseManager databaseManager;
 
 
+
     private final HashMap<String,JGitBlame> urlAndData = new HashMap<>();
     @Autowired
     public BackApplication(DatabaseManager databaseManager){
         this.databaseManager = databaseManager;
     }
+
+    /**
+     * Try to check if the link is a git link and run it if it is
+     * @param gitLink link of the git
+     * @return true if it is a git
+     */
     public boolean tryAndAdd (String gitLink){
         Objects.requireNonNull(gitLink);
         var runnable = UtilsMethods.isGitRepo(gitLink);
@@ -43,18 +50,37 @@ public class BackApplication{
         return runnable;
     }
 
+    /**
+     * return data for the radar chart
+     * @param gitLink link of the git
+     * @return data for the radar chart
+     */
     public HashMap<String,HashMap<String,Integer>> radarData(String gitLink){
         return databaseManager.MapOfAverage(gitLink);
     }
 
+    /**
+     * Return all tags of a project
+     * @param gitLink link of the git
+     * @return all tags of a project
+     */
     public ArrayList<String> getTagOfProject(String gitLink){
         return databaseManager.getTags(gitLink);
     }
 
+    /**
+     * return a list of project that have already been blamed
+     * @return a list project that have already been blamed
+     */
     public List<String> displayProjects(){
         return new ArrayList<>(urlAndData.keySet());
     }
 
+    /**
+     * Return the percentage of project advance
+     * @param gitLink link of the project
+     * @return the percentage of project advance
+     */
     public double getPercentageOfProject(String gitLink){
         var get = urlAndData.getOrDefault(gitLink,null);
         return get!=null? get.PercentOfFinishedTask():0;
