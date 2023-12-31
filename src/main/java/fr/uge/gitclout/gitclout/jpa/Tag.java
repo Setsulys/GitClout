@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -26,6 +27,10 @@ public class Tag {
     }
 
     public Tag(String tagId,String nomTag, String project, Date date, Set<Participation> participation){
+        Objects.requireNonNull(tagId);
+        Objects.requireNonNull(nomTag);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(participation);
         this.tagId = tagId;
         this.nomTag = nomTag;
         this.date = date;
@@ -34,6 +39,9 @@ public class Tag {
     }
 
     public Tag(String tagId,String nomTag, String project, Date date){
+        Objects.requireNonNull(tagId);
+        Objects.requireNonNull(nomTag);
+        Objects.requireNonNull(date);
         this.tagId = tagId;
         this.nomTag = nomTag;
         this.date = date;
@@ -53,6 +61,7 @@ public class Tag {
      * @param tagId the shawan of the tag
      */
     public void setTagId(String tagId) {
+        Objects.requireNonNull(tagId);
         this.tagId = tagId;
     }
 
@@ -69,6 +78,7 @@ public class Tag {
      * @param nomTag tag name
      */
     public void setNomTag(String nomTag) {
+        Objects.requireNonNull(nomTag);
         this.nomTag = nomTag;
     }
 
@@ -85,22 +95,24 @@ public class Tag {
      * @param project link
      */
     public void setProject(String project) {
+        Objects.requireNonNull(project);
         this.project = project;
     }
 
-    /**
+    /** NOT FINISHED, MAYBE USE LATER
      * get tag date
      * @return tag date
      */
-    public Date getDate() {
+/*    public Date getDate() {
         return date;
-    }
+    }*/
 
     /**
      * Set the date for the tag
      * @param date a date of tag
      */
     public void setDate(Date date) {
+        Objects.requireNonNull(date);
         this.date = date;
     }
 

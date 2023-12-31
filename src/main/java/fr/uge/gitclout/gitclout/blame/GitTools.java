@@ -77,6 +77,8 @@ public class GitTools {
      * @throws IOException exception
      */
     public static long getCommitDate(Git git,Ref ref) throws IncorrectObjectTypeException, MissingObjectException, IOException {
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(ref);
         return git.getRepository().parseCommit(ref.getObjectId()).getCommitTime() * 1000L;
     }
 
@@ -89,6 +91,7 @@ public class GitTools {
      * @return list of Contributors data
      */
     public static ArrayList<Contributor> authorCredentials(Git git) {
+        Objects.requireNonNull(git);
         var list = new HashSet<Contributor>();
         try {
             for(var commit : git.log().all().call()) {
@@ -107,6 +110,7 @@ public class GitTools {
      * @return a string of the authors in the project
      */
     public static String getAuthorCredentials(Git git) {
+        Objects.requireNonNull(git);
         return authorCredentials(git).stream().map(String::valueOf).collect(Collectors.joining("\n"));
     }
 
@@ -137,6 +141,7 @@ public class GitTools {
      * @return the last tag if there is tag before the actual one
      */
     private static Ref getLastRef(List<Ref> allTag,int currentTagPosition) {
+        Objects.requireNonNull(allTag);
         if(currentTagPosition!=0) {
             return allTag.get(currentTagPosition-1);
         }
@@ -153,6 +158,8 @@ public class GitTools {
      * @throws IOException exception
      */
     private static RevCommit getCommitByRef(Git git,Ref ref) throws MissingObjectException, IncorrectObjectTypeException, IOException {
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(ref);
         try(RevWalk revWalk = new RevWalk(git.getRepository())) {
             ObjectId refObjectId = ref.getObjectId();
             return revWalk.parseCommit(refObjectId);
@@ -167,6 +174,8 @@ public class GitTools {
      * @throws IOException exception
      */
     private static AbstractTreeIterator prepareTreeParser(Git git,RevCommit commit) throws IOException {
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(commit);
         try (ObjectReader reader = git.getRepository().newObjectReader()) {
             CanonicalTreeParser treeParser = new CanonicalTreeParser();
             treeParser.reset(reader, commit.getTree());
@@ -184,6 +193,9 @@ public class GitTools {
      * @throws GitAPIException exception
      */
     private static List<DiffEntry> getChangedFiles(Git git,RevCommit oldCommit, RevCommit newCommit) throws IOException, GitAPIException{
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(oldCommit);
+        Objects.requireNonNull(newCommit);
         try (RevWalk revWalk = new RevWalk(git.getRepository())) {
             AbstractTreeIterator oldTree = prepareTreeParser(git,oldCommit);
             AbstractTreeIterator newTree = prepareTreeParser(git,newCommit);
@@ -201,6 +213,11 @@ public class GitTools {
      * @throws GitAPIException exception
      */
     public static List<String> checkModifiedFiles(Git git,List<Ref> allTag,int currentTagPosition) throws IOException, GitAPIException {
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(allTag);
+        if(currentTagPosition <0){
+            throw new IllegalArgumentException();
+        }
         RevCommit oldCommit = getCommitByRef(git,getLastRef(allTag,currentTagPosition));
         RevCommit newCommit = getCommitByRef(git,allTag.get(currentTagPosition));
         List<DiffEntry> diffEntries = getChangedFiles(git,oldCommit,newCommit);

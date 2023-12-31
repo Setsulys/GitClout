@@ -27,6 +27,10 @@ public class DatabaseManager {
 
     @Autowired
     public DatabaseManager(ContributeurService contributeurService, LangageService langageService, TagService tagService, ParticipationService participationService) {
+        Objects.requireNonNull(contributeurService);
+        Objects.requireNonNull(langageService);
+        Objects.requireNonNull(tagService);
+        Objects.requireNonNull(participationService);
         this.participationService = participationService;
         this.tagService = tagService;
         this.langageService = langageService;
@@ -40,6 +44,7 @@ public class DatabaseManager {
      * @param data data of current blame
      */
     private void fillContributor(Contributeur con,Data data){
+        Objects.requireNonNull(data);
         con.setGitId(data.getContributor().mail());
         con.setName(data.getContributor().name());
         contributeurService.insertContributeur(con);
@@ -53,6 +58,10 @@ public class DatabaseManager {
      * @param map map of the date of the tag
      */
     private void fillTag(Tag tag,Ref tago,String git, HashMap<Ref, java.sql.Date> map){
+        Objects.requireNonNull(tag);
+        Objects.requireNonNull(tag);
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(map);
         tag.setTagId(tago.toString());
         tag.setProject(git);
         tag.setNomTag(tago.getName());
@@ -68,6 +77,10 @@ public class DatabaseManager {
      * @param tago the tag used
      */
     private void fillParticipationPK(ParticipationPrimaryKey participationPK,Data data,Langage langage,Ref tago){
+        Objects.requireNonNull(participationPK);
+        Objects.requireNonNull(data);
+        Objects.requireNonNull(langage);
+        Objects.requireNonNull(tago);
         participationPK.setGitId(data.getContributor().mail());
         participationPK.setLanguageName(langage.getLanguageName());
         participationPK.setTagId(tago.toString());
@@ -82,6 +95,11 @@ public class DatabaseManager {
      * @param data data inserted
      */
     private void fillParticipation(Tag tag,Contributeur con,ParticipationPrimaryKey participationPK,Langage langage,Data data){
+        Objects.requireNonNull(tag);
+        Objects.requireNonNull(con);
+        Objects.requireNonNull(participationPK);
+        Objects.requireNonNull(langage);
+        Objects.requireNonNull(data);
         Participation participation = new Participation();
         participation.setTag(tag);
         participation.setContributeur(con);
@@ -99,6 +117,10 @@ public class DatabaseManager {
      * @param map date to check for the tag
      */
     private void fillLoop(Ref tago,Data data,String git,HashMap<Ref, java.sql.Date> map){
+        Objects.requireNonNull(data);
+        Objects.requireNonNull(tago);
+        Objects.requireNonNull(git);
+        Objects.requireNonNull(map);
         Contributeur con = new Contributeur();
         fillContributor(con,data);
         Langage langage = new Langage();
@@ -164,6 +186,7 @@ public class DatabaseManager {
      * @return a map of a language and number of lines in this language
      */
     private HashMap<String,Integer> mapForLanguageCount(ArrayList<Participation> listo){
+        Objects.requireNonNull(listo);
         var map = new HashMap<String,Integer>();
         for(var x : listo){
             if(map.containsKey(x.getLangage().getLanguageName())){
@@ -181,6 +204,7 @@ public class DatabaseManager {
      * @return a map of all contribution
      */
     public HashMap<String, ArrayList<Integer>> MapOfPartFull(String project){
+        Objects.requireNonNull(project);
         var listContributor = contributeurService.findAllContributor();
         var mapFinal = new HashMap<String,ArrayList<Integer>>();
         for( var con : listContributor){
@@ -198,6 +222,7 @@ public class DatabaseManager {
      * @return a map of contributor name and a map of language and number of lines
      */
     public HashMap<String, HashMap<String ,Integer>> MapOfAverage(String project){
+        Objects.requireNonNull(project);
         int nbTag = tagService.sizeOfTagsByProject(project);
         var listContributor = contributeurService.findAllContributor();
         var mapFinal = new HashMap<String, HashMap<String, Integer>>();
@@ -217,6 +242,8 @@ public class DatabaseManager {
      * @return the blaming info of the current tag of this project
      */
     public HashMap<String,HashMap<String, ArrayList<Integer>>> MapOfPartByTagAndProject(String nomTag, String project){
+        Objects.requireNonNull(project);
+        Objects.requireNonNull(nomTag);
         var listContributor = contributeurService.findAllContributor();
         var mapFinal = new HashMap<String,HashMap<String, ArrayList<Integer>>>();
         for( var con : listContributor){
@@ -237,6 +264,7 @@ public class DatabaseManager {
      * @return list of value in a precise order
      */
     public static ArrayList<Integer> forFront(HashMap<String,Integer> map){
+        Objects.requireNonNull(map);
         var list = new ArrayList<Integer>();
         for( var x : Extensions.values()){
             if(x != Extensions.OTHER){
@@ -255,6 +283,7 @@ public class DatabaseManager {
      * @return list of tags that are in the project
      */
     public ArrayList<String> getTags(String project){
+        Objects.requireNonNull(project);
         var list = tagService.findAllTags();
         return new ArrayList<>(list.stream().map(Tag::getNomTag).toList());
     }
@@ -267,6 +296,8 @@ public class DatabaseManager {
      * @return the date of the current tag
      */
     public static Date getDateFromRef(HashMap<Ref, Date> map,Ref ref){
+        Objects.requireNonNull(map);
+        Objects.requireNonNull(ref);
         return map.get(ref);
     }
 

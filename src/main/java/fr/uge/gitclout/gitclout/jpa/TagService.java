@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class TagService {
@@ -12,6 +13,7 @@ public class TagService {
 
     @Autowired
     public TagService(TagRepo tagRepo){
+        Objects.requireNonNull(tagRepo);
         this.tagRepo = tagRepo;
     }
 
@@ -21,6 +23,7 @@ public class TagService {
      * @param tag tag
      */
     public void insertTag(Tag tag) {
+        Objects.requireNonNull(tag);
         tagRepo.save(tag);
     }
 
@@ -30,6 +33,7 @@ public class TagService {
      * @return all tag linked to this project
      */
     public ArrayList<Tag> findTagsByProject(String project){
+        Objects.requireNonNull(project);
         return tagRepo.findByProject(project);
     }
 
@@ -47,6 +51,7 @@ public class TagService {
      * @return size of the tag list by project
      */
     public int sizeOfTagsByProject(String project){
+        Objects.requireNonNull(project);
         return findTagsByProject(project).size();
     }
 

@@ -3,6 +3,7 @@ package fr.uge.gitclout.gitclout.jpa;
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class ParticipationPrimaryKey implements Serializable {
@@ -37,22 +38,25 @@ public class ParticipationPrimaryKey implements Serializable {
      * @param gitId contributor email
      */
     public void setGitId(String gitId) {
+        Objects.requireNonNull(gitId);
         this.gitId = gitId;
     }
 
     /**
+     * NOT FINISHED, MAYBE WANTED TO USE IT
      * Get the participation tagID
      * @return the tagID
      */
-    public String getTagId() {
+/*    public String getTagId() {
         return tagId;
-    }
+    }*/
 
     /**
      * Set the tagId for the current participation
      * @param tagId id of the tag blamed
      */
     public void setTagId(String tagId) {
+        Objects.requireNonNull(tagId);
         this.tagId = tagId;
     }
 
@@ -69,6 +73,7 @@ public class ParticipationPrimaryKey implements Serializable {
      * @param languageName language name
      */
     public void setLanguageName(String languageName) {
+        Objects.requireNonNull(languageName);
         this.languageName = languageName;
     }
 }

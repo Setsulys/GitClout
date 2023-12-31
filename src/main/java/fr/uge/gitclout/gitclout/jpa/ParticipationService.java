@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class ParticipationService {
@@ -12,17 +13,27 @@ public class ParticipationService {
 
     @Autowired
     public ParticipationService(ParticipationRepo participationRepo){
+        Objects.requireNonNull(participationRepo);
         this.participationRepo = participationRepo;
     }
 
-
+    /**
+     * Insert into participation
+     * @param participation participation
+     */
     public void insertParticipation(Participation participation) {
+        Objects.requireNonNull(participation);
         participationRepo.save(participation);
     }
 
-    public ArrayList<Participation> findall(){
+    /**
+     * NOT FINISHED, MAYBE WANTED TO USE IT
+     * return all participation
+     * @return all participation
+     */
+/*    public ArrayList<Participation> findall(){
         return new ArrayList<>(participationRepo.findAll());
-    }
+    }*/
 
     /**
      * NOT FINISHED
@@ -31,6 +42,7 @@ public class ParticipationService {
      * @return all participation of a precise language
      */
 /*    public ArrayList<Participation> findParticipationsByLanguage(String languageName) {
+        Objects.requireNonNull(languageName);
         return participationRepo.findParticipationsByLangage(languageName);
     }*/
 
@@ -42,6 +54,8 @@ public class ParticipationService {
      * @return
      */
 /*    public ArrayList<Participation> findParticipationsByLanguageAndContributor(String languageName, String gitId) {
+        Objects.requireNonNull(languageName);
+        Objects.requireNonNull(gitId);
         return participationRepo.findParticipationsByLanguageAndContributor(languageName, gitId);
     }*/
 
@@ -52,6 +66,7 @@ public class ParticipationService {
      * @return all participation of the contributor
      */
 /*    public ArrayList<Participation> findParticipationsByContributor(String gitId){
+        Objects.requireNonNull(gitId);
         return participationRepo.findParticipationsByContributor(gitId);
     }*/
 
@@ -62,6 +77,8 @@ public class ParticipationService {
      * @return for a tag and a contributor all participation that he has done
      */
     public ArrayList<Participation> findParticipationsByTagAndContributor(String nomTag,String gitId){
+        Objects.requireNonNull(gitId);
+        Objects.requireNonNull(nomTag);
         return participationRepo.findParticipationsByTagAndContributeur(nomTag,gitId);
     }
 
@@ -72,6 +89,8 @@ public class ParticipationService {
      * @return participation by project and contributor
      */
     public ArrayList <Participation> findParticipationsByProjectAndContributor(String project, String gitId){
+        Objects.requireNonNull(project);
+        Objects.requireNonNull(gitId);
         return participationRepo.findParticipationsByProjectAndContributor(project,gitId);
     }
 }

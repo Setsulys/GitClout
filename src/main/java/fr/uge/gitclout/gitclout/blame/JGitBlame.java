@@ -158,6 +158,7 @@ public class JGitBlame {
      * @param git current git
      */
     private void executeForEveryTag(Git git) {
+        Objects.requireNonNull(git);
         for(var i =0; i < tagOfProject.size();i++) {
             System.out.println("start --------------------------" + tagOfProject.get(i).getName());
             runByTag(git,tagOfProject,i);
@@ -172,6 +173,7 @@ public class JGitBlame {
      * @param repositoryURL link of the repo
      */
     public void run(String repositoryURL) {
+        Objects.requireNonNull(repositoryURL);
         try {
             System.out.println("-----Pulling or cloning-----");
             String localPath = new StringWork().localPathFromURI(repositoryURL);

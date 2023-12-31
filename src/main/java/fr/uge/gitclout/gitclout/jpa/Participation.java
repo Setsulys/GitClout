@@ -5,6 +5,8 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 
+import java.util.Objects;
+
 @Entity
 public class Participation {
 
@@ -88,6 +90,7 @@ public class Participation {
      * @param contributeur contributor
      */
     public void setContributeur(Contributeur contributeur) {
+        Objects.requireNonNull(contributeur);
         this.contributeur = contributeur;
     }
 
@@ -104,6 +107,7 @@ public class Participation {
      * @param langage the language of current participation
      */
     public void setLangage(Langage langage) {
+        Objects.requireNonNull(langage);
         this.langage = langage;
     }
 
@@ -120,6 +124,7 @@ public class Participation {
      * @param tag a tag
      */
     public void setTag(Tag tag) {
+        Objects.requireNonNull(tag);
         this.tag = tag;
     }
 }

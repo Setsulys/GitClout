@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 /*import jakarta.persistence.*;*/
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class ContributeurService {
@@ -16,11 +17,13 @@ public class ContributeurService {
     private ContributeurRepo contributeurRepo;
     @Autowired
     public ContributeurService(ContributeurRepo contributeurRepo){
+        Objects.requireNonNull(contributeurRepo);
         this.contributeurRepo = contributeurRepo;
     }
 
 
     public void insertContributeur(Contributeur con) {
+        Objects.requireNonNull(con);
         contributeurRepo.save(con);
     }
 

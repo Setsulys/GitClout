@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -35,6 +36,7 @@ public class Contributeur {
      * @param name name of contributor
      */
     public void setName(String name){
+        Objects.requireNonNull(name);
         this.name = name;
     }
 
@@ -51,6 +53,7 @@ public class Contributeur {
      * @param id contributor id
      */
     public void setGitId(String id){
+        Objects.requireNonNull(id);
         gitId = id;
     }
 }

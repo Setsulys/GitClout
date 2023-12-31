@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -34,6 +35,7 @@ public class Langage {
      * @param languageName language name
      */
     public void setLangage(String languageName) {
+        Objects.requireNonNull(languageName);
         this.languageName = languageName;
     }
 

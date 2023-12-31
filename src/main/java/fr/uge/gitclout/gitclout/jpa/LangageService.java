@@ -3,6 +3,8 @@ package fr.uge.gitclout.gitclout.jpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class LangageService {
 
@@ -10,6 +12,7 @@ public class LangageService {
 
     @Autowired
     public LangageService(LangageRepo langageRepo){
+        Objects.requireNonNull(langageRepo);
         this.langageRepo = langageRepo;
     }
 
@@ -19,6 +22,7 @@ public class LangageService {
      * @param langage language of a file
      */
     public void insertLangage(Langage langage) {
+        Objects.requireNonNull(langage);
         this.langageRepo.save(langage);
     }
 

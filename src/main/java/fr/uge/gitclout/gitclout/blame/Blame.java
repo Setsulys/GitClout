@@ -115,6 +115,7 @@ public class Blame {
 	 * @return a regex of the language comments
 	 */
 	private String regex(Extensions extension) {
+		Objects.requireNonNull(extension);
 		return switch(extension) {
 		case Extensions.C -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
 		case Extensions.JAVA -> "^(?!.*([\"'])(?:(?!\\1|//|/\\*).)*\\1)(^[\s\t]*+//|//|^[\s\t]*+/\\*|/\\*|^[\s\t]*+\\*|\\*).*$";
