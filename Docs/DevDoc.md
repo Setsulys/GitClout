@@ -45,6 +45,7 @@ on a préferé laisser la classe de la rest api plutot épuré et elle fait appe
    > - Au début, il n'y avait pas de GitTools, mais on pensé que créer une classe qui me permettrais de faire tout ce qui est en rapport avec le git serait plus simple de compréhension, on a eu la même réaction pour StringWork et UtilsMethods, utilsMethods qui servait pour les méthodes dont on savait pas trop ou les mettre.
 
    > - Pour le blame, on donne toutes les informations qui sont utile pour l'analyse avec le constructeur, par exemple, le GitDiff du tag actuel ce qui nous permet de ne pas faire une nouvelle analyse des fichiers déja présents et non modifiés.<br> 
+   On n'analysera pas les fichiers de type média ou autre que du code/configuration car ce n'est pas forcément la personne qui a crée l'image, de plus ces fichiers pouvant etre aussi gros en terme de lignes on a pensé que cela ne servirait pas à grand chose.
    On utilise des regex pour les differents énums qu'on a pour verifier si se sont des commentaires, pour les eviter. Les lignes n'etant pas de commentaires sont stockés avec la personne qui les à écrite dans la classe Data et peuvent s'incrémenter si la personne à écrit dans deux fichiers differents.<br>
    Pour essayer d'accélerer l'analyse nous avons éssayé d'ajouter un executorService au Blame.
 
