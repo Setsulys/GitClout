@@ -165,7 +165,7 @@ public class Blame {
 	 * @param extension is the extension of the file
 	 * @param codeCount a hashmap collecting contributors and it contribution on codes lines
 	 */
-	public void checkComments(BlameResult blame,RawText rawText, Pattern pattern,Extensions extension, HashMap<Contributor,Integer> codeCount){
+	private void checkComments(BlameResult blame,RawText rawText, Pattern pattern,Extensions extension, HashMap<Contributor,Integer> codeCount){
 		Objects.requireNonNull(blame);
 		Objects.requireNonNull(rawText);
 		Objects.requireNonNull(codeCount);
