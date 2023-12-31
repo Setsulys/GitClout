@@ -131,6 +131,7 @@ public class JGitBlame {
     }
 
     /**
+     * Blame on each tag
      * @param git current git
      * @param allTag list of all tags of this project
      * @param actualTag position of the current tag in the list

@@ -18,7 +18,10 @@ public class ContributeurService {
         this.contributeurRepo = contributeurRepo;
     }
 
-
+    /**
+     * insert into table
+     * @param con table contributeur
+     */
     public void insertContributeur(Contributeur con) {
         Objects.requireNonNull(con);
         contributeurRepo.save(con);

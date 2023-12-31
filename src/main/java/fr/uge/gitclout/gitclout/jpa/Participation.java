@@ -31,6 +31,13 @@ public class Participation {
     }
 
     public Participation(ParticipationPrimaryKey id, int nbLignesCode, Contributeur contributeur, Langage langage, Tag tag){
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(contributeur);
+        Objects.requireNonNull(langage);
+        Objects.requireNonNull(tag);
+        if(nbLignesCode < 0){
+            throw new IllegalArgumentException();
+        }
         this.id = id;
         this.nbLignesCode = nbLignesCode;
         this.contributeur = contributeur;
@@ -52,6 +59,9 @@ public class Participation {
      * @param lignes number of lines of code
      */
     public void setNbLignesCode(int lignes) {
+        if(lignes< 0){
+            throw new IllegalArgumentException();
+        }
         this.nbLignesCode = lignes;
     }
 
@@ -68,6 +78,7 @@ public class Participation {
      * @param id primary key
      */
     public void setId(ParticipationPrimaryKey id) {
+        Objects.requireNonNull(id);
         this.id = id;
     }
 

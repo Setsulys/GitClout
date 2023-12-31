@@ -52,9 +52,9 @@ public class Tag {
      * Get tag id
      * @return shawan
      */
-    public String getTagId() {
+/*    public String getTagId() {
         return tagId;
-    }
+    }*/
 
     /**
      * Set tag id
